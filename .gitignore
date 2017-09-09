@@ -6,3 +6,5 @@ include/
 *.pyc
 pip-selfcheck.json
 *.zip
+tests
+

@@ -1,10 +1,14 @@
 import subprocess
-from bottle import run, post, request, response, get, route
+from flask import Flask
+from flask import request
 
-@route('/<path>',method = 'POST')
-def process(path):
-    output = subprocess.check_output([sys.executable, 'python',path+'.py'],shell=True)
-    print(output)
-    return output
+app = Flask(__name__)
 
-run(host='localhost', port=8080, debug=True)
+@app.route('/',methods=['POST'])
+def get_passage():
+	query = request.form['query']
+	proc = subprocess.Popen(['python','IR/InfoRet.py',query],shell=False,stdout=subprocess.PIPE)
+	return proc.communicate()[0].decode()
+
+if __name__ == '__main__':
+	app.run()
