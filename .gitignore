@@ -6,5 +6,12 @@ include/
 *.pyc
 pip-selfcheck.json
 *.zip
+<<<<<<< HEAD
+data/
+erudite_theano/
+__pycache__/
+*.tar.gz
+=======
 tests
 
+>>>>>>> 16a219dd90c78cb2149a401b9fb3003a84dd22fc
