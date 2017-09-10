@@ -1,5 +1,7 @@
 import theano
-import theano.tensor as T
+from theano import tensor as T
+from theano import printing as printf
+from theano import function
 import lasagne
 
 def softmax(x):
@@ -17,3 +19,16 @@ def constant_param(value=0.0, shape=(0,)):
 
 def normal_param(std=0.1, mean=0.0, shape=(0,)):
     return theano.shared(lasagne.init.Normal(std, mean).sample(shape), borrow=True)
+
+def cosine_similarity(A,B):
+	return T.dot(A,T.transpose(B))/(T.dot(A,T.transpose(A))*T.dot(B,T.transpose(B)))
+
+def cosine_proximity_loss(A,B):
+	return (1 - cosine_similarity(A,B))
+
+def print_shape(A):
+	print_op = printf.Print('vector',attrs=['shape'])
+	printed = print_op(A)
+	f = function([A],printed)
+	return f(A)
+

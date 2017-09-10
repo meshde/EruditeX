@@ -2,9 +2,12 @@
 import random
 import numpy as np
 
+import sys
+
 import theano
 import theano.tensor as T
 from theano.compile.nanguardmode import NanGuardMode
+from theano import pp
 
 import lasagne
 from lasagne import layers
@@ -21,11 +24,12 @@ class DMN_basic:
     
     def __init__(self, babi_train_raw, babi_test_raw, word2vec, word_vector_size, 
                 dim, mode, answer_module, input_mask_mode, memory_hops, l2, 
-                normalize_attention, **kwargs):
+                normalize_attention, answer_vec, debug, **kwargs):
 
-        print("==> not used params in DMN class:", kwargs.keys())
         self.vocab = {}
         self.ivocab = {}
+
+        self.debug = debug
         
         self.word2vec = word2vec
         self.word_vector_size = word_vector_size
@@ -36,18 +40,46 @@ class DMN_basic:
         self.memory_hops = memory_hops
         self.l2 = l2
         self.normalize_attention = normalize_attention
-        
+        self.answer_vec = answer_vec
+
+        if self.mode != 'deploy': print("==> not used params in DMN class:", kwargs.keys())
+
+                
         self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
         self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
         self.vocab_size = len(self.vocab)
 
+
+        if self.debug:
+            print('Input:',np.array(self.train_input).shape)
+            print('Quest:',np.array(self.train_q).shape)
+            print('Answer:',np.array(self.train_answer).shape)
+            print('Mask:',np.array(self.train_input_mask))
+            sys.exit(0)
+
+        # if self.mode == 'deploy':
+        #     self.input_var = T.tensor3('input_var')
+        #     self.q_var = T.tensor3('question_var')
+        #     self.input_mask_var = T.ivector('input_mask_var')
+
+        # else:
         self.input_var = T.matrix('input_var')
         self.q_var = T.matrix('question_var')
-        self.answer_var = T.iscalar('answer_var')
+        if self.answer_vec == 'word2vec':
+            self.answer_var = T.vector('answer_var')
+        else:
+            self.answer_var = T.iscalar('answer_var')
         self.input_mask_var = T.ivector('input_mask_var')
+
+        if self.answer_vec == 'one_hot' or self.answer_vec == 'index':
+            self.answer_size = self.vocab_size
+        elif self.answer_vec == 'word2vec':
+            self.answer_size = self.word_vector_size
+        else:
+            raise Exception("Invalid answer_vec type")
         
             
-        print("==> building input module")
+        if self.mode != 'deploy': print("==> building input module")
         self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
         self.W_inp_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
@@ -73,7 +105,7 @@ class DMN_basic:
         self.q_q = self.q_q[-1]
         
         
-        print("==> creating parameters for memory module")
+        if self.mode != 'deploy': print("==> creating parameters for memory module")
         self.W_mem_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.W_mem_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_mem_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
@@ -93,7 +125,7 @@ class DMN_basic:
         self.b_2 = nn_utils.constant_param(value=0.0, shape=(1,))
         
 
-        print("==> building episodic memory module (fixed number of steps: %d)" % self.memory_hops)
+        if self.mode != 'deploy': print("==> building episodic memory module (fixed number of steps: %d)" % self.memory_hops)
         memory = [self.q_q.copy()]
         for iter in range(1, self.memory_hops + 1):
             current_episode = self.new_episode(memory[iter - 1])
@@ -104,22 +136,23 @@ class DMN_basic:
         
         last_mem = memory[-1]
         
-        print("==> building answer module")
-        self.W_a = nn_utils.normal_param(std=0.1, shape=(self.vocab_size, self.dim))
+        if self.mode != 'deploy': print("==> building answer module")
+        
+        self.W_a = nn_utils.normal_param(std=0.1, shape=(self.answer_size, self.dim))
         
         if self.answer_module == 'feedforward':
             self.prediction = nn_utils.softmax(T.dot(self.W_a, last_mem))
         
         elif self.answer_module == 'recurrent':
-            self.W_ans_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.vocab_size))
+            self.W_ans_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
             self.W_ans_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
             self.b_ans_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
             
-            self.W_ans_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.vocab_size))
+            self.W_ans_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
             self.W_ans_upd_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
             self.b_ans_upd = nn_utils.constant_param(value=0.0, shape=(self.dim,))
             
-            self.W_ans_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.vocab_size))
+            self.W_ans_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
             self.W_ans_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
             self.b_ans_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
         
@@ -128,12 +161,13 @@ class DMN_basic:
                                   self.W_ans_res_in, self.W_ans_res_hid, self.b_ans_res, 
                                   self.W_ans_upd_in, self.W_ans_upd_hid, self.b_ans_upd,
                                   self.W_ans_hid_in, self.W_ans_hid_hid, self.b_ans_hid)
-                
-                y = nn_utils.softmax(T.dot(self.W_a, a))
+                y = T.dot(self.W_a, a)
+                if self.answer_vec == 'one_hot' or self.answer_vec == 'index':
+                    y = nn_utils.softmax(y)
                 return [a, y]
             
             # TODO: add conditional ending
-            dummy = theano.shared(np.zeros((self.vocab_size, ), dtype=floatX))
+            dummy = theano.shared(np.zeros((self.answer_size, ), dtype=floatX))
             results, updates = theano.scan(fn=answer_step,
                 outputs_info=[last_mem, T.zeros_like(dummy)],
                 n_steps=1)
@@ -143,7 +177,7 @@ class DMN_basic:
             raise Exception("invalid answer_module")
         
         
-        print("==> collecting all parameters")
+        if self.mode != 'deploy': print("==> collecting all parameters")
         self.params = [self.W_inp_res_in, self.W_inp_res_hid, self.b_inp_res, 
                   self.W_inp_upd_in, self.W_inp_upd_hid, self.b_inp_upd,
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid,
@@ -158,8 +192,14 @@ class DMN_basic:
                               self.W_ans_hid_in, self.W_ans_hid_hid, self.b_ans_hid]
         
         
-        print("==> building loss layer and computing updates")
-        self.loss_ce = T.nnet.categorical_crossentropy(self.prediction.dimshuffle('x', 0), T.stack([self.answer_var]))[0]
+        if self.mode != 'deploy': print("==> building loss layer and computing updates")
+        if debug:
+            print('Prediction dim:',self.prediction.dimshuffle('x', 0).ndim)
+            print('Answer dim:',self.answer_var.ndim)
+        if self.answer_vec == 'word2vec':
+            self.loss_ce = nn_utils.cosine_proximity_loss(self.prediction.dimshuffle('x', 0), T.stack([self.answer_var]))[0][0]
+        else:
+            self.loss_ce = T.nnet.categorical_crossentropy(self.prediction.dimshuffle('x', 0), T.stack([self.answer_var]))[0]
         if self.l2 > 0:
             self.loss_l2 = self.l2 * nn_utils.l2_reg(self.params)
         else:
@@ -167,23 +207,29 @@ class DMN_basic:
         
         self.loss = self.loss_ce + self.loss_l2
         
+        if debug: print(self.loss.ndim)
+        # if self.debug: print(self.loss.eval({self.input_var:self.train_input,self.q_var:self.train_q,self.answer_var:self.train_answer,self.input_mask_var:self.train_input_mask}))
         updates = lasagne.updates.adadelta(self.loss, self.params)
-        
-        if self.mode == 'train':
-            print("==> compiling train_fn")
-            self.train_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var], 
-                                       outputs=[self.prediction, self.loss],
-                                       updates=updates)
-        
-        print("==> compiling test_fn")
-        self.test_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var],
-                                  outputs=[self.prediction, self.loss, self.inp_c, self.q_q, last_mem])
-        
-        
-        if self.mode == 'train':
-            print("==> computing gradients (for debugging)")
-            gradient = T.grad(self.loss, self.params)
-            self.get_gradient_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var], outputs=gradient)
+
+        if self.mode == 'deploy':
+            self.deploy_fn = theano.function(inputs=[self.input_var, self.q_var,self.input_mask_var],outputs=[self.prediction])
+
+        else:
+            if self.mode == 'train':
+                print("==> compiling train_fn")
+                self.train_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var], 
+                                           outputs=[self.prediction, self.loss],
+                                           updates=updates)
+            
+            print("==> compiling test_fn")
+            self.test_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var],
+                                      outputs=[self.prediction, self.loss, self.inp_c, self.q_q, last_mem])
+            
+            
+            if self.mode == 'train':
+                print("==> computing gradients (for debugging)")
+                gradient = T.grad(self.loss, self.params)
+                self.get_gradient_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var], outputs=gradient)
 
     
     def GRU_update(self, h, x, W_res_in, W_res_hid, b_res,
@@ -264,8 +310,8 @@ class DMN_basic:
     
     
     def load_state(self, file_name):
-        print("==> loading state %s" % file_name)
-        with open(file_name, 'r') as load_file:
+        if self.mode != 'deploy': print("==> loading state %s" % file_name)
+        with open(file_name, 'rb') as load_file:
             dict = pickle.load(load_file)
             loaded_params = dict['params']
             for (x, y) in zip(self.params, loaded_params):
@@ -299,12 +345,13 @@ class DMN_basic:
             
             inputs.append(np.vstack(inp_vector).astype(floatX))
             questions.append(np.vstack(q_vector).astype(floatX))
-            answers.append(utils.process_word(word = x["A"], 
-                                            word2vec = self.word2vec, 
-                                            vocab = self.vocab, 
-                                            ivocab = self.ivocab, 
-                                            word_vector_size = self.word_vector_size, 
-                                            to_return = "index"))
+            if self.mode != 'deploy':
+                answers.append(utils.process_word(word = x["A"], 
+                                                word2vec = self.word2vec, 
+                                                vocab = self.vocab, 
+                                                ivocab = self.ivocab, 
+                                                word_vector_size = self.word_vector_size, 
+                                                to_return = self.answer_vec))
             # NOTE: here we assume the answer is one word! 
             if self.input_mask_mode == 'word':
                 input_masks.append(np.array([index for index, w in enumerate(inp)], dtype=np.int32)) 
@@ -381,3 +428,9 @@ class DMN_basic:
                 "skipped": skipped,
                 "log": "pn: %.3f \t gn: %.3f" % (param_norm, grad_norm)
                 }
+    def step_deploy(self):
+        inputs = self.train_input
+        q = self.train_q
+        input_mask = self.train_input_mask
+        prediction = self.deploy_fn(inputs[0],q[0],input_mask[0])
+        return np.array([prediction])
