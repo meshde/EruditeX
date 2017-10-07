@@ -5,6 +5,8 @@ import numpy as np
 import theano.tensor as T
 import theano
 import lasagne
+import os
+import pickle
 def load_glove(dim = 50): #Redundant
     glove = {}
     # path = "/Users/meshde/Mehmood/EruditeX/data/glove/glove.6B.50d.txt"
@@ -32,8 +34,7 @@ def normal_param(std=0.1, mean=0.0, shape=(0,)): #Redundant
 def cosine_similarity(A,B): #Redundant
 	return T.dot(A,T.transpose(B))/(T.dot(A,T.transpose(A))*T.dot(B,T.transpose(B)))
 
-
-class SentEmbd:
+class SentEmbd(object):
     def __init__(self,word_vector_size,dataset_size,dim=50):
         self.dim=dim #Dimmensions of Hidden State of the GRU
         self.W_inp_res_in = normal_param(std=0.1, shape=(self.dim, word_vector_size))
@@ -47,59 +48,74 @@ class SentEmbd:
         self.W_inp_hid_in = normal_param(std=0.1, shape=(self.dim, word_vector_size))
         self.U_inp_hid_hid = normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_hid = constant_param(value=0.0, shape=(self.dim,))
+
         self.hid_state_matrix=np.zeros(shape=(dataset_size+1,dim))
-        self.hid_state_matrix_out=np.zeros(shape=(dataset_size+1,dim))
+        self.hid_state_matrix_exp=np.zeros(shape=(dataset_size+1,dim))
         self.count=0 # For keeping track of which training pair is being used in the current epoch.
+        self.dummy_hid_state=T.zeros(np.zeros((1,50)).shape,dtype=theano.config.floatX)
+
 
 
         # Creating A GRU using theano
         wordvec=T.dvector('xt')
-        prev_hid_state=T.vector('ht-1')
-        temp=T.vector('ht')
-        zt=T.nnet.sigmoid(T.dot(self.W_inp_upd_in,wordvec)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
-        rt=T.nnet.sigmoid(T.dot(self.W_inp_res_in,wordvec)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
-        curr_hid_state_int=T.tanh(T.dot(self.W_inp_hid_in,wordvec) + np.multiply(T.dot(self.U_inp_hid_hid,prev_hid_state),rt) +self.b_inp_hid) # intermediate hidden state
-        #TODO
-        t=np.multiply(zt,prev_hid_state)+np.multiply((1-zt),curr_hid_state_int) #Hidden state(ht) at timestamp t
+        prev_hid_state=T.dvector('ht-1')
+        temp=T.dvector('ht')
+        similarity_score = T.dscalar('score')
+        sent1=T.dmatrix('sent1')
+        sent2=T.dmatrix('sent2')
+        hid_state1,_=theano.scan(fn=self.computation,sequences=[sent1],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.hid1=hid_state1[-1]
+        hid_state2,_=theano.scan(fn=self.computation,sequences=[sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.hid2=hid_state2[-1]
+        # print(type(self.hid1))
+        score = cosine_similarity(self.hid1,self.hid2)
+        # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
+        self.loss = T.sqrt(T.square(score)-T.square(similarity_score))
 
-        self.curr_hid_state = theano.function([wordvec,prev_hid_state],t)
+        self.params = [
+        self.W_inp_res_in,
+        self.U_inp_res_hid ,
+        self.b_inp_res ,
 
-    def computation(self,wVec_in,wVev_out):
-        self.count += 1
-        self.hid_state_matrix[self.count] = self.curr_hid_state(wVec_in,self.hid_state_matrix[self.count-1])
-        self.hid_state_matrix_out[self.count]=self.curr_hid_state(wVec_out,self.hid_state_matrix[self.count-1])
-        return 1.0
+        self.W_inp_upd_in,
+        self.U_inp_upd_hid,
+        self.b_inp_upd,
 
-    def train_batch(self,batch_in,batch_out):
-        theano.scan(fn=self.computation,sequences=[batch_in,batch_out],outputs_info=T.dscalar())
-        cos_sim=cosine_similarity(self.hid_state_matrix[count],self.hid_state_matrix_out[self.count]) #A measure of similarity between two sentences passed through our model.
-        #TODO exp_similarity=? #Obtain value from sick dataset
-        #TODO Calculate loss and send it back to function train() where weights will be trained.
+        self.W_inp_hid_in,
+        self.U_inp_hid_hid,
+        self.b_inp_hid
+]
+        updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
+
+        self.train = theano.function([sent1,sent2,similarity_score],[],updates=updates)
+        self.predict = theano.function([sent1],[hid_state1])
+    def computation(self,wVec,prev_hid_state):
+        zt=T.nnet.sigmoid(T.dot(self.W_inp_upd_in,wVec)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
+        rt=T.nnet.sigmoid(T.dot(self.W_inp_res_in,wVec)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
+        curr_hid_state_int=T.tanh(T.dot(self.W_inp_hid_in,wVec) + (rt * (T.dot(self.U_inp_hid_hid,prev_hid_state))) + self.b_inp_hid) # intermediate hidden state
+        t=(zt * prev_hid_state)+((1-zt) * curr_hid_state_int) #Hidden state(ht) at timestamp t
+        return t
+
+    def trainx(self,training_dataset,exp_dataset,relatedness_scores):
+        for num in np.arange(len(training_dataset)):
+            self.train(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)),relatedness_scores[num])
+            # print("Trained on Sentence Pair ",(num+1))
+
+    def predictx(self,inp_sent):
+        # print(np.array(inp_sent).reshape((-1,50)).shape)
+        hidden_states=self.predict(np.array(inp_sent).reshape((-1,50)))
+        print hidden_states
+    def testing(self,sent1,sent2,exp_sccore):
+        hid1=self.predict(np.array(sent1).reshape((-1,50)))
+        hid2=self.predict(np.array(sent2).reshape((-1,50)))
+        score=cosine_similarity(hid1,hid2)
+        print("Actual Similarity: ",score)
+        print("Expected Similarity: ",exp_sccore)
+
+    def printParams(self):
+        print self.W_inp_upd_in.get_value()
 
 
-    def train(self,training_dataset,output_dataset,batch_size,epochs):
-        start=0
-        end=0
-        for val in range(epochs):
-            self.count=0
-            batch_in=[]
-            batch_out=[]
-            while(True):
-                if(start>=len(dataset)):
-                    break
-                end=start+batch_size-1
-                if(end>=len(dataset)):
-                    batch_in=training_dataset[start:]
-                    batch_out=output_dataset[start:]
-                else:
-                    batch_in=training_dataset[start:end]
-                    batch_out=output_dataset[start:end]
-                start=end+1
-
-                #Training GRU on each batch
-                self.train_batch(batch_in,batch_out)
-
-            print("Completed ",val+1," epoch/s")
 
 
 
@@ -107,17 +123,25 @@ class SentEmbd:
 training_set="/home/mit/Desktop/EruditeX/SICK.txt"
 file = open(training_set,'r')
 raw_dataset=file.read().split('\n')
-raw_dataset=raw_dataset[1:20]
-print(raw_dataset) #TESTING PURPOSE
+n=input("Enter the no. training examples to learn from: ")
+# print(raw_dataset) #TESTING PURPOSE
 dataset=[]
 training_dataset=[]
-output_dataset=[]
+sim_dataset=[]
+relatedness_scores=[]
+raw_dataset=raw_dataset[1:100]
 for item in raw_dataset:
     temp=item.split('\t')
+    temp2=temp[4]
+    # print(temp2)
     temp=temp[1:3]
+    temp.append(temp2)
     dataset.append(temp)
+    # print(temp)
 # print(dataset)
-glove=load_glove
+glove=load_glove()
+# print("Word vector for And:")
+# print(get_vector('and',glove))
 for item in dataset:
     sent1=item[0].split(' ')
     sent2=item[1].split(' ')
@@ -128,11 +152,25 @@ for item in dataset:
     for word in sent2:
        sent_2.append(get_vector(word,glove))
     training_dataset.append(sent_1)
-    output_dataset.append(sent_2)
+    sim_dataset.append(sent_2)
+    relatedness_scores.append(float(item[2]))
 
 
 
 sent_embd=SentEmbd(50,len(dataset)) #GRU INITIALIZED
-batch_size=input("Enter the number of batches in which the training dataset has to be divided: ")
-epochs=input("Enter the number of epochs needed to train the GRU: ")
-sent_embd.train(training_dataset,output_dataset,batch_size,epochs) #Training THE GRU using the SICK dataset
+# batch_size=input("Enter the batch size in which the training dataset has to be divided: ")
+# epochs=input("Enter the number of epochs needed to train the GRU: ")
+batch_size=1
+epochs=1
+# print(np.array(training_dataset[0]).reshape((-1,50)).shape)
+# print(np.array(relatedness_scores))
+print "Before Training:"
+sent_embd.printParams()
+sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n]) #Training THE GRU using the SICK dataset
+print "After Training:"
+sent_embd.printParams()
+sent_embd.predictx(training_dataset[n+1])
+sent_embd.testing(training_dataset[n+1],sim_dataset[n+1],relatedness_scores[n+1])
+
+# # Saving the trained Model:
+# pickle.dump( sent_embd, open( "pre_trained_model", "wb" ) )
