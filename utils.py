@@ -39,6 +39,19 @@ def init_babi(fname):
 
     return tasks
 
+def init_babi_deploy(fname,query):
+	task = {'C':"",'Q':query}
+	with open(fname,'r') as f:
+		for line in f:
+			line = line.strip()
+			line = line.replace('.',' . ')
+			task['C'] += line
+			task['C'] += " "
+	tasks = []
+	tasks.append(task.copy())
+	return tasks
+
+
 
 def get_babi_raw(id, test_id):
     babi_map = {
@@ -107,8 +120,8 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
         return word2vec[word]
     elif to_return == "index":
         return vocab[word]
-    elif to_return == "onehot":
-        raise Exception("to_return = 'onehot' is not implemented yet")
+    elif to_return == "one_hot":
+        raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
 def load_glove(dim = 50):
