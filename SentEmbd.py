@@ -72,7 +72,7 @@ class SentEmbd(object):
         # print(type(self.hid1))
         score = cosine_similarity(self.hid1,self.hid2)
         # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
-        self.loss = T.sqrt(T.square(score)-T.square(similarity_score))
+        self.loss = T.sqrt(abs(T.square(score)-T.square(similarity_score)))
 
         self.params = [
         self.W_inp_res_in,
@@ -119,12 +119,11 @@ class SentEmbd(object):
 
 
 
-def read_dataset():
+def read_dataset(n):
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
     training_set=os.path.join(os.path.dirname(os.path.abspath(__file__)),"SICK.txt")
     with open(training_set,'r') as file:
         raw_dataset=file.read().split('\n')
-    n=int(sys.argv[1])
     # print(raw_dataset) #TESTING PURPOSE
     dataset=[]
     training_dataset=[]
@@ -158,7 +157,8 @@ def read_dataset():
     return dataset,training_dataset,sim_dataset,relatedness_scores
 
 def main():
-    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
+    n=int(sys.argv[1])
+    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset(n)
     sent_embd=SentEmbd(50,len(dataset)) #GRU INITIALIZED
     # batch_size=input("Enter the batch size in which the training dataset has to be divided: ")
     # epochs=input("Enter the number of epochs needed to train the GRU: ")
