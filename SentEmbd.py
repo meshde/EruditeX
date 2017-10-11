@@ -91,6 +91,7 @@ class SentEmbd(object):
 
         self.train = theano.function([sent1,sent2,similarity_score],[],updates=updates)
         self.predict = theano.function([sent1],[hid_state1])
+        self.get_similarity = theano.function([sent1,sent2],score)
     def computation(self,wVec,prev_hid_state):
         zt=T.nnet.sigmoid(T.dot(self.W_inp_upd_in,wVec)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
         rt=T.nnet.sigmoid(T.dot(self.W_inp_res_in,wVec)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
@@ -108,9 +109,10 @@ class SentEmbd(object):
         hidden_states=self.predict(np.array(inp_sent).reshape((-1,50)))
         print(hidden_states)
     def testing(self,sent1,sent2,exp_sccore):
-        hid1=self.predict(np.array(sent1).reshape((-1,50)))
-        hid2=self.predict(np.array(sent2).reshape((-1,50)))
-        score=cosine_similarity(hid1,hid2)
+        # hid1=self.predict(np.array(sent1).reshape((-1,50)))
+        # hid2=self.predict(np.array(sent2).reshape((-1,50)))
+        # score=cosine_similarity(hid1,hid2)
+        score = self.get_similarity(np.array(sent1).reshape((-1,50)),np.array(sent2).reshape((-1,50)))
         print("Actual Similarity: ",score)
         print("Expected Similarity: ",exp_sccore)
 
