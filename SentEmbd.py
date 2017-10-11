@@ -7,6 +7,8 @@ import theano
 import lasagne
 import os
 import pickle
+import sys
+
 def load_glove(dim = 50): #Redundant
     glove = {}
     # path = "/Users/meshde/Mehmood/EruditeX/data/glove/glove.6B.50d.txt"
@@ -104,7 +106,7 @@ class SentEmbd(object):
     def predictx(self,inp_sent):
         # print(np.array(inp_sent).reshape((-1,50)).shape)
         hidden_states=self.predict(np.array(inp_sent).reshape((-1,50)))
-        print hidden_states
+        print(hidden_states)
     def testing(self,sent1,sent2,exp_sccore):
         hid1=self.predict(np.array(sent1).reshape((-1,50)))
         hid2=self.predict(np.array(sent2).reshape((-1,50)))
@@ -113,64 +115,68 @@ class SentEmbd(object):
         print("Expected Similarity: ",exp_sccore)
 
     def printParams(self):
-        print self.W_inp_upd_in.get_value()
+        print(self.W_inp_upd_in.get_value())
 
 
 
+def read_dataset():
+    #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
+    training_set=os.path.join(os.path.dirname(os.path.abspath(__file__)),"SICK.txt")
+    with open(training_set,'r') as file:
+        raw_dataset=file.read().split('\n')
+    n=int(sys.argv[1])
+    # print(raw_dataset) #TESTING PURPOSE
+    dataset=[]
+    training_dataset=[]
+    sim_dataset=[]
+    relatedness_scores=[]
+    raw_dataset=raw_dataset[1:100]
+    for item in raw_dataset:
+        temp=item.split('\t')
+        temp2=temp[4]
+        # print(temp2)
+        temp=temp[1:3]
+        temp.append(temp2)
+        dataset.append(temp)
+        # print(temp)
+    # print(dataset)
+    glove=load_glove()
+    # print("Word vector for And:")
+    # print(get_vector('and',glove))
+    for item in dataset:
+        sent1=item[0].split(' ')
+        sent2=item[1].split(' ')
+        sent_1=[]
+        sent_2=[]
+        for word in sent1:
+            sent_1.append(get_vector(word,glove))
+        for word in sent2:
+           sent_2.append(get_vector(word,glove))
+        training_dataset.append(sent_1)
+        sim_dataset.append(sent_2)
+        relatedness_scores.append(float(item[2]))
+    return dataset,training_dataset,sim_dataset,relatedness_scores
+
+def main():
+    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
+    sent_embd=SentEmbd(50,len(dataset)) #GRU INITIALIZED
+    # batch_size=input("Enter the batch size in which the training dataset has to be divided: ")
+    # epochs=input("Enter the number of epochs needed to train the GRU: ")
+    batch_size=1
+    epochs=1
+    # print(np.array(training_dataset[0]).reshape((-1,50)).shape)
+    # print(np.array(relatedness_scores))
+    print("Before Training:")
+    sent_embd.printParams()
+    sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n]) #Training THE GRU using the SICK dataset
+    print("After Training:")
+    sent_embd.printParams()
+    sent_embd.predictx(training_dataset[n+1])
+    sent_embd.testing(training_dataset[n+1],sim_dataset[n+1],relatedness_scores[n+1])
+
+    # # Saving the trained Model:
+    # pickle.dump( sent_embd, open( "pre_trained_model", "wb" ) )
 
 
-#PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
-training_set="/home/mit/Desktop/EruditeX/SICK.txt"
-file = open(training_set,'r')
-raw_dataset=file.read().split('\n')
-n=input("Enter the no. training examples to learn from: ")
-# print(raw_dataset) #TESTING PURPOSE
-dataset=[]
-training_dataset=[]
-sim_dataset=[]
-relatedness_scores=[]
-raw_dataset=raw_dataset[1:100]
-for item in raw_dataset:
-    temp=item.split('\t')
-    temp2=temp[4]
-    # print(temp2)
-    temp=temp[1:3]
-    temp.append(temp2)
-    dataset.append(temp)
-    # print(temp)
-# print(dataset)
-glove=load_glove()
-# print("Word vector for And:")
-# print(get_vector('and',glove))
-for item in dataset:
-    sent1=item[0].split(' ')
-    sent2=item[1].split(' ')
-    sent_1=[]
-    sent_2=[]
-    for word in sent1:
-        sent_1.append(get_vector(word,glove))
-    for word in sent2:
-       sent_2.append(get_vector(word,glove))
-    training_dataset.append(sent_1)
-    sim_dataset.append(sent_2)
-    relatedness_scores.append(float(item[2]))
-
-
-
-sent_embd=SentEmbd(50,len(dataset)) #GRU INITIALIZED
-# batch_size=input("Enter the batch size in which the training dataset has to be divided: ")
-# epochs=input("Enter the number of epochs needed to train the GRU: ")
-batch_size=1
-epochs=1
-# print(np.array(training_dataset[0]).reshape((-1,50)).shape)
-# print(np.array(relatedness_scores))
-print "Before Training:"
-sent_embd.printParams()
-sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n]) #Training THE GRU using the SICK dataset
-print "After Training:"
-sent_embd.printParams()
-sent_embd.predictx(training_dataset[n+1])
-sent_embd.testing(training_dataset[n+1],sim_dataset[n+1],relatedness_scores[n+1])
-
-# # Saving the trained Model:
-# pickle.dump( sent_embd, open( "pre_trained_model", "wb" ) )
+if __name__ == '__main__':
+    main()
