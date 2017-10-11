@@ -70,7 +70,7 @@ class SentEmbd(object):
         hid_state2,_=theano.scan(fn=self.computation,sequences=[sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=hid_state2[-1]
         # print(type(self.hid1))
-        score = cosine_similarity(self.hid1,self.hid2)
+        score = cosine_similarity(self.hid1,self.hid2) * 5
         # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
         self.loss = T.sqrt(abs(T.square(score)-T.square(similarity_score)))
 
