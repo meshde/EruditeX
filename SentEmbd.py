@@ -6,50 +6,22 @@ import theano.tensor as T
 import theano
 import lasagne
 import os
-import pickle
 import sys
-
-def load_glove(dim = 50): #Redundant
-    glove = {}
-    # path = "/Users/meshde/Mehmood/EruditeX/data/glove/glove.6B.50d.txt"
-    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/glove/glove.6B.%sd.txt' % dim)
-    with open(path,'r') as f:
-        for line in f:
-            l = line.split()
-            glove[l[0]] = list(map(float,l[1:]))
-    return glove
-
-
-def get_vector(word,glove): #Redundant
-    try:
-        ans = np.array(glove[word]).reshape((1,50))
-        return ans
-    except:
-        return np.random.rand(1,50)
-
-def constant_param(value=0.0, shape=(0,)): #Redundant
-    return theano.shared(lasagne.init.Constant(value).sample(shape), borrow=True)
-
-def normal_param(std=0.1, mean=0.0, shape=(0,)): #Redundant
-    return theano.shared(lasagne.init.Normal(std, mean).sample(shape), borrow=True)
-
-def cosine_similarity(A,B): #Redundant
-	return T.dot(A,T.transpose(B))/(T.dot(A,T.transpose(A))*T.dot(B,T.transpose(B)))
 
 class SentEmbd(object):
     def __init__(self,word_vector_size,dataset_size,dim=50):
         self.dim=dim #Dimmensions of Hidden State of the GRU
-        self.W_inp_res_in = normal_param(std=0.1, shape=(self.dim, word_vector_size))
-        self.U_inp_res_hid = normal_param(std=0.1, shape=(self.dim, self.dim))
-        self.b_inp_res = constant_param(value=0.0, shape=(self.dim,))
+        self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
+        self.U_inp_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        self.b_inp_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-        self.W_inp_upd_in = normal_param(std=0.1, shape=(self.dim, word_vector_size))
-        self.U_inp_upd_hid = normal_param(std=0.1, shape=(self.dim, self.dim))
-        self.b_inp_upd = constant_param(value=0.0, shape=(self.dim,))
+        self.W_inp_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
+        self.U_inp_upd_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        self.b_inp_upd = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-        self.W_inp_hid_in = normal_param(std=0.1, shape=(self.dim, word_vector_size))
-        self.U_inp_hid_hid = normal_param(std=0.1, shape=(self.dim, self.dim))
-        self.b_inp_hid = constant_param(value=0.0, shape=(self.dim,))
+        self.W_inp_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
+        self.U_inp_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        self.b_inp_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
         self.hid_state_matrix=np.zeros(shape=(dataset_size+1,dim))
         self.hid_state_matrix_exp=np.zeros(shape=(dataset_size+1,dim))
@@ -70,7 +42,7 @@ class SentEmbd(object):
         hid_state2,_=theano.scan(fn=self.computation,sequences=[sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=hid_state2[-1]
         # print(type(self.hid1))
-        score = cosine_similarity(self.hid1,self.hid2) * 5
+        score = nn_utils.cosine_similarity(self.hid1,self.hid2) * 5
         # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
         self.loss = T.sqrt(abs(T.square(score)-T.square(similarity_score)))
 
@@ -99,27 +71,32 @@ class SentEmbd(object):
         t=(zt * prev_hid_state)+((1-zt) * curr_hid_state_int) #Hidden state(ht) at timestamp t
         return t
 
-    def trainx(self,training_dataset,exp_dataset,relatedness_scores):
-        for num in np.arange(len(training_dataset)):
-            self.train(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)),relatedness_scores[num])
-            # print("Trained on Sentence Pair ",(num+1))
+    def trainx(self,training_dataset,exp_dataset,relatedness_scores,epochs):
+        for val in range(epochs):
+            for num in np.arange(len(training_dataset)):
+                self.train(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)),relatedness_scores[num])
+                # print("Trained on Sentence Pair ",(num+1))
 
     def predictx(self,inp_sent):
         # print(np.array(inp_sent).reshape((-1,50)).shape)
         hidden_states=self.predict(np.array(inp_sent).reshape((-1,50)))
-        print(hidden_states)
-    def testing(self,sent1,sent2,exp_sccore):
-        # hid1=self.predict(np.array(sent1).reshape((-1,50)))
-        # hid2=self.predict(np.array(sent2).reshape((-1,50)))
-        # score=cosine_similarity(hid1,hid2)
-        score = self.get_similarity(np.array(sent1).reshape((-1,50)),np.array(sent2).reshape((-1,50)))
-        print("Actual Similarity: ",score)
-        print("Expected Similarity: ",exp_sccore)
+        hidden_states=np.array(hidden_states).reshape(-1,50)
+        print(hidden_states[-1])
+
+    def testing(self,training_dataset,exp_dataset,relatedness_scores):
+        avg_acc=0.0
+        for num in np.arange(len(training_dataset)):
+            score = self.get_similarity(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)))
+            print("Actual Similarity: ",score)
+            print("Expected Similarity(From SICK.txt): ",relatedness_scores[num])
+            avg_acc += (abs(score-relatedness_scores[num])/relatedness_scores[num])
+        avg_acc =(avg_acc/len(training_dataset) * 100)
+        print("Average Accuracy: ",avg_acc)
+
+
 
     def printParams(self):
         print(self.W_inp_upd_in.get_value())
-
-
 
 def read_dataset():
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
