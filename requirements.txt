@@ -12,8 +12,5 @@ Lasagne==0.1
 MarkupSafe==1.0
 numpy==1.13.1
 requests==2.18.4
-scipy==0.19.1
-six==1.10.0
-Theano==0.9.0
 urllib3==1.22
 Werkzeug==0.12.2
