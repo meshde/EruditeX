@@ -9839,4 +9839,3 @@ pair_ID	sentence_A	sentence_B	entailment_label	relatedness_score	entailment_AB	e
 9998	The man is singing heartily and playing the guitar	A bicyclist is holding a bike over his head in a group of people	NEUTRAL	1	A_neutral_B	B_neutral_A	the man sang and played his guitar	a bicyclist holds their bike over their head by a group of people	SEMEVAL	FLICKR	TRAIN
 9999	A man in blue has a yellow ball in the mitt	A man is jumping rope outside	NEUTRAL	1.2	A_neutral_B	B_neutral_A	a man is jumping rope outside	a woman in blue has a yellow ball in her mitt	SEMEVAL	FLICKR	TRAIN
 10000	Three dogs are resting on a sidewalk	The woman with a knife is slicing a pepper	NEUTRAL	1	A_neutral_B	B_neutral_A	a woman with a knife is slicing a pepper	three dogs on a sidewalk	SEMEVAL	FLICKR	TRAIN
-
