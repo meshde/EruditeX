@@ -121,7 +121,7 @@ class SentEmbd(object):
 
 
 
-def read_dataset(n):
+def read_dataset():
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
     training_set=os.path.join(os.path.dirname(os.path.abspath(__file__)),"SICK.txt")
     with open(training_set,'r') as file:
@@ -160,7 +160,7 @@ def read_dataset(n):
 
 def main():
     n=int(sys.argv[1])
-    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset(n)
+    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
     sent_embd=SentEmbd(50,len(dataset)) #GRU INITIALIZED
     # batch_size=input("Enter the batch size in which the training dataset has to be divided: ")
     # epochs=input("Enter the number of epochs needed to train the GRU: ")
