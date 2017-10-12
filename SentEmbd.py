@@ -93,6 +93,7 @@ class SentEmbd(object):
             avg_acc += (abs(score-relatedness_scores[num])/relatedness_scores[num])
         avg_acc =(avg_acc/len(training_dataset) * 100)
         print("Average Accuracy: ",avg_acc)
+        return avg_acc
 
     def printParams(self):
         print(self.W_inp_upd_in.get_value())
