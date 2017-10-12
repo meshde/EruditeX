@@ -10,4 +10,5 @@ data/
 erudite_theano/
 __pycache__/
 *.tar.gz
-tests
+tests/
+*.log
