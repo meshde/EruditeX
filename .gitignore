@@ -12,3 +12,5 @@ __pycache__/
 *.tar.gz
 tests/
 *.log
+*.pkl
+
