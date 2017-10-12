@@ -83,8 +83,7 @@ class SentEmbd(object):
 
         self.W_inp_hid_in,
         self.U_inp_hid_hid,
-        self.b_inp_hid
-]
+        self.b_inp_hid]
         updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
 
         self.train = theano.function([sent1,sent2,similarity_score],[],updates=updates)
@@ -113,7 +112,7 @@ class SentEmbd(object):
         print("Expected Similarity: ",exp_sccore)
 
     def printParams(self):
-        print self.W_inp_upd_in.get_value()
+        print (np.array(self.b_inp_upd.get_value()).shape)
 
 
 
@@ -140,8 +139,6 @@ for item in raw_dataset:
     # print(temp)
 # print(dataset)
 glove=load_glove()
-# print("Word vector for And:")
-# print(get_vector('and',glove))
 for item in dataset:
     sent1=item[0].split(' ')
     sent2=item[1].split(' ')
@@ -164,13 +161,17 @@ batch_size=1
 epochs=1
 # print(np.array(training_dataset[0]).reshape((-1,50)).shape)
 # print(np.array(relatedness_scores))
-print "Before Training:"
+
+print ("Before Training:")
 sent_embd.printParams()
+
 sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n]) #Training THE GRU using the SICK dataset
-print "After Training:"
+
+print ("After Training:")
 sent_embd.printParams()
+
 sent_embd.predictx(training_dataset[n+1])
-sent_embd.testing(training_dataset[n+1],sim_dataset[n+1],relatedness_scores[n+1])
+# sent_embd.testing(training_dataset[n+1],sim_dataset[n+1],relatedness_scores[n+1])
 
 # # Saving the trained Model:
 # pickle.dump( sent_embd, open( "pre_trained_model", "wb" ) )
