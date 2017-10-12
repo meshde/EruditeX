@@ -7,6 +7,7 @@ import theano
 import lasagne
 import os
 import sys
+import pickle
 
 class SentEmbd(object):
     def __init__(self,word_vector_size,dataset_size,dim=50):
@@ -42,7 +43,7 @@ class SentEmbd(object):
         hid_state2,_=theano.scan(fn=self.computation,sequences=[sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=hid_state2[-1]
         # print(type(self.hid1))
-        score = nn_utils.cosine_similarity(self.hid1,self.hid2) * 5
+        score = (nn_utils.cosine_similarity(self.hid1,self.hid2) * 4) + 1
         # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
         self.loss = T.sqrt(abs(T.square(score)-T.square(similarity_score)))
 
@@ -93,69 +94,25 @@ class SentEmbd(object):
         avg_acc =(avg_acc/len(training_dataset) * 100)
         print("Average Accuracy: ",avg_acc)
 
-
-
     def printParams(self):
         print(self.W_inp_upd_in.get_value())
 
-def read_dataset():
-    #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
-    training_set=os.path.join(os.path.dirname(os.path.abspath(__file__)),"SICK.txt")
-    with open(training_set,'r') as file:
-        raw_dataset=file.read().split('\n')
-    # print(raw_dataset) #TESTING PURPOSE
-    dataset=[]
-    training_dataset=[]
-    sim_dataset=[]
-    relatedness_scores=[]
-    raw_dataset=raw_dataset[1:100]
-    for item in raw_dataset:
-        temp=item.split('\t')
-        temp2=temp[4]
-        # print(temp2)
-        temp=temp[1:3]
-        temp.append(temp2)
-        dataset.append(temp)
-        # print(temp)
-    # print(dataset)
-    glove=load_glove()
-    # print("Word vector for And:")
-    # print(get_vector('and',glove))
-    for item in dataset:
-        sent1=item[0].split(' ')
-        sent2=item[1].split(' ')
-        sent_1=[]
-        sent_2=[]
-        for word in sent1:
-            sent_1.append(get_vector(word,glove))
-        for word in sent2:
-           sent_2.append(get_vector(word,glove))
-        training_dataset.append(sent_1)
-        sim_dataset.append(sent_2)
-        relatedness_scores.append(float(item[2]))
-    return dataset,training_dataset,sim_dataset,relatedness_scores
+    def save_params(self,file_name,epochs):
+        with open(file_name, 'wb') as save_file:
+            pickle.dump(
+                obj = {
+                    'params' : [x.get_value() for x in self.params],
+                    'epoch' : epochs,
+                },
+                file = save_file,
+                protocol = -1
+            )
+        return
 
-def main():
-    n=int(sys.argv[1])
-    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
-    sent_embd=SentEmbd(50,len(dataset)) #GRU INITIALIZED
-    # batch_size=input("Enter the batch size in which the training dataset has to be divided: ")
-    # epochs=input("Enter the number of epochs needed to train the GRU: ")
-    batch_size=1
-    epochs=1
-    # print(np.array(training_dataset[0]).reshape((-1,50)).shape)
-    # print(np.array(relatedness_scores))
-    print("Before Training:")
-    sent_embd.printParams()
-    sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n]) #Training THE GRU using the SICK dataset
-    print("After Training:")
-    sent_embd.printParams()
-    sent_embd.predictx(training_dataset[n+1])
-    sent_embd.testing(training_dataset[n+1],sim_dataset[n+1],relatedness_scores[n+1])
-
-    # # Saving the trained Model:
-    # pickle.dump( sent_embd, open( "pre_trained_model", "wb" ) )
-
-
-if __name__ == '__main__':
-    main()
+    def load_params(self,file_name):
+        with open(file_name, 'rb') as load_file:
+            dict = pickle.load(load_file)
+            loaded_params = dict['params']
+            for (x, y) in zip(self.params, loaded_params):
+                x.set_value(y)
+        return

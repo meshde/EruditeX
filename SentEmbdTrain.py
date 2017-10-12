@@ -5,27 +5,8 @@ import pickle
 import sys
 import SentEmbd
 import datetime
-def save_params(model,file_name,epochs):
-    with open(file_name, 'wb') as save_file:
-        pickle.dump(
-            obj = {
-                'params' : [x.get_value() for x in model.params],
-                'epoch' : epochs,
-            },
-            file = save_file,
-            protocol = -1
-        )
-        save_file.close()
 
-def load_params(file_name,model):
-    with open(file_name, 'rb') as load_file:
-        dict = pickle.load(load_file)
-        loaded_params = dict['params']
-        for (x, y) in zip(model.params, loaded_params):
-            x.set_value(y)
-        load_file.close()
-
-def read_dataset(n):
+def read_dataset():
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
     training_set=os.path.join(os.path.dirname(os.path.abspath(__file__)),"SICK.txt")
     with open(training_set,'r') as file1:
@@ -63,7 +44,7 @@ def read_dataset(n):
 def main():
     n=int(sys.argv[1])
 
-    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset(n)
+    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
     sent_embd=SentEmbd.SentEmbd(50,len(dataset)) #GRU INITIALIZED
     batch_size=1 #By default
     epochs=int(sys.argv[2])
@@ -78,8 +59,8 @@ def main():
     # Saving the trained Model:
     z=str(datetime.datetime.now()).split(' ')
     # print(z)
-    file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+z[0]+"_"+z[1]
-    save_params(sent_embd,file_name,epochs)
+    file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+    sent_embd.save_params(file_name,epochs)
 
     print("Current model params saved in- ",file_name)
 
