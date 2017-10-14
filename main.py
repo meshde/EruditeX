@@ -11,7 +11,7 @@ import nn_utils
 print("==> parsing input arguments")
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="dmn_batch", help='network type: dmn_basic, dmn_smooth, or dmn_batch')
+parser.add_argument('--network', type=str, default="dmn_basic", help='network type: dmn_basic, dmn_smooth, or dmn_batch')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=5, help='number of epochs')
@@ -62,6 +62,8 @@ args_dict['babi_train_raw'] = babi_train_raw
 args_dict['babi_test_raw'] = babi_test_raw
 args_dict['word2vec'] = word2vec
 
+with open('results.txt', 'a') as f:
+    f.write('babi: ' + args.babi_id + '\n')
 
 # init class
 # if args.network == 'dmn_batch':
@@ -145,6 +147,8 @@ def do_epoch(mode, epoch, skipped=0):
 
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size))
+    with open('results.txt', 'a') as f:
+        f.write("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size) + "  epoch: " + epoch)
 
     return avg_loss, skipped
 
@@ -168,7 +172,9 @@ if args.mode == 'train':
             print("==> saving ... %s" % state_name)
             dmn.save_params(state_name, epoch)
 
-        print("epoch %d took %.3fs" % (epoch, float(time.time()) - start_time))
+        print("epoch %d took %.3fs" % (epoch + 1, float(time.time()) - start_time))
+        with open('results.txt', 'a') as f:
+            f.write('  time: ' + str(float(time.time()) - start_time) + '\n')
 
 elif args.mode == 'test':
     file = open('last_tested_model.json', 'w+')
