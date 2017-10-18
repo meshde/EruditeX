@@ -49,7 +49,7 @@ def main():
     sent_embd=SentEmbd.SentEmbd(50,len(dataset),hid_dim) #GRU INITIALIZED
     batch_size=1 #By default
     epochs=int(sys.argv[2])
-    test = sys.argv[3]
+    test = sys.argv[4]
 
     start = time.time()
     sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
