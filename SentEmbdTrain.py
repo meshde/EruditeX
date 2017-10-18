@@ -5,6 +5,7 @@ import pickle
 import sys
 import SentEmbd
 import datetime
+import time
 
 def read_dataset():
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
@@ -48,13 +49,16 @@ def main():
     sent_embd=SentEmbd.SentEmbd(50,len(dataset),hid_dim) #GRU INITIALIZED
     batch_size=1 #By default
     epochs=int(sys.argv[2])
+    test = sys.argv[3]
 
+    start = time.time()
     sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
 
+    print("Time taken for training:\t"+str(time.time()-start))
+
     #To Check for accuracy after training.
-    ch=input('Do want to test the trained model on remaining sentences ? (y/n): ')
     acc="Nan"
-    if(ch is 'y'):
+    if test == 'test':
         accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:])
         acc="{0:.3}".format(accuracy)
         acc+="%"
@@ -64,6 +68,8 @@ def main():
     # print(z)
     file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
     sent_embd.save_params(file_name,epochs)
+
+
 
     print("Current model params saved in- ",file_name)
 
