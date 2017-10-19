@@ -10,7 +10,7 @@ import sys
 import pickle
 
 class SentEmbd(object):
-    def __init__(self,word_vector_size,dataset_size,dim=50):
+    def __init__(self,word_vector_size,dataset_size,dim):
         self.dim=dim #Dimmensions of Hidden State of the GRU
         self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
         self.U_inp_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))

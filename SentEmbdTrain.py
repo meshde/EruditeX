@@ -44,12 +44,12 @@ def read_dataset():
 
 def main():
     n=int(sys.argv[1])
-
+    hid_dim=int(sys.argv[3])
     dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
-    sent_embd=SentEmbd.SentEmbd(50,len(dataset)) #GRU INITIALIZED
+    sent_embd=SentEmbd.SentEmbd(50,len(dataset),hid_dim) #GRU INITIALIZED
     batch_size=1 #By default
     epochs=int(sys.argv[2])
-    test = sys.argv[3]
+    test = sys.argv[4]
 
     start = time.time()
     sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
@@ -66,7 +66,7 @@ def main():
     # Saving the trained Model:
     z=str(datetime.datetime.now()).split(' ')
     # print(z)
-    file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+    file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
     sent_embd.save_params(file_name,epochs)
 
 
