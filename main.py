@@ -5,8 +5,8 @@ import argparse
 import time
 import json
 import os
-import utils
-import nn_utils
+from Helpers import utils
+from Helpers import nn_utils
 
 print("==> parsing input arguments")
 parser = argparse.ArgumentParser()
@@ -72,7 +72,7 @@ with open('results.txt', 'a') as f:
 
 # elif args.network == 'dmn_basic':
 if args.network == 'dmn_basic':
-    import dmn_basic
+    from Models import dmn_basic
     if (args.batch_size != 1):
         print("==> no minibatch training, argument batch_size is useless")
         args.batch_size = 1
@@ -166,11 +166,13 @@ if args.mode == 'train':
 
         epoch_loss, skipped = do_epoch('test', epoch, skipped)
 
-        state_name = 'states/%s.epoch%d.test%.5f.state' % (network_name, epoch, epoch_loss)
+        state_name = '%s.epoch%d.test%.5f.state' % (network_name, epoch, epoch_loss)
+
+        path = os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)),'states'),network_name),state_name)
 
         if (epoch % args.save_every == 0):
             print("==> saving ... %s" % state_name)
-            dmn.save_params(state_name, epoch)
+            dmn.save_params(path, epoch)
 
         print("epoch %d took %.3fs" % (epoch + 1, float(time.time()) - start_time))
         with open('results.txt', 'a') as f:

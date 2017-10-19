@@ -14,7 +14,13 @@ def fetch_wiki(url):
     soup = bs(response.content,'html.parser')
     print(soup.get_text())
     return
-
+def create_vector(word, word2vec, word_vector_size, silent=False):
+    # if the word is missing from Glove, create some fake vector and store in glove!
+    vector = np.random.uniform(0.0,1.0,(word_vector_size,))
+    word2vec[word] = vector
+    if (not silent):
+        print("utils.py::create_vector => %s is missing" % word)
+    return vector
 
 def init_babi(fname):
     print("==> Loading test from %s" % fname)
@@ -111,6 +117,7 @@ def get_babi_raw(id, test_id):
 def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="word2vec", silent=False):
     if not word in word2vec:
         create_vector(word, word2vec, word_vector_size, silent)
+        # word2vec[word] = np.random.rand(1,50)
     if not word in vocab: 
         next_index = len(vocab)
         vocab[word] = next_index
@@ -127,7 +134,7 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 def load_glove(dim = 50):
     glove = {}
     # path = "/Users/meshde/Mehmood/EruditeX/data/glove/glove.6B.50d.txt"
-    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/glove/glove.6B.%sd.txt' % dim)
+    path = os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),'glove'),'glove.6B.%sd.txt' % dim)
     with open(path,'r') as f:
         for line in f:
             l = line.split()

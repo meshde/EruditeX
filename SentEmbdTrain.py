@@ -1,15 +1,17 @@
-import utils
+from Helpers import utils
 import numpy as np
 import os
 import pickle
 import sys
-import SentEmbd
+from Models import SentEmbd
 import datetime
 import time
 
+BASE = os.path.dirname(os.path.abspath(__file__))
+
 def read_dataset():
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
-    training_set=os.path.join(os.path.dirname(os.path.abspath(__file__)),"SICK.txt")
+    training_set=os.path.join(os.path.join(BASE,'data'),"SICK.txt")
     with open(training_set,'r') as file1:
         raw_dataset=file1.read().split('\n')
     file1.close()
@@ -56,18 +58,23 @@ def main():
 
     print("Time taken for training:\t"+str(time.time()-start))
 
+    z=str(datetime.datetime.now()).split(' ')
+
     #To Check for accuracy after training.
     acc="Nan"
     if test == 'test':
-        accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:])
+        file_name = "SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
+        path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)
+        accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],path)
         acc="{0:.3}".format(accuracy)
         acc+="%"
 
     # Saving the trained Model:
-    z=str(datetime.datetime.now()).split(' ')
+    
     # print(z)
     file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
-    sent_embd.save_params(file_name,epochs)
+    path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)
+    sent_embd.save_params(path,epochs)
 
 
 

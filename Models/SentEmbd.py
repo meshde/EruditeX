@@ -1,6 +1,6 @@
 #Sentence Embedder.
-import utils
-import nn_utils
+from Helpers import utils
+from Helpers import nn_utils
 import numpy as np
 import theano.tensor as T
 import theano
@@ -84,15 +84,16 @@ class SentEmbd(object):
         hidden_states=np.array(hidden_states).reshape(-1,50)
         print(hidden_states[-1])
 
-    def testing(self,training_dataset,exp_dataset,relatedness_scores):
+    def testing(self,training_dataset,exp_dataset,relatedness_scores,log_file):
         avg_acc=0.0
-        for num in np.arange(len(training_dataset)):
-            score = self.get_similarity(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)))
-            print("Actual Similarity: ",score)
-            print("Expected Similarity(From SICK.txt): ",relatedness_scores[num])
-            avg_acc += (abs(score-relatedness_scores[num])/relatedness_scores[num])
-        avg_acc =(avg_acc/len(training_dataset) * 100)
-        print("Average Accuracy: ",avg_acc)
+        with open(log_file,'w') as f:
+            for num in np.arange(len(training_dataset)):
+                score = self.get_similarity(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)))
+                f.write("Actual Similarity: "+str(score)+"\n")
+                f.write("Expected Similarity(From SICK.txt): "+str(relatedness_scores[num])+"\n")
+                avg_acc += (abs(score-relatedness_scores[num])/relatedness_scores[num])
+            avg_acc =(avg_acc/len(training_dataset) * 100)
+            f.write("Average Accuracy: "+str(avg_acc)+"\n")
         return avg_acc
 
     def printParams(self):

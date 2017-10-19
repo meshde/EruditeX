@@ -21,7 +21,7 @@ def cosine_similarity(A,B):
 def get_most_relevant(paras,query_measure):
 	res = paras[0]
 	mini = cosine_similarity(query_measure,paras[0][1])
-	print("Para",0," Measure:",mini)
+	# print("Para",0," Measure:",mini)
 	index = 0
 	for i in range(1,len(paras)):
 		similarity = cosine_similarity(query_measure,paras[i][1])
@@ -30,7 +30,7 @@ def get_most_relevant(paras,query_measure):
 			mini = similarity
 			index = i
 			res = paras[i]
-	print("Para",index," Measure:",mini)
+	# print("Para",index," Measure:",mini)
 	return res[0]
 def main():
 	glove = load_glove()

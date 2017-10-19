@@ -2,8 +2,10 @@ import sys
 import utils
 import os
 import dmn_basic
+import time
 
 def main():
+	start = time.time()
 	query = sys.argv[1]
 	glove = utils.load_glove()
 	quest = utils.init_babi_deploy(os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)),'data'),'corpus'),'babi.txt'),query)
@@ -20,6 +22,7 @@ def main():
 		if ind < dmn.answer_size:
 			print(dmn.ivocab[ind])
 			break
+	print('Time taken:',time.time()-start)
 	# print(len(dmn.ivocab))
 	# print(len(dmn.vocab))
 	# print(dmn.answer_size)

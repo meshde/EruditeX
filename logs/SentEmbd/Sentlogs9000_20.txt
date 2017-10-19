@@ -1,0 +1,1681 @@
+Time taken for training:	363.819052696228
+Actual Similarity:  3.38566611803528
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.089699300693295
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.4392128735364484
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  2.7851779454923697
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.765208198707127
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  4.346140529897669
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  4.421641594674302
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.7515224501941136
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.866234523269381
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.9880734700982865
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.85032265335168
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.720800728753006
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  2.764454114215293
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.7796112537412103
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.7510000881265806
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.945536332188542
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  4.312107283649428
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.5343490124713517
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.1480403526594936
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  2.9635779389392427
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.068313141462545
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.713315631912361
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.420626815335076
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  4.285972005539277
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  4.260728720439112
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.7999252334735343
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.188573108430344
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.022283953171412
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  2.5780681000307144
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.300584785254345
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.225483836135167
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  3.3466700593606755
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.4225675271181863
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.5189625550029726
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.0559807158137002
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.1510525690962257
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.303947609333113
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  2.8969861373878185
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.206771262368007
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  2.8188904493977573
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  2.7509145205412127
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.8470418557237025
+Expected Similarity(From SICK.txt):  5.0
+Actual Similarity:  3.6015325261585813
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.695491756452738
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.503817744605505
+Expected Similarity(From SICK.txt):  3.915
+Actual Similarity:  3.4836079396484823
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.217595928416472
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  2.749924329536716
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  2.897877166644993
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.1133482082876744
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.9534120904384005
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  2.9542096053144804
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.0258648686651837
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.743022578438232
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  2.579299833383043
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  2.901660947817844
+Expected Similarity(From SICK.txt):  1.935
+Actual Similarity:  3.2266110504287187
+Expected Similarity(From SICK.txt):  2.3
+Actual Similarity:  2.8705594447840226
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.30112589200216
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.9607257051404714
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  4.197010653257768
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  4.004723027828926
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.671407712941497
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.7275750308671074
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.139295578034758
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.418662286625361
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.6215981207914925
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.8436393018049357
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.1499634135605206
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.604062655701774
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.074380533527425
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.381303600479871
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.3200904521712737
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  2.9403375947949026
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.4983794314152825
+Expected Similarity(From SICK.txt):  4.065
+Actual Similarity:  3.526534251383873
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.5510828164513497
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.673807198339533
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.4736998402593247
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  4.0447439708772315
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.3700228904269434
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.4742100658635606
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.3908267163691965
+Expected Similarity(From SICK.txt):  2.2
+Actual Similarity:  3.1909594954012324
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.202582481023723
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.3795878072825043
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  4.15045486149671
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.8186153702458396
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.5628312747465465
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.4393295975609113
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.3181642514836285
+Expected Similarity(From SICK.txt):  1.8
+Actual Similarity:  3.3770918031650012
+Expected Similarity(From SICK.txt):  1.73
+Actual Similarity:  2.9616279145573436
+Expected Similarity(From SICK.txt):  1.9
+Actual Similarity:  2.6711455621622364
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.100886977281441
+Expected Similarity(From SICK.txt):  1.5
+Actual Similarity:  3.7460684104970983
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.0937694976358467
+Expected Similarity(From SICK.txt):  3.565
+Actual Similarity:  3.8004919315886903
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.594049708043354
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.4137959501960067
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.11151760299717
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.18544216094944
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  2.691587213625382
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.295242336900758
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  3.6025486202593218
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.521539393759743
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  4.074479933998665
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.52216183453842
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.2533492587907435
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  2.902598269592202
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.5030937265958317
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.277370052793055
+Expected Similarity(From SICK.txt):  2.1
+Actual Similarity:  3.3625297808918786
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.680400889566599
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.587647167781935
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.78507670756441
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.775217592710567
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.701238591816409
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.6462407140210913
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.3833107723170865
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.1023249577435394
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.392261542544693
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.37362136542058
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.191964874471314
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.732532484267677
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.4258214359513848
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.721202021042003
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  2.9069652606156016
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.8190608085079925
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.3182755879104113
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.5033430767982736
+Expected Similarity(From SICK.txt):  2.2
+Actual Similarity:  3.9260959605852337
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.3848688513510226
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.227662759168329
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.812888031715223
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  2.6325449433522143
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  2.665824543362584
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  2.7633626291336846
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  2.7929694414846313
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.228985925232753
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  4.556823979768433
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  4.165582768292561
+Expected Similarity(From SICK.txt):  3.365
+Actual Similarity:  4.3547449054724865
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  4.760228267154541
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.8766915680143015
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.959034326348369
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.7494037398613904
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  4.038826215036395
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.831686879700625
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.5510104212767537
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.1883078859212772
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.022319849821169
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.7164198126994235
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.012113709543337
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  2.826162682986456
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  3.1171727775831086
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  2.6434330523959844
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  2.88810865656838
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  4.0059502461060665
+Expected Similarity(From SICK.txt):  5.0
+Actual Similarity:  4.333924579381872
+Expected Similarity(From SICK.txt):  3.285
+Actual Similarity:  3.7496132180116764
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.869558310960368
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.93912592040597
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.3403255645489134
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.3899048898802757
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.4569922662342227
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.2914549304687877
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.198535648740171
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.230210532659792
+Expected Similarity(From SICK.txt):  3.365
+Actual Similarity:  4.162072614780631
+Expected Similarity(From SICK.txt):  4.65
+Actual Similarity:  3.78204701549691
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  4.060559158780216
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.5683131887569624
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.752860736027648
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.2338323220865295
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.446639704544421
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.2957592453078477
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.6130337550163096
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.8746537148767763
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.357100851384845
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.6729322694436077
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.922403805982911
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  2.612168225433125
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  2.662658378404739
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  2.827591156857399
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  2.7698760371859046
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  2.838360973975973
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.2808149480127295
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.091504413574872
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.4812250985293445
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.677546862068389
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.1178403955462315
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.018797089915954
+Expected Similarity(From SICK.txt):  2.3
+Actual Similarity:  3.0179171952982693
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  2.3832653995305426
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  2.884100287496606
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.7354998971470854
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.928130700557043
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.8355146956822206
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.9869028382358596
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.895171110502835
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.562777744212932
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.668482365894015
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.54809401319097
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  4.18859101818218
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.414243498786037
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.7418122538605343
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.304258760313833
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.4177544030629843
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.0082282203715667
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.372756222225654
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.214163125352066
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.3095724466977385
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.1237415003278497
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.683122829449043
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.874185663698638
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  4.068350981742201
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.8438959294918758
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  2.8386409838002447
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  2.95232752498758
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.1746054400532966
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  2.901319274242546
+Expected Similarity(From SICK.txt):  1.9
+Actual Similarity:  2.8467466422364236
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  4.805715804963354
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.269386005934883
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.720360822967056
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.0856522812728344
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.5379274187572367
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  3.0439934389989967
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.8319343298152355
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.3510042235500794
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.587430676339375
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.865525704454452
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.270266373768738
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.794485383442235
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.5615659256027272
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  2.9416225265568725
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  2.935186102327492
+Expected Similarity(From SICK.txt):  3.15
+Actual Similarity:  3.427766087821316
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  2.937914562475486
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.412039144959097
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  4.106317097077378
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.721769795787223
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  4.452111955818594
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.6820904286887615
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.739799749868958
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.1896195880560576
+Expected Similarity(From SICK.txt):  2.2
+Actual Similarity:  3.7628700929585897
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.894259722902924
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.953732593847832
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.3512270234819317
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.848718098611388
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.8167935539358484
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.9733807904548866
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.3477983029196277
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.5238072173279464
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.327400491265648
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.5709866995332358
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.505172602340675
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.344666425399339
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.3481034197924333
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.91705257129402
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.626665689973008
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.484541979922594
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.444402621984008
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.4544173925701975
+Expected Similarity(From SICK.txt):  3.765
+Actual Similarity:  3.4610967439873725
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.4741695727758763
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  4.3215130486759525
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.206575911972647
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  4.025088342767467
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.7845732132923566
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  4.028463625932051
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.546436635319365
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  4.300533607921673
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.868956232785088
+Expected Similarity(From SICK.txt):  2.915
+Actual Similarity:  3.923945853658595
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.937993665924328
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  4.010244445589976
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  4.243301569929768
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  4.116958532314593
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.438692614358316
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.6467253459816305
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.6266664710250853
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.3979626703517067
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.6665150986470536
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.145549887346435
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  4.265150323736538
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  4.185826199428039
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.6880677465308747
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.3581838387233045
+Expected Similarity(From SICK.txt):  3.335
+Actual Similarity:  3.980744076595484
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.3438153005505526
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  3.5922781036173763
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.7467626375128886
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.6216708689540553
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.580875824874208
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  4.063591983006152
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.999613502606877
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.5904109862684837
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.5303833163172453
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.271671891358709
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  2.725106862352173
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.2943738910911544
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.2826206858049716
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  3.3068427241370832
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.623600577802626
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  4.06118503920896
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.282562000516059
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.235490528936204
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  2.931695462023807
+Expected Similarity(From SICK.txt):  3.515
+Actual Similarity:  2.621244589591875
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  2.716879750547914
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  2.633912359036668
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  2.831332992544107
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.88845177320788
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.607175403204883
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.926519498181099
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.422657576830928
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.2952812965451717
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  2.8555118138990316
+Expected Similarity(From SICK.txt):  2.465
+Actual Similarity:  3.423012663900441
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.2683222052224625
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.7914232688191376
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.722214357167819
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.291167885079246
+Expected Similarity(From SICK.txt):  2.1
+Actual Similarity:  3.961837393632065
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.023843168355096
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.4494211706299325
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.0149766750911033
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.056058690312501
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.153124472459066
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.6646262298242296
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.699878683413561
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.0784164083423775
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.607868108373147
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.105574216042873
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.209490825981403
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.17493231014126
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  2.853113541431109
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.4032699805090316
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.0346556239114078
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.8426576885547674
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.625369235194659
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.316032780943818
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.189385322928958
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.419377063556435
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.6146090266624924
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.6441115528631105
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.3749751977365356
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.5817838377241147
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.7705422721862636
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.9762875514754223
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.4653652313997023
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.016214697962605
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.545857411391485
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.240461128128648
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.360097187352303
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.2897043490953037
+Expected Similarity(From SICK.txt):  1.9
+Actual Similarity:  3.560122011005012
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.4229593897039314
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.317114867486628
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.6643692320987116
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.812785678931248
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.461913613255653
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  4.210791582847931
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  2.736092234149644
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.5427387919630045
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  3.34689158483151
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.149932456255156
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  4.032908190166939
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.0875174081366645
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.143697891029676
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  2.9155627916988704
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.032183830976511
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.0374717525470314
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.120907516815991
+Expected Similarity(From SICK.txt):  1.9
+Actual Similarity:  2.750767610353194
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.403433279052389
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.394942275215909
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.939249231506295
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.894420779929623
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.641301113173298
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.7313951860582297
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.5855012926439604
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.186724162614824
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.6974329375230863
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.3440083088768153
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.517466957886193
+Expected Similarity(From SICK.txt):  3.415
+Actual Similarity:  3.502947924696361
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.113762270571713
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.8364056611405766
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.0211554803470886
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  2.667772063106648
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  2.600996475339124
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.2799723448932294
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  4.358938858965299
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  4.125723394078184
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.896555434480439
+Expected Similarity(From SICK.txt):  5.0
+Actual Similarity:  4.279103554685355
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  4.108899550069929
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  4.0294986310762955
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  4.366073138204316
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.8712322574664997
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  4.021358520288866
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.1444922367332255
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  4.374168902791261
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.9986578460819473
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.9665781054040274
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.548306745028275
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.7975526114824887
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.871257291848877
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  4.077489135976073
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.9323053507771233
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.7560801896878795
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.8063742661112236
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.7917396234935614
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.928347271759845
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.855074596207942
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.730993920883849
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.700214247213801
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.932103064437162
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.9536820637297274
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.6591414421611437
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.4950689672290522
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  4.300459327210531
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  4.066024078535491
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.5481846978248655
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.2506128678021593
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  2.8789768529209474
+Expected Similarity(From SICK.txt):  1.5
+Actual Similarity:  2.6704337170427292
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  3.348550087734702
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  2.6187130046066596
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  2.75794156753412
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.7493978980900806
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.535645587470578
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  4.285128067737407
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  4.17796542785395
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  4.111858519290287
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  4.038588105132341
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.734821439204826
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.197596347891843
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  4.002699062883647
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  4.925828378159212
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.7663234051288588
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  4.130586422655493
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.258834043332984
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.897496899313339
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.220602761596459
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.922965825832827
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.1877248691895024
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.6271667809603376
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  4.069235714510405
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.296743283799227
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  4.324171660995312
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.742938002187033
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.846025774304723
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.8122038288722178
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.6725359438524885
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  3.390151665421628
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.414234439093229
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.6070748955516785
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.7878209743614306
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.7005059193601455
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.6020679634544703
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.4435961995855497
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.2273121023529625
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.3952620413316956
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.2403994221895105
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.414903035361227
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.150405001689066
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  3.7027793675093825
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.3846551390372244
+Expected Similarity(From SICK.txt):  3.95
+Actual Similarity:  4.137774747331186
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.8741929950003398
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.2549989488728914
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.444802515746421
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.137261956820389
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.369136208380205
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.291291628961723
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.5232505682536295
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.1153168749815325
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.3511426351590705
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.981023929115806
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.656266198337717
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.2956158704287386
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.401781691121571
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.342239230479428
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  2.8013496848348267
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.1300536646395347
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.9715874502574158
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.742500611244096
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.7643026605826306
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.9817492218797534
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.5355436235664572
+Expected Similarity(From SICK.txt):  2.9
+Actual Similarity:  3.4390728775542447
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.5262880970624417
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.5233971219328053
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.507443895527368
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.998790088256413
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.608414691508484
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.6730457021897105
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.8493444688246115
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.029026973117263
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.176673129557921
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.3024521417963
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.3658441241029156
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  3.5222450290572094
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  4.12847106649726
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.683682772551574
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.6792116512575905
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.887748366800349
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.1620363938001215
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.2240954931310775
+Expected Similarity(From SICK.txt):  2.6
+Actual Similarity:  3.4571060968961556
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  2.794491798565449
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  2.9466186301193256
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.3979951817866456
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.8873755488781963
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.8742535228203745
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.8869011489726946
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.080887484986086
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  2.7431098806068226
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  2.7960491976877897
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  2.718424962588542
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  2.953478971839024
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  4.240567018668506
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.2716830258895477
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.6523250082137646
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  4.066952241028029
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.1062259274996036
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.6705116116168046
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.7071106902879833
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  2.9080049472162983
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.269816077317254
+Expected Similarity(From SICK.txt):  3.585
+Actual Similarity:  3.585845337876327
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.4274908675350395
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.693707393042192
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.8395568528873594
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  2.726639247290917
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  2.9071893098305264
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  2.94090332979071
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  2.8831373526424096
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  2.8909473845573954
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.5978196257886284
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.6961878505610364
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  4.024725283033906
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  4.179748036203019
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.374544733641019
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  2.701353983867577
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.370599850810286
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.131575859057445
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.5438938578989228
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.793923169796838
+Expected Similarity(From SICK.txt):  4.5
+Actual Similarity:  3.568093649814692
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.538562738479625
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.4851575421196728
+Expected Similarity(From SICK.txt):  4.0
+Actual Similarity:  3.109543941318627
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.37883669953782
+Expected Similarity(From SICK.txt):  3.3
+Actual Similarity:  3.1054101013393764
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.035667847615386
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.229880326659598
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.462104306039298
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.3072276787360435
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.5787951455648255
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.72174501315614
+Expected Similarity(From SICK.txt):  3.8
+Actual Similarity:  3.3739638546821746
+Expected Similarity(From SICK.txt):  3.4
+Actual Similarity:  3.2788784757522182
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  3.175574290439739
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.09566447762727
+Expected Similarity(From SICK.txt):  2.3
+Actual Similarity:  3.2899547649361827
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  4.25383024423913
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  3.608128020991621
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.3341557196930816
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  2.976067795180975
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  2.781911185746805
+Expected Similarity(From SICK.txt):  4.3
+Actual Similarity:  3.185020921691377
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  2.837185470569554
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  2.2996233165376014
+Expected Similarity(From SICK.txt):  3.1
+Actual Similarity:  2.578216018860725
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.736683049430866
+Expected Similarity(From SICK.txt):  4.6
+Actual Similarity:  3.9333692420485065
+Expected Similarity(From SICK.txt):  3.7
+Actual Similarity:  3.8068632089289163
+Expected Similarity(From SICK.txt):  4.9
+Actual Similarity:  3.53811039829013
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.4566044157555886
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.1473110479611144
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.4028022348937497
+Expected Similarity(From SICK.txt):  4.4
+Actual Similarity:  3.618358774500061
+Expected Similarity(From SICK.txt):  3.2
+Actual Similarity:  3.4830184022733506
+Expected Similarity(From SICK.txt):  3.9
+Actual Similarity:  3.9764682216561877
+Expected Similarity(From SICK.txt):  4.8
+Actual Similarity:  4.0559528373969975
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  4.064209453798576
+Expected Similarity(From SICK.txt):  4.7
+Actual Similarity:  4.10004980476678
+Expected Similarity(From SICK.txt):  4.2
+Actual Similarity:  3.5026023523913548
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.590137931410191
+Expected Similarity(From SICK.txt):  4.1
+Actual Similarity:  3.7189283624490526
+Expected Similarity(From SICK.txt):  3.5
+Actual Similarity:  3.66351300528202
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.7611139351651772
+Expected Similarity(From SICK.txt):  3.6
+Actual Similarity:  3.193745161904907
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.103231656918474
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  3.5232928603080733
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  2.899249693547625
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.892587141490676
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0681540090858617
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.9983570362757384
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.374911659991075
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.8761980726532075
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.8804199894767595
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.8101959632080407
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.1526845712618194
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0052077404394963
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.48529315702598
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  2.696315512318632
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.543285260246071
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.8559048379804555
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  2.684341116132706
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.5477710697899476
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  3.650393215726261
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.632682940388074
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.300366062633509
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.9076192425050995
+Expected Similarity(From SICK.txt):  2.1
+Actual Similarity:  3.36861536121894
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.6711087176987407
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.7520345969029902
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.7677082859144218
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.03384600313059
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.068775998320959
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  3.674344563592086
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.4680804267597347
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.330126921491843
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0165021370007175
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.8496539691870573
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.6464391648966243
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.4354799179956754
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.5522667288119556
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.0443195005124704
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.1980674108757254
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.763562050078149
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  2.764353809017785
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.9452102601481593
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.536631105107647
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.5921472005267803
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7083371202418682
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.8031350533044144
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.0449416063280736
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  3.6001205990125733
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.419990203680065
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7066467904105904
+Expected Similarity(From SICK.txt):  1.5
+Actual Similarity:  2.165843354298816
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.553432325768943
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.223888991112726
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6096325919065113
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  3.0860808276551692
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0358992212724893
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.375480245469579
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.994656010607258
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.66123789626809
+Expected Similarity(From SICK.txt):  2.2
+Actual Similarity:  3.3213122345281105
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.800451548300479
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6193398466240065
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2746772837032623
+Expected Similarity(From SICK.txt):  2.0
+Actual Similarity:  3.269580536075135
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7999496238618864
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.4633860691670755
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7205876970591163
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2562276376497494
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.469590608877956
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1206738915301693
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7762773782012307
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  2.323397527964886
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.1287035566367587
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0853054938507642
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  3.612627423416396
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.504195038701838
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7638120858717334
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.315603025415739
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.162551944370744
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.608575263420543
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.766166889622829
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.6616209508965856
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  3.7311527303477936
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.5904982850588665
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.062905790051665
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.092612554420847
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6679023650535902
+Expected Similarity(From SICK.txt):  1.8
+Actual Similarity:  2.485611649835799
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.008674591025195
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.5667064306145475
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  3.5512926559258617
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2614137881808896
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.371797034735734
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.3694550251092705
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.969847320011664
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.879952952484512
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.2719604889494907
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.3366661789510204
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.302792737043185
+Expected Similarity(From SICK.txt):  2.5
+Actual Similarity:  3.4308775543834455
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  4.113705235931663
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.77721069469164
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.4715218157954544
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1442354485939488
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  3.1337200187364243
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.820174074270125
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.972173218322869
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.1687990024235733
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2486402372485252
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.4589664678108036
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.5085423625871943
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0409379717839133
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.8545515410859372
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.53392750941937
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.576651668879246
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  3.334337193094039
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1388613142655877
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  1.984036639314903
+Expected Similarity(From SICK.txt):  2.2
+Actual Similarity:  3.018804887900424
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.922988928886003
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1202109616597724
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.6949633111157842
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.759412599842787
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.554776543458887
+Expected Similarity(From SICK.txt):  1.185
+Actual Similarity:  3.257019449182496
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.3209918669620744
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.323564704420899
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.9616194305749026
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.46199035737573
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.321613880752923
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  3.4391585757276006
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.3119409377134486
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.2530591737852976
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.207682836138584
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.0287750058029204
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  2.719777182031885
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1642146070595483
+Expected Similarity(From SICK.txt):  1.185
+Actual Similarity:  3.0302986772958804
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.160544989231389
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.062919643487818
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2798765500014264
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6166925180171026
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.0785944913919074
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.566169546340304
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.486263212597487
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.140751093995256
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2644823905782587
+Expected Similarity(From SICK.txt):  1.8
+Actual Similarity:  2.9710180258620484
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.329668914553231
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  2.280706734721732
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.557974332909189
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.300867405843316
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.9853235851846436
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.8679894561341044
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.9588279748755932
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.180980766996421
+Expected Similarity(From SICK.txt):  2.7
+Actual Similarity:  2.438702338906805
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.1647123094923972
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.322757611391057
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.8922110620145283
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.1267379558167803
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.766418001287482
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.7928126957142987
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.861403302954793
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.555991070867762
+Expected Similarity(From SICK.txt):  2.4
+Actual Similarity:  3.629673956862537
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.6808825875952322
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.9631129499146376
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.7211311162604814
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.3173945119345083
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.946361382691216
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  4.034962987192559
+Expected Similarity(From SICK.txt):  3.0
+Actual Similarity:  2.5500515462342688
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7988022163184643
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.4523245582722897
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.8255347726744944
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.0080299461804882
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.540620044247966
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.4099891000142297
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.240622760939707
+Expected Similarity(From SICK.txt):  1.6
+Actual Similarity:  2.360158977989334
+Expected Similarity(From SICK.txt):  2.2
+Actual Similarity:  3.0897712582837937
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.879031721638592
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.006403372068114
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.667547691177629
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.35628166941906
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.7783305623468113
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.977682988645217
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.8396246334498234
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.621443766990834
+Expected Similarity(From SICK.txt):  1.8
+Actual Similarity:  2.1392275402232133
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1506193366686723
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.3970477183306422
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.9613412285317975
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  1.896992690453695
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6502943307529305
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6188098716728128
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.970223608507184
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.779876248233543
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  2.858999824660112
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.804974499491614
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  1.9869899640560023
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  4.385413676176331
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.3060814286644256
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1278250273435297
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1299799886127504
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.7749687635543276
+Expected Similarity(From SICK.txt):  1.7
+Actual Similarity:  2.741578154688323
+Expected Similarity(From SICK.txt):  2.8
+Actual Similarity:  3.2408220322682957
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  2.003980447135921
+Expected Similarity(From SICK.txt):  1.4
+Actual Similarity:  3.1843010242830982
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.901126509151712
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.83718042727384
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.411340407121526
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6186311196575063
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.9322613368917203
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.691805990876084
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  3.1691123952383387
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.1899151955742897
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.4381172717440682
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.42764790546088
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.6991838037913167
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.503828855001461
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.8328252979391055
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  3.929256569165798
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.2532578391805527
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.1202014197820382
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.914775762755613
+Expected Similarity(From SICK.txt):  1.3
+Actual Similarity:  3.1051722065148435
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.085202251537732
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.257680329664787
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  1.8891251845890866
+Expected Similarity(From SICK.txt):  2.1
+Actual Similarity:  2.749220108521678
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.5029284484145995
+Expected Similarity(From SICK.txt):  1.1
+Actual Similarity:  2.134643590836924
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.0129018601927013
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.678753644955586
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.154024866534666
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  3.228258174154393
+Expected Similarity(From SICK.txt):  1.0
+Actual Similarity:  2.2700909731091716
+Expected Similarity(From SICK.txt):  1.2
+Actual Similarity:  2.6958552167497434
+Expected Similarity(From SICK.txt):  1.0
+Average Accuracy:  56.8602031954
+Current model params saved in-  SentEmbd_20_9000_2017-10-12_20:09:33.pkl
