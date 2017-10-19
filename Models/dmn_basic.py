@@ -14,8 +14,8 @@ from lasagne import layers
 from lasagne import nonlinearities
 import pickle as pickle
 
-import utils
-import nn_utils
+from Helpers import utils
+from Helpers import nn_utils
 
 floatX = theano.config.floatX
 
