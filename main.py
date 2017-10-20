@@ -148,7 +148,7 @@ def do_epoch(mode, epoch, skipped=0):
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size))
     with open('results.txt', 'a') as f:
-        f.write("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size) + "  epoch: " + epoch)
+        f.write("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size) + "  epoch: " + str(epoch))
 
     return avg_loss, skipped
 
@@ -168,7 +168,7 @@ if args.mode == 'train':
 
         state_name = '%s.epoch%d.test%.5f.state' % (network_name, epoch, epoch_loss)
 
-        path = os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)),'states'),network_name),state_name)
+        path = os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)),'states'),'dmn_basic'),state_name)
 
         if (epoch % args.save_every == 0):
             print("==> saving ... %s" % state_name)
