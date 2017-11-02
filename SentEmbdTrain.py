@@ -48,7 +48,7 @@ def main():
     n=int(sys.argv[1])
     hid_dim=int(sys.argv[3])
     dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
-    sent_embd=SentEmbd.SentEmbd(50,len(dataset),hid_dim) #GRU INITIALIZED
+    sent_embd=SentEmbd.SentEmbd(50,hid_dim) #GRU INITIALIZED
     batch_size=1 #By default
     epochs=int(sys.argv[2])
     test = sys.argv[4]

@@ -149,10 +149,25 @@ def get_vector(word,glove):
     except:
         return np.random.rand(1,50)
 
+def get_list_sequence(sentence,glove):
+    result = []
+    for word in sentence.split():
+        result.append(get_vector(word,glove))
+    return result
+
+def get_vector_sequence(sentence,glove,dim=50):
+    list_sequence = get_list_sequence(sentence,glove)
+    result = np.array(list_sequence).reshape((-1,dim))
+    return result
 
 def get_norm(x):
     x = np.array(x)
     return np.sum(x * x)
+
+
+def get_var_name(var,namespace):
+    return [name for name in namespace if namespace[name] is var][0]
+
 
 
 def main():
