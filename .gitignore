@@ -14,3 +14,4 @@ tests/
 *.log
 *.pkl
 hell*
+share/
