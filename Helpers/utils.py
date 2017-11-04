@@ -142,12 +142,13 @@ def load_glove(dim = 50):
     return glove
 
 
-def get_vector(word,glove):
+def get_vector(word,glove,dim=50):
     try:
-        ans = np.array(glove[word]).reshape((1,50))
+        ans = np.array(glove[word]).reshape((1,dim))
         return ans
     except:
-        return np.random.rand(1,50)
+        
+        return np.random.rand(1,dim)
 
 def get_list_sequence(sentence,glove):
     result = []
