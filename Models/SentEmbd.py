@@ -3,7 +3,7 @@ from Helpers import utils
 from Helpers import nn_utils
 import numpy as np
 import theano.tensor as T
-import theano
+import theano   
 import lasagne
 import os
 import sys
@@ -45,7 +45,7 @@ class SentEmbd(object):
         hid_state2,_=theano.scan(fn=self.computation,sequences=[sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=hid_state2[-1]
         # print(type(self.hid1))
-        score = (nn_utils.cosine_similarity(self.hid1,self.hid2) * 4) + 1
+        score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
         # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
         self.loss = T.sqrt(abs(T.square(score)-T.square(similarity_score)))
 
@@ -87,7 +87,7 @@ class SentEmbd(object):
     def trainx(self,training_dataset,exp_dataset,relatedness_scores,epochs):
         for val in range(epochs):
             for num in np.arange(len(training_dataset)):
-                self.train(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)),relatedness_scores[num])
+                self.train(np.array(training_dataset[num]),np.array(exp_dataset[num]),relatedness_scores[num])
                 # print("Trained on Sentence Pair ",(num+1))
 
     def predictx(self,inp_sent):
