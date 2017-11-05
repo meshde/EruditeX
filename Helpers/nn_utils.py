@@ -3,6 +3,7 @@ from theano import tensor as T
 from theano import printing as printf
 from theano import function
 import lasagne
+import numpy as np
 
 def softmax(x):
     e_x = T.exp(x - x.max(axis=0, keepdims=True))
@@ -30,3 +31,6 @@ def print_shape(A):
 	printed = print_op(A)
 	f = function([A],printed)
 	return f(A)
+
+def sigmoid_np(A):
+	return 1 / (1 + np.exp(-A))

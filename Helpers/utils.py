@@ -1,6 +1,7 @@
 import requests
 import numpy as np
 import os
+import pickle
 
 
 def fetch_wikis():
@@ -141,18 +142,46 @@ def load_glove(dim = 50):
             glove[l[0]] = list(map(float,l[1:]))
     return glove
 
+def load_glove_visualisation(recreate=False):
+    path = os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),'glove'),'glove_visualisation.pkl')
+    if os.path.exists(path) and not recreate:
+        with open(path,'rb') as f:
+            glove = pickle.load(f)
+            return glove
+    glove = {}
+    for x in ['welcome','to','my','house','home','where','is','are','you']:
+        glove[x] = np.random.rand(1,3)
+    with open(path,'wb') as f:
+        pickle.dump(glove,f)
+    return glove
+    
 
-def get_vector(word,glove):
+def get_vector(word,glove,dim=50):
     try:
-        ans = np.array(glove[word]).reshape((1,50))
+        ans = np.array(glove[word]).reshape((1,dim))
         return ans
     except:
-        return np.random.rand(1,50)
+        return np.random.rand(1,dim)
 
+def get_list_sequence(sentence,glove):
+    result = []
+    for word in sentence.split():
+        result.append(get_vector(word,glove))
+    return result
+
+def get_vector_sequence(sentence,glove,dim=50):
+    list_sequence = get_list_sequence(sentence,glove)
+    result = np.array(list_sequence).reshape((-1,dim))
+    return result
 
 def get_norm(x):
     x = np.array(x)
     return np.sum(x * x)
+
+
+def get_var_name(var,namespace):
+    return [name for name in namespace if namespace[name] is var][0]
+
 
 
 def main():

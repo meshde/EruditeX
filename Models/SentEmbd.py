@@ -10,7 +10,10 @@ import sys
 import pickle
 
 class SentEmbd(object):
-    def __init__(self,word_vector_size,dataset_size,dim):
+    def __init__(self,word_vector_size,dim,visualise=False):
+
+        self.visualise = visualise
+
         self.dim=dim #Dimmensions of Hidden State of the GRU
         self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
         self.U_inp_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
@@ -24,8 +27,7 @@ class SentEmbd(object):
         self.U_inp_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-        self.hid_state_matrix=np.zeros(shape=(dataset_size+1,dim))
-        self.hid_state_matrix_exp=np.zeros(shape=(dataset_size+1,dim))
+        
         self.count=0 # For keeping track of which training pair is being used in the current epoch.
         self.dummy_hid_state=T.zeros(np.zeros((1,50)).shape,dtype=theano.config.floatX)
 
@@ -60,7 +62,17 @@ class SentEmbd(object):
         self.U_inp_hid_hid,
         self.b_inp_hid
 ]
+        
+        if self.visualise:
+            self.get_loss = theano.function([sent1,sent2,similarity_score],[self.loss])
+            self.get_updates = {}
+            for param in self.params:
+                self.get_updates[param] = theano.function([sent1,sent2,similarity_score],[lasagne.updates.adadelta(self.loss, [param])[param]])
+
         updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
+        # print(updates[self.params[0]])
+        # self.get_updates = theano.function([sent1,sent2,similarity_score],[updates[self.params[0]]])
+        # self.get_updates = theano.function([sent1,sent2,similarity_score],[T.as_tensor_variable(list(updates.items()))])
 
         self.train = theano.function([sent1,sent2,similarity_score],[],updates=updates)
         self.predict = theano.function([sent1],[hid_state1])
@@ -83,6 +95,7 @@ class SentEmbd(object):
         hidden_states=self.predict(np.array(inp_sent).reshape((-1,50)))
         hidden_states=np.array(hidden_states).reshape(-1,50)
         print(hidden_states[-1])
+        return
 
     def testing(self,training_dataset,exp_dataset,relatedness_scores,log_file):
         avg_acc=0.0
@@ -98,6 +111,13 @@ class SentEmbd(object):
 
     def printParams(self):
         print(self.W_inp_upd_in.get_value())
+        return
+
+    def printAllParams(self):
+        for param in self.params:
+            print(utils.get_var_name(param,self.__dict__))
+            print(param.get_value())
+        return
 
     def save_params(self,file_name,epochs):
         with open(file_name, 'wb') as save_file:
