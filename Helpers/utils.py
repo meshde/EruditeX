@@ -2,6 +2,7 @@ import requests
 import numpy as np
 import os
 import pickle
+import spacy
 
 
 def fetch_wikis():
@@ -182,6 +183,32 @@ def get_norm(x):
 def get_var_name(var,namespace):
     return [name for name in namespace if namespace[name] is var][0]
 
+def load_dep_tags():
+    path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),'depTags.txt')
+    dep_tags=[]
+    dep_tags_dict={}
+    with open(path,'r') as file1:
+        for line in file1:
+            l=line.split(':')
+            print(l[0])
+            dep_tags.append(l[0])
+    dep_tags_dict=dict([(w,i) for i,w in enumerate(dep_tags)])
+    return dep_tags_dict
+
+def get_depTags_sequence(sentence,dep_tags_dict,nlp):
+    result=[]
+    # nlp=spacy.load('en')
+    doc=nlp(sentence)
+    for w in doc:
+
+        key=w.dep_.split('||')[0]
+        result.append(dep_tags_dict[key.upper()])
+    return np.array(result)
+
+def get_sent_details(sentence,glove,dep_tags_dict,nlp,wVec_size=50):
+    result1=get_vector_sequence(sentence,glove,wVec_size)
+    result2=get_depTags_sequence(sentence,dep_tags_dict,nlp)
+    return result1,result2
 
 
 def main():

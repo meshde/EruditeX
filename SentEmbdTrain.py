@@ -6,10 +6,14 @@ import sys
 from Models import SentEmbd
 import datetime
 import time
+import spacy
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
 def read_dataset():
+    global glove
+    global dep_tags
+    nlp=spacy.load('en')
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
     training_set=os.path.join(os.path.join(BASE,'data'),"SICK.txt")
     with open(training_set,'r') as file1:
@@ -20,37 +24,55 @@ def read_dataset():
     training_dataset=[]
     sim_dataset=[]
     relatedness_scores=[]
+    training_dataset_depTags=[]
+    sim_dataset_depTags=[]
     raw_dataset=raw_dataset[1:-1]
     for item in raw_dataset:
         temp=item.split('\t')
         temp2=temp[4]
         temp=temp[1:3]
-        temp.append(temp2)
+        temp.append(temp2.strip())
         dataset.append(temp)
 
     glove=utils.load_glove()
+    dep_tags=utils.load_dep_tags()
 
     for item in dataset:
-        vectorized_sent1=utils.get_vector_sequence(item[0],glove)
-        vectorized_sent2=utils.get_vector_sequence(item[1],glove)
+
+        vectorized_sent1,dep_tags_1=utils.get_sent_details(item[0].strip(),glove,dep_tags,nlp)
+        vectorized_sent2,dep_tags_2=utils.get_sent_details(item[1].strip(),glove,dep_tags,nlp)
 
         training_dataset.append(vectorized_sent1)
+        training_dataset_depTags.append(dep_tags_1)
         sim_dataset.append(vectorized_sent2)
+        sim_dataset_depTags.append(dep_tags_2)
+
         relatedness_scores.append(float(item[2]))
-    return dataset,training_dataset,sim_dataset,relatedness_scores
+    return dataset,training_dataset,sim_dataset,relatedness_scores,training_dataset_depTags,sim_dataset_depTags
 
 def main():
+    global glove
+    global dep_tags
     n=int(sys.argv[1])
     hid_dim=int(sys.argv[3])
-    dataset,training_dataset,sim_dataset,relatedness_scores = read_dataset()
+    dataset,training_dataset,sim_dataset,relatedness_scores,training_dataset_depTags,sim_dataset_depTags = read_dataset()
     # print(training_dataset[1].shape)
-    sent_embd=SentEmbd.SentEmbd(50,hid_dim) #GRU INITIALIZED
+    
     batch_size=1 #By default
     epochs=int(sys.argv[2])
-    test = sys.argv[4]
+    choice = int(sys.argv[4])
+    test = sys.argv[5]
+    start=time.time()
+    if(choice == 1):
+        sent_embd=SentEmbd.SentEmbd(50,hid_dim) #GRU INITIALIZED
+        start = time.time()
+        sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
 
-    start = time.time()
-    sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
+    else:
+        sent_embd=SentEmbd.SentEmbd_syntactic(50,hid_dim,len(dep_tags))
+        start = time.time()
+        sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],training_dataset_depTags[:n],sim_dataset_depTags[:n],epochs) #Training THE GRU using the SICK dataset
+    
 
     print("Time taken for training:\t"+str(time.time()-start))
 

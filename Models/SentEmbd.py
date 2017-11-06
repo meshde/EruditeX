@@ -15,15 +15,16 @@ class SentEmbd(object):
         self.visualise = visualise
 
         self.dim=dim #Dimmensions of Hidden State of the GRU
-        self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
+        self.word_vector_size=word_vector_size
+        self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
         self.U_inp_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-        self.W_inp_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
+        self.W_inp_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
         self.U_inp_upd_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_upd = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-        self.W_inp_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, word_vector_size))
+        self.W_inp_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
         self.U_inp_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
@@ -37,17 +38,17 @@ class SentEmbd(object):
         wordvec=T.dvector('xt')
         prev_hid_state=T.dvector('ht-1')
         temp=T.dvector('ht')
-        similarity_score = T.dscalar('score')
-        sent1=T.dmatrix('sent1')
-        sent2=T.dmatrix('sent2')
-        hid_state1,_=theano.scan(fn=self.computation,sequences=[sent1],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.similarity_score = T.dscalar('score')
+        self.sent1=T.dmatrix('sent1')
+        self.sent2=T.dmatrix('sent2')
+        hid_state1,_=theano.scan(fn=self.computation,sequences=[self.sent1],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid1=hid_state1[-1]
-        hid_state2,_=theano.scan(fn=self.computation,sequences=[sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        hid_state2,_=theano.scan(fn=self.computation,sequences=[self.sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=hid_state2[-1]
         # print(type(self.hid1))
         score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
         # print(score.shape.eval({sent1:np.ones((10,50)),sent2: np.ones((10,50))}))
-        self.loss = T.sqrt(abs(T.square(score)-T.square(similarity_score)))
+        self.loss = T.sqrt(abs(T.square(score)-T.square(self.similarity_score)))
 
         self.params = [
         self.W_inp_res_in,
@@ -74,9 +75,9 @@ class SentEmbd(object):
         # self.get_updates = theano.function([sent1,sent2,similarity_score],[updates[self.params[0]]])
         # self.get_updates = theano.function([sent1,sent2,similarity_score],[T.as_tensor_variable(list(updates.items()))])
 
-        self.train = theano.function([sent1,sent2,similarity_score],[],updates=updates)
-        self.predict = theano.function([sent1],[hid_state1])
-        self.get_similarity = theano.function([sent1,sent2],score)
+        self.train = theano.function([self.sent1,self.sent2,self.similarity_score],[],updates=updates)
+        self.predict = theano.function([self.sent1],[hid_state1])
+        self.get_similarity = theano.function([self.sent1,self.sent2],score)
     def computation(self,wVec,prev_hid_state):
         zt=T.nnet.sigmoid(T.dot(self.W_inp_upd_in,wVec)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
         rt=T.nnet.sigmoid(T.dot(self.W_inp_res_in,wVec)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
@@ -101,7 +102,7 @@ class SentEmbd(object):
         avg_acc=0.0
         with open(log_file,'w') as f:
             for num in np.arange(len(training_dataset)):
-                score = self.get_similarity(np.array(training_dataset[num]).reshape((-1,50)),np.array(exp_dataset[num]).reshape((-1,50)))
+                score = self.get_similarity(np.array(training_dataset[num]),np.array(exp_dataset[num]))
                 f.write("Actual Similarity: "+str(score)+"\n")
                 f.write("Expected Similarity(From SICK.txt): "+str(relatedness_scores[num])+"\n")
                 avg_acc += (abs(score-relatedness_scores[num])/relatedness_scores[num])
@@ -138,3 +139,34 @@ class SentEmbd(object):
             for (x, y) in zip(self.params, loaded_params):
                 x.set_value(y)
         return
+
+class SentEmbd_syntactic(SentEmbd):
+    def __init__(self,word_vector_size,dim,dep_tags_size,visualise=False):        
+        super().__init__(word_vector_size,dim,visualise)
+        self.W_dep=nn_utils.normal_param(std=0.1, shape=(self.dim, dep_tags_size))
+        depTags1 = T.lvector('dep_tags')
+        depTags2=T.lvector('dep_tags')
+        hid_state1,_=theano.scan(fn=self.computation1,sequences=[self.sent1,depTags1],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.hid1=hid_state1[-1]
+        hid_state2,_=theano.scan(fn=self.computation1,sequences=[self.sent2,depTags2],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.hid2=hid_state2[-1]
+        score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
+        self.loss = T.sqrt(abs(T.square(score)-T.square(self.similarity_score)))
+        self.params.append(self.W_dep)
+        updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
+        self.train = theano.function([self.sent1,self.sent2,self.similarity_score,depTags1,depTags2],[],updates=updates)
+
+
+    def computation1(self,wVec,dep_val,prev_hid_state):
+        xt_W_dep=self.W_dep[:,dep_val]
+        zt=T.nnet.sigmoid((T.dot(self.W_inp_upd_in,wVec)*xt_W_dep)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
+        rt=T.nnet.sigmoid((T.dot(self.W_inp_res_in,wVec)*xt_W_dep)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
+        curr_hid_state_int=T.tanh((T.dot(self.W_inp_hid_in,wVec)*xt_W_dep) + (rt * (T.dot(self.U_inp_hid_hid,prev_hid_state))) + self.b_inp_hid) # intermediate hidden state
+        t=(zt * prev_hid_state)+((1-zt) * curr_hid_state_int) #Hidden state(ht) at timestamp t
+        return t
+
+    def trainx(self,training_dataset,exp_dataset,relatedness_scores,training_dataset_deptags,exp_dataset_depTags,epochs):
+        for val in range(epochs):
+            for num in np.arange(len(training_dataset)):
+                self.train(np.array(training_dataset[num]),np.array(exp_dataset[num]),relatedness_scores[num],training_dataset_deptags[num],exp_dataset_depTags[num])
+                
