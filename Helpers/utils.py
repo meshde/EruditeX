@@ -190,7 +190,6 @@ def load_dep_tags():
     with open(path,'r') as file1:
         for line in file1:
             l=line.split(':')
-            print(l[0])
             dep_tags.append(l[0])
     dep_tags_dict=dict([(w,i) for i,w in enumerate(dep_tags)])
     return dep_tags_dict

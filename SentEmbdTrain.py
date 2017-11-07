@@ -64,11 +64,12 @@ def main():
     test = sys.argv[5]
     start=time.time()
     if(choice == 1):
-        sent_embd=SentEmbd.SentEmbd(50,hid_dim) #GRU INITIALIZED
+        sent_embd=SentEmbd.SentEmbd_basic(50,hid_dim) #GRU INITIALIZED
         start = time.time()
         sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
 
     else:
+        print("SentEmbd_syntactic")
         sent_embd=SentEmbd.SentEmbd_syntactic(50,hid_dim,len(dep_tags))
         start = time.time()
         sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],training_dataset_depTags[:n],sim_dataset_depTags[:n],epochs) #Training THE GRU using the SICK dataset
