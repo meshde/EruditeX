@@ -24,8 +24,8 @@ def read_dataset():
     training_dataset=[]
     sim_dataset=[]
     relatedness_scores=[]
-    training_dataset_depTags=[]
-    sim_dataset_depTags=[]
+    depTags_training_dataset=[]
+    depTags_sim_dataset=[]
     raw_dataset=raw_dataset[1:-1]
     for item in raw_dataset:
         temp=item.split('\t')
@@ -43,19 +43,19 @@ def read_dataset():
         vectorized_sent2,dep_tags_2=utils.get_sent_details(item[1].strip(),glove,dep_tags,nlp)
 
         training_dataset.append(vectorized_sent1)
-        training_dataset_depTags.append(dep_tags_1)
+        depTags_training_dataset.append(dep_tags_1)
         sim_dataset.append(vectorized_sent2)
-        sim_dataset_depTags.append(dep_tags_2)
+        depTags_sim_dataset.append(dep_tags_2)
 
         relatedness_scores.append(float(item[2]))
-    return dataset,training_dataset,sim_dataset,relatedness_scores,training_dataset_depTags,sim_dataset_depTags
+    return dataset,training_dataset,sim_dataset,relatedness_scores,depTags_training_dataset,depTags_sim_dataset
 
 def main():
     global glove
     global dep_tags
     n=int(sys.argv[1])
     hid_dim=int(sys.argv[3])
-    dataset,training_dataset,sim_dataset,relatedness_scores,training_dataset_depTags,sim_dataset_depTags = read_dataset()
+    dataset,training_dataset,sim_dataset,relatedness_scores,depTags_training_dataset,depTags_sim_dataset= read_dataset()
     # print(training_dataset[1].shape)
     
     batch_size=1 #By default
@@ -64,15 +64,17 @@ def main():
     test = sys.argv[5]
     start=time.time()
     if(choice == 1):
-        sent_embd=SentEmbd.SentEmbd_basic(50,hid_dim) #GRU INITIALIZED
+        print("SentEmbd_Normal")
+        sent_embd=SentEmbd.SentEmbd_basic(50,hid_dim) #GRU INITIALIZATION
         start = time.time()
         sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
 
+
     else:
         print("SentEmbd_syntactic")
-        sent_embd=SentEmbd.SentEmbd_syntactic(50,hid_dim,len(dep_tags))
+        sent_embd=SentEmbd.SentEmbd_syntactic(50,hid_dim,len(dep_tags)) #GRU INITIALIZATION
         start = time.time()
-        sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],training_dataset_depTags[:n],sim_dataset_depTags[:n],epochs) #Training THE GRU using the SICK dataset
+        sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],depTags_training_dataset[:n],depTags_sim_dataset[:n],epochs) #Training THE GRU using the SICK dataset
     
 
     print("Time taken for training:\t"+str(time.time()-start))
@@ -84,7 +86,11 @@ def main():
     if test == 'test':
         file_name = "SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
         path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)
-        accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],path)
+        if(choice == 1):
+            accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],path,choice)
+        if(choice == 2):
+            additional_inputs=[depTags_training_dataset[n+1:],depTags_sim_dataset[n+1:]]
+            accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],path,choice,additional_inputs)
         acc="{0:.3}".format(accuracy)
         acc+="%"
 

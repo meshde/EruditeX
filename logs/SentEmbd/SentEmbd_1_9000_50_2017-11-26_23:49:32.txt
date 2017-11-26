@@ -1,0 +1,1679 @@
+Actual Similarity: [array(3.572442581692378)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.643925186172074)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.617638977026153)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.4638435837435777)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.725280917605373)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.8467096163134573)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.6747743088869385)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.5541244954846816)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.6677971067601978)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.638242135535898)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.667357851565818)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.7111843165599003)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.5639724304383837)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.7013175273473973)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.779022471710186)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.9859379928959466)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.914944395449802)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.665100548950625)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.7397762304145274)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.4791163071897673)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.5997606731377063)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.7453157270782538)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.9270400431928865)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.78346543596545)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.9959369241249787)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.8786217990553506)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.6925412252819876)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.5402297258850406)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.333231886305691)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.6293545153765048)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.404363570801242)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.6164646255845927)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.881774695050445)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.8841606177702652)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.5658610326373044)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.8304013950781997)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.4527268737521783)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.6621386559945397)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.6372825503296866)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.5563890235004427)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.564324755595873)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.8369682907960883)]
+Expected Similarity(From SICK.txt): 5.0
+Actual Similarity: [array(4.067753810419025)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.4797864116544455)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.6136822608813572)]
+Expected Similarity(From SICK.txt): 3.915
+Actual Similarity: [array(3.4593904630463475)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.5771993181114494)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.4246761530242327)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.4030227109002023)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.4272319258666037)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.774897913862653)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.568480304314378)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.4965764093851615)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.9589119106172608)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.530740722744407)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.669011969756696)]
+Expected Similarity(From SICK.txt): 1.935
+Actual Similarity: [array(3.423480807874592)]
+Expected Similarity(From SICK.txt): 2.3
+Actual Similarity: [array(3.3971489048647996)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.7610635034135598)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.904351429902097)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(4.081255297942826)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.562079089279449)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.5899883664161703)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.4830012988870642)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.1441929203124204)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.467882881843388)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.6312720856258145)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.5912404278166496)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.4890147371810816)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.575805366385333)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.501850682566954)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.4390340306113445)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.521828713966801)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.3083147451261254)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.4810058419069154)]
+Expected Similarity(From SICK.txt): 4.065
+Actual Similarity: [array(3.4082818703962188)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.438449921002738)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.7491012538948345)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.756036544663047)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.951650351077883)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(4.023294973636375)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.5482547222227874)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.5029929535864595)]
+Expected Similarity(From SICK.txt): 2.2
+Actual Similarity: [array(3.585461939299387)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.596088254732739)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.660726526295088)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.933473462223198)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.9396857004705796)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.5917852411938083)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.6150557939916776)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.1975229880443163)]
+Expected Similarity(From SICK.txt): 1.8
+Actual Similarity: [array(3.189564579345049)]
+Expected Similarity(From SICK.txt): 1.73
+Actual Similarity: [array(3.21032722506804)]
+Expected Similarity(From SICK.txt): 1.9
+Actual Similarity: [array(3.1755295811353808)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.278446799259813)]
+Expected Similarity(From SICK.txt): 1.5
+Actual Similarity: [array(3.822719481312717)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.6301359451602884)]
+Expected Similarity(From SICK.txt): 3.565
+Actual Similarity: [array(3.7046770563091433)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.6265312336155677)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.3930516130730632)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.364421449117146)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.375988311959528)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.261793966548799)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.350995021762399)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.6634693216877476)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.6818937744900824)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.8200860242510872)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.479389127719059)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.3722103132010597)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.2254965514904437)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.3508147553878826)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.394348244495593)]
+Expected Similarity(From SICK.txt): 2.1
+Actual Similarity: [array(3.3880250170825574)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.615179745565107)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(4.119123076036185)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.9107621177374066)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.9148415059282287)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.811223749741333)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.777715279910277)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.854536937376393)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.707132594152326)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.7845409386587257)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(4.141230256612347)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(4.115701169059515)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.8112149817933902)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.8749205616977287)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.5425366807389262)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.685034734331806)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.768066971150656)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.613032438424395)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.6918639779788793)]
+Expected Similarity(From SICK.txt): 2.2
+Actual Similarity: [array(3.9032305170771453)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.6001745230502715)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.6743632203276193)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.7242434980806673)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.4963223002537034)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.726807881200242)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.637712046289179)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.4472989804166128)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.805995402595466)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.820357792583775)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.5332422459500186)]
+Expected Similarity(From SICK.txt): 3.365
+Actual Similarity: [array(4.139842921931999)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(4.150520032138095)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.4050266182368545)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.4250748296752107)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.304766862106795)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.2365434464921927)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.347689387776854)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.7914461254276)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.417850722666395)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.7791107203378957)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.4352046535317244)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.1504825291597203)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.25454110694564)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.159690982581062)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.2799182850954156)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.2788090412188007)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.8184669309901995)]
+Expected Similarity(From SICK.txt): 5.0
+Actual Similarity: [array(3.9758333835790833)]
+Expected Similarity(From SICK.txt): 3.285
+Actual Similarity: [array(4.039089955527759)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.878745715866589)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.8312003288795697)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.949989567047859)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.745438641402215)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.7318024786662116)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.6880853536534812)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.8399584723078606)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.8434797491543655)]
+Expected Similarity(From SICK.txt): 3.365
+Actual Similarity: [array(3.4603852109241453)]
+Expected Similarity(From SICK.txt): 4.65
+Actual Similarity: [array(3.4976722446174375)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.812904582959074)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.623228229928805)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.6276957064244693)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.548385978827041)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.459925702795447)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.494171967516854)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.62575347800535)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.044350073325589)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.8272457962359274)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.7044215027344594)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.667561090731129)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.2510218599944767)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.279487835232919)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.201018670557268)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.249080273473917)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.262626724949926)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.6654507252814996)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.575585178773835)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.67540649149803)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.903144947018464)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.296891092411283)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.485689725160684)]
+Expected Similarity(From SICK.txt): 2.3
+Actual Similarity: [array(3.316439633214787)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.333193873453486)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.3607165161208834)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.662427598959225)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.7207277771434053)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.9986851113792303)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(4.38364780913659)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.2987508748539778)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.4225164454329318)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.3608564328037307)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.4213812435740256)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.4234836918942513)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.8866689571014694)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.5709294860211234)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.5275650433735173)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.496188550443299)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.3150802934839607)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.36689422458201)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.2591212737436823)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.240366173430225)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.3587335640846763)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(4.098624458857485)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.825177632766892)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.6709060307717563)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.628501916113989)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.278375289700683)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.1927672213678036)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.461738804663545)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.4010779799014546)]
+Expected Similarity(From SICK.txt): 1.9
+Actual Similarity: [array(3.2847423676637284)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.8500384859812824)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.9255663828993326)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.5535060279384867)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.4467665339025126)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.046328924396304)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.351524053792887)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.544727239545849)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.7124723681663925)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.7068974423425933)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.6410576809371498)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.497289827436349)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.363010015480427)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.339019394773169)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.3946253673408253)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.4129359760996576)]
+Expected Similarity(From SICK.txt): 3.15
+Actual Similarity: [array(3.189165632471621)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.320489789370418)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.291137693797951)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.834944528579649)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.704214208148297)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.987978621277826)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.8369389531906473)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.399352953927346)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.5750573362651266)]
+Expected Similarity(From SICK.txt): 2.2
+Actual Similarity: [array(3.331642858884366)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.6114940261913113)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.548531292154552)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.5920123548979594)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.5289770688960274)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.6999576631706397)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.7878963205593665)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.6651019244336003)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.6737459289122483)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.6745018197015007)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.454937266159739)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.600674918403147)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.6881594186663613)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.7365875418906436)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.8440621936022503)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.8850487591268377)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.6383841389353457)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.668657407142201)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.557560851723596)]
+Expected Similarity(From SICK.txt): 3.765
+Actual Similarity: [array(3.666865470730607)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.5851609256276706)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(4.279627514497432)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(4.075803328304701)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(4.0045598028317055)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.617059781862195)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.803782354964717)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.365589481589284)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.843237437762718)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.851113703186907)]
+Expected Similarity(From SICK.txt): 2.915
+Actual Similarity: [array(3.7420247328105916)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.7753561802704656)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.7914796459858096)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(4.141982271156647)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.999947350730972)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.5424178003985998)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.510130888031106)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.6443265737655732)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.440070444430131)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.4280937784632766)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.7999094996921627)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.796884447357109)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.248364500045988)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.7648851639463037)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.6334531824479375)]
+Expected Similarity(From SICK.txt): 3.335
+Actual Similarity: [array(3.302332711721579)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.287549697610946)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.2775529827127587)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.3018565295461295)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.320775013264522)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.3157440011435217)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.712181440274848)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.7335766283597636)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.80414137192712)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.5332277559064673)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.441691423807726)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.3128619158093446)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.4757581683151644)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.4247870974390073)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.4322921858211126)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.8481969575630233)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.9520276240975583)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.8549261271070856)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.7783498763130843)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.40208570108977)]
+Expected Similarity(From SICK.txt): 3.515
+Actual Similarity: [array(3.457014339359875)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.5105975809178056)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.408643326997381)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.431884105804911)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(4.2243465399507825)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.047039517532493)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.553573305829923)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.583013352072708)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.644326833378442)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.315133013000246)]
+Expected Similarity(From SICK.txt): 2.465
+Actual Similarity: [array(3.338353684866682)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.5548495079329183)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.500981384864684)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.713287819731324)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.4989115902479098)]
+Expected Similarity(From SICK.txt): 2.1
+Actual Similarity: [array(4.084287996368379)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.5536410648363335)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.5385939575429295)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.368535084132131)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.474870847379068)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.247303501639965)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.5085635811647795)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.638148752454623)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.6973321841277302)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.5360163989049425)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.5881181702991123)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.1240108742743065)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.143700127741202)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.1397836183059047)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.3225864709188615)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.1078087732021626)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(4.03828565046377)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.8889736655730056)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.662079538373613)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.9612230630461744)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.334157899429945)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.627509843389026)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.597164398139441)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.5798456920816863)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.5520596579990973)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.586102732311253)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.633242932340065)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.6914787668022058)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.9167273949541217)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.42957193896699)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.652031735822492)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.592907117283773)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.6198942015086786)]
+Expected Similarity(From SICK.txt): 1.9
+Actual Similarity: [array(3.5887801527282153)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.7826694265473515)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.6685004594600015)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.7002923800380447)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.7395570154761577)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.5648840876447987)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.6108698554542893)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.668779970249285)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.5930577383699807)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.585201330956198)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.7727459168518713)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.7284950573081126)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.655833393539366)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.788016838045449)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.684874280057772)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.6635537604748167)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.658403800040043)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.6837333135792356)]
+Expected Similarity(From SICK.txt): 1.9
+Actual Similarity: [array(3.6531867051820153)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.9083586216676975)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.510123311832062)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.7416053398670166)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.726314402740007)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.6089942686148637)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.5887569523450136)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.590422603774595)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.3870247586151843)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.5468531157960563)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.244927938233863)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.2293866593785667)]
+Expected Similarity(From SICK.txt): 3.415
+Actual Similarity: [array(3.226022395324266)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.2293965548460783)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.254056613100908)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.2776379263347857)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.1393591615556056)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.204446080241538)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.2566275568422935)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(4.180727171411497)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.262811239309876)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(4.062589261474914)]
+Expected Similarity(From SICK.txt): 5.0
+Actual Similarity: [array(3.839370462191201)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.629245939549555)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.945334471592494)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(4.060865108915291)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.9406713578121177)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.791806411880528)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.7804383448536445)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.645316791101452)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.47471884587081)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.476608550276471)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.015432423621875)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.054895015427252)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.0540673212290934)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(2.9709425249139794)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.0572398373055716)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.5762577552426658)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.5800064713972555)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.9734963318773167)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(4.218677320736156)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.6076519715636493)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.5595442369343484)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.4602385636670574)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.6192299517350643)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.535620038374347)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.8239095149083044)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.4758629639116307)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.6948220671907572)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.673870453049085)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.501454024616626)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.2383621740342945)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.269374079372364)]
+Expected Similarity(From SICK.txt): 1.5
+Actual Similarity: [array(3.2321495375915665)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.1800899619958316)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.240353386616285)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.2475157373943135)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(4.403069592616931)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.3873250154760712)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.8148227598248385)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.088007995202786)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.211510508515765)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.5643926730657816)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.766680369153551)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.4094200312582728)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.377705124580385)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(4.290600779023828)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.7737102181557267)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.866027183026066)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.5029612646382153)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.9269384250052983)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.585237396478024)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.6640727269982545)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.4552508250360385)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.9149046923285304)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(4.236716235549634)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(4.1454971630164765)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.842515811853649)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(4.092814676269764)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.6970791637128135)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.525664931695381)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.40177201528204)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.510450682430555)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.4485706223260126)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.5680701056241273)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.6033784247232297)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.695891110982305)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.8035840416871136)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.6125821573641987)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.658352449977776)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.6576290661495348)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.6434285549365475)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.6270843883732)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.854299286583544)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(3.710534088032404)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.6816299919588427)]
+Expected Similarity(From SICK.txt): 3.95
+Actual Similarity: [array(3.774476387591269)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.9441018600004765)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.729867925985653)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.757719101605235)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.7559610253905165)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.6416159264024603)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.6415367088082604)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.693434941786105)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.6915679121705036)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.5613977320424186)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.872284107534245)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.886580025551601)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.469259965508942)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.526641209413364)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.4796003670312774)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.281972293519114)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.525210729189429)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(4.009805038295179)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.90499771297054)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(4.0073643736263636)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(4.16680309432103)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.585237796710979)]
+Expected Similarity(From SICK.txt): 2.9
+Actual Similarity: [array(3.545994284327876)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.353420833702382)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.5047922129861853)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.507167082738581)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.842164693445548)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.861939468696999)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.55565030348815)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.5224868804123703)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.6791694129760133)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.5851258437433455)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.594138584618472)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.6066659387446336)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.5756145775128423)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.694636254309837)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.4650416148513683)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.7038964211792287)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(3.7635840396787352)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.2395676528777915)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.3469345885728323)]
+Expected Similarity(From SICK.txt): 2.6
+Actual Similarity: [array(3.3338941671431694)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.2094005105803345)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.334905628611538)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(4.00082459221325)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.9201812487491634)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.6326518142911937)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.672463017067651)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.1737759035816557)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.162873583986392)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.1437311932977905)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.1462811810076294)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.198966822548733)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.9480717107482546)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.435484452275968)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.597519309827471)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.7709244262777113)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.718060357935762)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.8062251025622578)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.524980452059827)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.1831594343484184)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.585323733134515)]
+Expected Similarity(From SICK.txt): 3.585
+Actual Similarity: [array(3.7752733742296467)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.8594734146113256)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.5350758289369564)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.5217607073137907)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.2481791802025346)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.3281274310876143)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.2971763165123873)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.326424020363184)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.279213840047945)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(4.068364528763998)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.811517175171542)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(4.355896051504672)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.076898556038475)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.538253213740254)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.8352035113647993)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.9419747117575907)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.7013356804630195)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.6962820395487297)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.754218466892844)]
+Expected Similarity(From SICK.txt): 4.5
+Actual Similarity: [array(3.8232308386627616)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(4.032322116203883)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.9884189357527955)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(3.314928348893864)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.3366944918660595)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(3.2385480025791686)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.1565797233276296)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.1380126440433442)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.926794333818869)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.8802300648195867)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(4.008447572205944)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(4.264917865263567)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(3.5917833340706102)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(3.6302780765909626)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.5307418739335645)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.490994984794306)]
+Expected Similarity(From SICK.txt): 2.3
+Actual Similarity: [array(3.714740071525236)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.8478218433945095)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(4.004678909270723)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.906764418577316)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.793976494113834)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.3776586443072762)]
+Expected Similarity(From SICK.txt): 4.3
+Actual Similarity: [array(3.3405124461999804)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.5538316479269394)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.4083128800161817)]
+Expected Similarity(From SICK.txt): 3.1
+Actual Similarity: [array(3.4537976799083063)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(4.242203367803688)]
+Expected Similarity(From SICK.txt): 4.6
+Actual Similarity: [array(4.131174180266836)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(3.779663989833778)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(3.5975136541221895)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.901312965007956)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.5504781717017586)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.9893228799716285)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(3.8965460177038165)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(3.903623285937728)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(3.8566401795672784)]
+Expected Similarity(From SICK.txt): 4.8
+Actual Similarity: [array(3.7322894534697024)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(4.0090550602146955)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.059878772342127)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(3.5607103092019385)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.578500740947187)]
+Expected Similarity(From SICK.txt): 4.1
+Actual Similarity: [array(3.709650491874079)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(3.587526955970928)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.594902973448702)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(3.513684324545599)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(2.918520446683012)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.4955824292429325)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.272543854429164)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.330071221149673)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1071409409594954)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.9587095191788317)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2603040141452335)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.4075881883862666)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4259449201639653)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.2723897261598647)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.040193993978392)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.5983828939710314)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.543557789840488)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.3493630509998122)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.5793111398805344)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3774694024510516)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.2221018755955937)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3569203896307576)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.5575238508024456)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1819487887607156)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3701557358346137)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3909422390900517)]
+Expected Similarity(From SICK.txt): 2.1
+Actual Similarity: [array(2.8980329883441875)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.956262407653095)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.182537017874877)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.4157248691231588)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.1696037793912786)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.451017406810843)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(2.9738527892740914)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4247433619321637)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1354402684297944)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.210859933916113)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.991835745732949)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.129124982117216)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.5813373784281124)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3090843667894143)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.375624215830192)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.5199922650062243)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.404165262785843)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.491012071169911)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4117789369923583)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.4041799481618344)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(2.839552976769709)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.490027300095342)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.465461413406275)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.2336669556644484)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.2132076956740803)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.5023034469547385)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2955371895844303)]
+Expected Similarity(From SICK.txt): 1.5
+Actual Similarity: [array(3.176676439130746)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.918283600924782)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.125087791590486)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.299523009553881)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.0971113706310622)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2364013660034607)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.470413327757722)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.204349119070741)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.605882870972342)]
+Expected Similarity(From SICK.txt): 2.2
+Actual Similarity: [array(3.5344553209509866)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.1146020449600536)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3476567136566793)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.241594835281835)]
+Expected Similarity(From SICK.txt): 2.0
+Actual Similarity: [array(3.4953818231458746)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4350054074744363)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4188918176804033)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4194452342790584)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1814962671208122)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.242832976883314)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3388477944707575)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1783745268754724)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.095683422753516)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3929059564612882)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.358925685543353)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.1639555916969657)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.291331578462451)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.573170935753285)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.5739668277007244)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.209947864182969)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0641004547219333)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.177972476642938)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.32843360732994)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.163060683504652)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.290116670042642)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.205680198380601)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.069211966761564)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.040292447670562)]
+Expected Similarity(From SICK.txt): 1.8
+Actual Similarity: [array(3.1740909304879508)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0752951632922505)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2107683418000255)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.1314985636345964)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.308887540840264)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.1236958672957855)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.1131824597018927)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.8821586163283506)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.322968657388782)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.231633963349652)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0655353994058325)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.215109362169223)]
+Expected Similarity(From SICK.txt): 2.5
+Actual Similarity: [array(3.4392960352016217)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4342430445056573)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.675842338668491)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.142811227343972)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.402515357854542)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.488007212215194)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1578770236713436)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.3285556240348084)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.051283096125817)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.9884888409856)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.761580245267103)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.2965819997661656)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.136296505058398)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.355263038099582)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.1790869302613842)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.357624492809898)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.2982960468145635)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3491936373977507)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.39260512403739)]
+Expected Similarity(From SICK.txt): 2.2
+Actual Similarity: [array(3.2245969008353814)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.22684331768767)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4855124661616883)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.5812443339473354)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.0649838033461254)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.4552776816779303)]
+Expected Similarity(From SICK.txt): 1.185
+Actual Similarity: [array(3.336222949500927)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.0622221791201367)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.320686736960625)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.276410620917519)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2386377435190505)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0503241606850313)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.2977475903089575)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(2.905232484984508)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.509131832782019)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.391316108402384)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.129957630053103)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.481662528484821)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.341764913030022)]
+Expected Similarity(From SICK.txt): 1.185
+Actual Similarity: [array(3.246234738217496)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(2.798349114941516)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4628777711802887)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4396394837990982)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3610380908485085)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.5027795781140765)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4598722708641234)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.7394607170347287)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.169551462207344)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2449724748011923)]
+Expected Similarity(From SICK.txt): 1.8
+Actual Similarity: [array(2.9125766881858794)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.1153178900170713)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.442246017550387)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(2.918674677676)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.067229324606263)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.097859266246533)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.293537004513071)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0161624777031677)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.490387466868497)]
+Expected Similarity(From SICK.txt): 2.7
+Actual Similarity: [array(3.3937242201817153)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.06248435360641)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(2.9746309744146915)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.551936908895404)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.035293568180099)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1095706085206376)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(2.9665370664037267)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.463793789839765)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.159885782318905)]
+Expected Similarity(From SICK.txt): 2.4
+Actual Similarity: [array(3.1662887748168482)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.895314386728403)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0564585458600653)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2193614146323513)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3379026721939478)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.462845850964811)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4064377682203166)]
+Expected Similarity(From SICK.txt): 3.0
+Actual Similarity: [array(3.0681760551297734)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0568622933283924)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.3663521880261276)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.052174091780594)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.168684776780478)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3518897998196575)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.712568666714383)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.6769317636652694)]
+Expected Similarity(From SICK.txt): 1.6
+Actual Similarity: [array(3.3547547576323433)]
+Expected Similarity(From SICK.txt): 2.2
+Actual Similarity: [array(3.046534201506171)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.4227941786094265)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.5368430295574047)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(2.8307433850734274)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3046733747037127)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.4470449080777428)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.26613763669179)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.5070540021197396)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4292582600361303)]
+Expected Similarity(From SICK.txt): 1.8
+Actual Similarity: [array(3.4174410185983777)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3778978332786265)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.020648690088176)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.401859777640179)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.2633696960896956)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.2434931298547354)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.218143322101961)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1402565873837074)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1068667791419493)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.062527617761006)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.966424750567265)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.582465379337053)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.70358107844437)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.172777375007477)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1350461033012396)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.156855097304727)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0174668941476352)]
+Expected Similarity(From SICK.txt): 1.7
+Actual Similarity: [array(3.6080048432512495)]
+Expected Similarity(From SICK.txt): 2.8
+Actual Similarity: [array(3.5118127812296924)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(2.9380662709850833)]
+Expected Similarity(From SICK.txt): 1.4
+Actual Similarity: [array(3.126648749158069)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4896118677635735)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1749304652610846)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.3912401148246265)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.980317518307249)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.050026419449861)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3717182497481266)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(3.3425152123556847)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.169052819019087)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.4292232886131337)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.0628708226907606)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.3789039678948773)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.198847544624014)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.416897280139511)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.595100466703097)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.068331958485953)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.227223151313857)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.49114743902714)]
+Expected Similarity(From SICK.txt): 1.3
+Actual Similarity: [array(3.4746586548496223)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.145500314347929)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.6388077663492755)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(3.1643964176637747)]
+Expected Similarity(From SICK.txt): 2.1
+Actual Similarity: [array(3.1181543558004163)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.6205196918756144)]
+Expected Similarity(From SICK.txt): 1.1
+Actual Similarity: [array(2.8983596035122887)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1584076850156286)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.355223954243476)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.1479772425311237)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(2.9316789093995337)]
+Expected Similarity(From SICK.txt): 1.0
+Actual Similarity: [array(3.108181144298368)]
+Expected Similarity(From SICK.txt): 1.2
+Actual Similarity: [array(2.996019634534635)]
+Expected Similarity(From SICK.txt): 1.0
+Average Accuracy: 66.0645362666

@@ -25,7 +25,7 @@ class SentEmbd(object):
         self.b_inp_upd = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
         self.W_inp_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
-        self.U_inp_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        self.U_inp_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self. dim))
         self.b_inp_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
       
@@ -45,19 +45,15 @@ class SentEmbd(object):
         self.U_inp_hid_hid,
         self.b_inp_hid
 ]
-
-
-
+        
         self.hid1=None
         self.hid2=None
         self.hid_state1=None
         self.hid_state2=None
-        self.predict=None
         self.train=None
         self.get_similarity=None
         self.updates=None 
-        self.predict_hid_states,_=theano.scan(fn=self.computation,sequences=[self.sent1],outputs_info=[T.zeros_like(self.b_inp_hid)])       
-        
+        self.score=None
 
         
         
@@ -67,18 +63,12 @@ class SentEmbd(object):
         #     for param in self.params:
         #         self.get_updates[param] = theano.function([sent1,sent2,similarity_score],[lasagne.updates.adadelta(self.loss, [param])[param]])
 
-        
-
-        
-
-
     def generate_function(self):
-        score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
-        loss = T.sqrt(abs(T.square(score)-T.square(self.similarity_score)))
+        self.score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
+        loss = T.sqrt(abs(T.square(self.score)-T.square(self.similarity_score)))
+        # self.get_similarity = theano.function([self.sent1,self.sent2],[predicted_score])
         self.updates = lasagne.updates.adadelta(loss, self.params) #BlackBox
-        self.predict = theano.function([self.sent1],[self.predict_hid_states])
-        self.get_similarity = theano.function([self.sent1,self.sent2],[score])
-
+        
     def computation(self,wVec,prev_hid_state):
         zt=T.nnet.sigmoid(T.dot(self.W_inp_upd_in,wVec)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
         rt=T.nnet.sigmoid(T.dot(self.W_inp_res_in,wVec)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
@@ -91,20 +81,24 @@ class SentEmbd(object):
             for num in np.arange(len(training_dataset)):
                 self.train(np.array(training_dataset[num]),np.array(exp_dataset[num]),relatedness_scores[num])
 
-    def predictx(self,inp_sent):
-        hidden_states=self.predict(np.array(inp_sent).reshape((-1,50)))
-        hidden_states=np.array(hidden_states).reshape(-1,50)
-        print(hidden_states[-1])
-        return
+    
+    def testing(self,training_dataset,exp_dataset,relatedness_scores,log_file,choice,additional_inputs=[]):
 
-    def testing(self,training_dataset,exp_dataset,relatedness_scores,log_file):
         avg_acc=0.0
+        dep_tags1=[]
+        dep_tags2=[]
+        if(choice==2):
+            dep_tags1=additional_inputs[0]
+            dep_tags2=additional_inputs[1]
         with open(log_file,'w') as f:
             for num in np.arange(len(training_dataset)):
-                score = self.get_similarity(np.array(training_dataset[num]),np.array(exp_dataset[num]))
+                if(choice==1):
+                    score = self.get_similarity(np.array(training_dataset[num]),np.array(exp_dataset[num])) #For SentEmbd_Basic
+                elif(choice==2):
+                    score = self.get_similarity(np.array(training_dataset[num]),np.array(exp_dataset[num]),np.array(dep_tags1[num]),np.array(dep_tags2[num])) #For SentEmbd_Syntactic
                 f.write("Actual Similarity: "+str(score)+"\n")
                 f.write("Expected Similarity(From SICK.txt): "+str(relatedness_scores[num])+"\n")
-                avg_acc += (abs(score-relatedness_scores[num])/relatedness_scores[num])
+                avg_acc += (abs(score[0]-relatedness_scores[num])/relatedness_scores[num])
             avg_acc =(avg_acc/len(training_dataset) * 100)
             f.write("Average Accuracy: "+str(avg_acc)+"\n")
         return avg_acc
@@ -138,13 +132,14 @@ class SentEmbd(object):
 
 class SentEmbd_basic(SentEmbd):
     def __init__(self,word_vector_size,dim,visualise=False):
-        super().__init__(self,word_vector_size,dim,visualise)
+        super().__init__(word_vector_size,dim,visualise)
         self.hid_state1,_=theano.scan(fn=self.computation,sequences=[self.sent1],outputs_info=[T.zeros_like(self.b_inp_hid)])
-        self.hid1=hid_state1[-1]
+        self.hid1=self.hid_state1[-1]
         self.hid_state2,_=theano.scan(fn=self.computation,sequences=[self.sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
-        self.hid2=hid_state2[-1]
+        self.hid2=self.hid_state2[-1]
         self.generate_function()
-        self.train = theano.function([self.sent1,self.sent2,self.similarity_score],[],updates=updates)
+        self.get_similarity = theano.function([self.sent1,self.sent2],[self.score])
+        self.train = theano.function([self.sent1,self.sent2,self.similarity_score],[],updates=self.updates)
 
 
 class SentEmbd_syntactic(SentEmbd):
@@ -153,17 +148,17 @@ class SentEmbd_syntactic(SentEmbd):
         self.W_dep=nn_utils.normal_param(std=0.1, shape=(self.dim, dep_tags_size))
         depTags1 = T.lvector('dep_tags1')
         depTags2=T.lvector('dep_tags2')
-        self.hid_state1,_=theano.scan(fn=self.computation1,sequences=[self.sent1,depTags1],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.hid_state1,_=theano.scan(fn=self.computation_syntactic,sequences=[self.sent1,depTags1],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid1=self.hid_state1[-1]
-        self.hid_state2,_=theano.scan(fn=self.computation1,sequences=[self.sent2,depTags2],outputs_info=[T.zeros_like(self.b_inp_hid)])
+        self.hid_state2,_=theano.scan(fn=self.computation_syntactic,sequences=[self.sent2,depTags2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=self.hid_state2[-1]
         self.params.append(self.W_dep)
-        
         self.generate_function()
+        self.get_similarity = theano.function([self.sent1,self.sent2,depTags1,depTags2],[self.score])
         self.train = theano.function([self.sent1,self.sent2,self.similarity_score,depTags1,depTags2],[],updates=self.updates)
 
 
-    def computation1(self,wVec,dep_val,prev_hid_state):
+    def computation_syntactic(self,wVec,dep_val,prev_hid_state):
         xt_W_dep=self.W_dep[:,dep_val]
         zt=T.nnet.sigmoid((T.dot(self.W_inp_upd_in,wVec)*xt_W_dep)+ T.dot(self.U_inp_upd_hid,prev_hid_state) + self.b_inp_upd)
         rt=T.nnet.sigmoid((T.dot(self.W_inp_res_in,wVec)*xt_W_dep)+ T.dot(self.U_inp_res_hid,prev_hid_state) + self.b_inp_res)
@@ -171,8 +166,8 @@ class SentEmbd_syntactic(SentEmbd):
         t=(zt * prev_hid_state)+((1-zt) * curr_hid_state_int) #Hidden state(ht) at timestamp t
         return t
 
-    def trainx(self,training_dataset,exp_dataset,relatedness_scores,training_dataset_deptags,exp_dataset_depTags,epochs):
+    def trainx(self,training_dataset,sim_dataset,relatedness_scores,deptags_dataset,depTags_sim_dataset,epochs):
         for val in range(epochs):
             for num in np.arange(len(training_dataset)):
-                self.train(np.array(training_dataset[num]),np.array(exp_dataset[num]),relatedness_scores[num],training_dataset_deptags[num],exp_dataset_depTags[num])
-                
+                self.train(np.array(training_dataset[num]),np.array(sim_dataset[num]),relatedness_scores[num],deptags_dataset[num],depTags_sim_dataset[num])
+                  
