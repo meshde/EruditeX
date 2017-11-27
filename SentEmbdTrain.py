@@ -13,6 +13,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 def read_dataset():
     global glove
     global dep_tags
+    global nlp
     nlp=spacy.load('en')
     #PreProcessing of Data before training our SentEmbd Model includes converting of words to their vector representation
     training_set=os.path.join(os.path.join(BASE,'data'),"SICK.txt")
@@ -53,6 +54,7 @@ def read_dataset():
 def main():
     global glove
     global dep_tags
+    global nlp
     n=int(sys.argv[1])
     hid_dim=int(sys.argv[3])
     dataset,training_dataset,sim_dataset,relatedness_scores,depTags_training_dataset,depTags_sim_dataset= read_dataset()
@@ -104,6 +106,10 @@ def main():
 
 
     print("Current model params saved in- ",file_name)
+    if choice==1:
+        print(sent_embd.predictx("Sample Sentence",glove))
+    elif choice == 2:
+        print(sent_embd.predictx("Sample Sentence",glove,dep_tags,nlp))
 
 
 
