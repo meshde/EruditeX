@@ -106,10 +106,10 @@ def main():
 
 
     print("Current model params saved in- ",file_name)
-    if choice==1:
-        print(sent_embd.predictx("Sample Sentence",glove))
-    elif choice == 2:
-        print(sent_embd.predictx("Sample Sentence",glove,dep_tags,nlp))
+    # if choice==1:
+    #     print(sent_embd.predictx("Sample Sentence",glove))
+    # elif choice == 2:
+    #     print(sent_embd.predictx("Sample Sentence",glove,dep_tags,nlp))
 
 
 

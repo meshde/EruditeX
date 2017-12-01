@@ -131,7 +131,7 @@ class SentEmbd(object):
         return
 
     def predictx(self,inp_sent,glove):
-        vectorizedSent=utils.get_vector_sequence(inp_sen.strip(),glove,self.word_vector_size)
+        vectorizedSent=utils.get_vector_sequence(inp_sent.strip(),glove,self.word_vector_size)
         sentVector=self.predict(vectorizedSent)
         return sentVector
 
