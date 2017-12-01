@@ -434,3 +434,12 @@ class DMN_basic:
         input_mask = self.train_input_mask
         prediction = self.deploy_fn(inputs[0],q[0],input_mask[0])
         return np.array([prediction])
+
+    def print_all_params_to_file(self,file):
+        with open(file,'w') as f:
+            for param in self.params:
+                f.write(utils.get_var_name_from_object(param,self))
+                f.write('\n')
+                f.write(np.array_str(param.get_value()))
+                f.write('\n')
+        return

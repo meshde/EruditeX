@@ -110,8 +110,8 @@ def get_babi_raw(id, test_id):
         test_id = id 
     babi_name = babi_map[id]
     babi_test_name = babi_map[test_id]
-    babi_train_raw = init_babi(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/en/%s_train.txt' % babi_name))
-    babi_test_raw = init_babi(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/en/%s_test.txt' % babi_test_name))
+    babi_train_raw = init_babi(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/%s_train.txt' % babi_name))
+    babi_test_raw = init_babi(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/%s_test.txt' % babi_test_name))
     return babi_train_raw, babi_test_raw
 
 
@@ -181,6 +181,9 @@ def get_norm(x):
 
 def get_var_name(var,namespace):
     return [name for name in namespace if namespace[name] is var][0]
+
+def get_var_name_from_object(var,obj):
+    return get_var_name(var,obj.__dict__)
 
 
 

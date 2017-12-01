@@ -39,7 +39,7 @@ def SentEmbd_gru_step(embedder,prev_hid_state,wVec):
 	h__U_hid = np.multiply(rt,np.dot(params[embedder.U_inp_hid_hid],prev_hid_state))
 	print(utils.get_var_name(h__U_hid,locals()),h__U_hid)
 
-	curr_hid_state_int = np.tanh(x__W_hid + h__U_hid + params[embedder.b_inp_hid].reshape(3,1
+	curr_hid_state_int = np.tanh(x__W_hid + h__U_hid + params[embedder.b_inp_hid].reshape(3,1))
 	print(utils.get_var_name(curr_hid_state_int,locals()),curr_hid_state_int)
 
 	z__prev_h = np.multiply(zt,prev_hid_state)

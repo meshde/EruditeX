@@ -34,6 +34,7 @@ parser.add_argument('--batch_norm', type=bool, default=False, help='batch normal
 parser.add_argument('--answer_vec', type=str, default='index', help='Answer type: index, one_hot or word2vec')
 parser.add_argument('--debug', type=bool, default=False, help='Debugging')
 parser.add_argument('--query', type=str, default="",help="query for the deployment model")
+parser.add_argument('--visualise', type=bool, default=False, help="outputs values of params")
 # parser.add_argument('--app',type=bool,default=False,help='Run the program for the application. Set to False if training or testing')
 parser.set_defaults(shuffle=True)
 args = parser.parse_args()
@@ -148,7 +149,7 @@ def do_epoch(mode, epoch, skipped=0):
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size))
     with open('results.txt', 'a') as f:
-        f.write("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size) + "  epoch: " + epoch)
+        f.write("accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size) + "  epoch: " + str(epoch))
 
     return avg_loss, skipped
 
@@ -162,7 +163,13 @@ if args.mode == 'train':
         if args.shuffle:
             dmn.shuffle_train_set()
 
+        if args.visualise:
+            dmn.print_all_params_to_file('vis1.txt')
+
         _, skipped = do_epoch('train', epoch, skipped)
+
+        if args.visualise:
+            dmn.print_all_params_to_file('vis2.txt')
 
         epoch_loss, skipped = do_epoch('test', epoch, skipped)
 
