@@ -1,0 +1,47 @@
+Actual Similarity: [array(4.415601585023802)]
+Expected Similarity(From SICK.txt): 3.2
+Actual Similarity: [array(4.320760815250434)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(4.3381624425243155)]
+Expected Similarity(From SICK.txt): 3.3
+Actual Similarity: [array(4.122741357968273)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(4.581038821491776)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(4.021205108134877)]
+Expected Similarity(From SICK.txt): 4.2
+Actual Similarity: [array(4.399839989492358)]
+Expected Similarity(From SICK.txt): 4.7
+Actual Similarity: [array(4.990927236300902)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(4.202417062247525)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(4.722304122429362)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(4.229984744540469)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(4.695925347733875)]
+Expected Similarity(From SICK.txt): 3.5
+Actual Similarity: [array(4.148637249311793)]
+Expected Similarity(From SICK.txt): 3.6
+Actual Similarity: [array(4.288487796165706)]
+Expected Similarity(From SICK.txt): 3.8
+Actual Similarity: [array(9.746375275595291)]
+Expected Similarity(From SICK.txt): 4.4
+Actual Similarity: [array(9.809362738075023)]
+Expected Similarity(From SICK.txt): 3.4
+Actual Similarity: [array(9.593840122013365)]
+Expected Similarity(From SICK.txt): 4.0
+Actual Similarity: [array(5.8013668031480305)]
+Expected Similarity(From SICK.txt): 4.9
+Actual Similarity: [array(5.760787325168116)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(6.606573102481055)]
+Expected Similarity(From SICK.txt): 3.9
+Actual Similarity: [array(6.575056996430881)]
+Expected Similarity(From SICK.txt): 3.415
+Actual Similarity: [array(6.681140458866417)]
+Expected Similarity(From SICK.txt): 3.7
+Actual Similarity: [array(6.8816153237871225)]
+Expected Similarity(From SICK.txt): 3.7
+Average Accuracy: 49.1161259135

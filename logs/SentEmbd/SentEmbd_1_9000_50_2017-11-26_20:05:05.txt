@@ -1,0 +1,2 @@
+Actual Similarity: [array(3.1324021435722402)]
+Expected Similarity(From SICK.txt): 3.6
