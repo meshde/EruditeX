@@ -3,8 +3,8 @@ import sys
 import os
 sys.path.append(os.path.abspath('./'))
 # print(sys.path)
-from utils import load_glove
-from utils import get_vector
+from Helpers.utils import load_glove
+from Helpers.utils import get_vector
 import sys
 def centroid(wordvecs):
 	vec = np.array(wordvecs).reshape((-1,50))

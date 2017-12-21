@@ -174,3 +174,6 @@ accuracy: 100.00 percent  epoch: 46accuracy: 79.80 percent  epoch: 46  time: 124
 accuracy: 100.00 percent  epoch: 47accuracy: 79.80 percent  epoch: 47  time: 124.34299159049988
 accuracy: 100.00 percent  epoch: 48accuracy: 79.80 percent  epoch: 48  time: 124.74144077301025
 accuracy: 100.00 percent  epoch: 49accuracy: 79.80 percent  epoch: 49  time: 125.56405353546143
+babi: 1
+accuracy: 14.40 percent  epoch: 0accuracy: 15.40 percent  epoch: 0babi: 1
+accuracy: 34.30 percent  epoch: 0accuracy: 52.30 percent  epoch: 0

@@ -1,19 +1,19 @@
 import sys
-import utils
+from Helpers import utils
 import os
-import dmn_basic
+from Models import dmn_basic
 import time
 
 def main():
 	start = time.time()
 	query = sys.argv[1]
 	glove = utils.load_glove()
-	quest = utils.init_babi_deploy(os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)),'data'),'corpus'),'babi.txt'),query)
+	quest = utils.init_babi_deploy(os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)),'data'),'corpus'),'babi3.txt'),query)
 
 	dmn = dmn_basic.DMN_basic(babi_train_raw=quest,babi_test_raw=[],word2vec=glove,word_vector_size=50,dim=40,mode='deploy',answer_module='feedforward', input_mask_mode="sentence", memory_hops=5, l2=0, 
                 normalize_attention=False, answer_vec='index', debug=False)
 
-	dmn.load_state('states/dmn_basic.mh5.n40.bs10.babi1.epoch2.test1.20454.state')
+	dmn.load_state('states/dmn_basic/dmn_basic.mh5.n40.bs10.babi2.epoch19.test3.76325.state')
 
 	prediction = dmn.step_deploy()
 

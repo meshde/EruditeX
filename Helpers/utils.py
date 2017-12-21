@@ -136,10 +136,13 @@ def load_glove(dim = 50):
     glove = {}
     # path = "/Users/meshde/Mehmood/EruditeX/data/glove/glove.6B.50d.txt"
     path = os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),'glove'),'glove.6B.%sd.txt' % dim)
-    with open(path,'r') as f:
-        for line in f:
-            l = line.split()
-            glove[l[0]] = list(map(float,l[1:]))
+    try:
+        with open(path,'r') as f:
+            for line in f:
+                l = line.split()
+                glove[l[0]] = list(map(float,l[1:]))
+    except:
+        pass
     return glove
 
 def load_glove_visualisation(recreate=False):

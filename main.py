@@ -41,7 +41,7 @@ args = parser.parse_args()
 
 print(args)
 
-assert args.word_vector_size in [50, 100, 200, 300]
+# assert args.word_vector_size in [50, 100, 200, 300]
 
 network_name = args.prefix + '%s.mh%d.n%d.bs%d%s%s%s.babi%s' % (
     args.network,
@@ -164,12 +164,12 @@ if args.mode == 'train':
             dmn.shuffle_train_set()
 
         if args.visualise:
-            dmn.print_all_params_to_file('vis1.txt')
+            dmn.print_all_params_to_file('vis3.txt')
 
         _, skipped = do_epoch('train', epoch, skipped)
 
         if args.visualise:
-            dmn.print_all_params_to_file('vis2.txt')
+            dmn.print_all_params_to_file('vis4.txt')
 
         epoch_loss, skipped = do_epoch('test', epoch, skipped)
 
