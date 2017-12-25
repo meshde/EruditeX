@@ -46,12 +46,14 @@ class DMN_basic:
 
 
         self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
+        sys.exit()
         self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
         self.vocab_size = len(self.vocab)
 
 
         if self.debug:
             print('Input:',np.array(self.train_input).shape)
+            # print(self.train_input)
             print('Quest:',np.array(self.train_q).shape)
             print('Answer:',np.array(self.train_answer).shape)
             print('Mask:',np.array(self.train_input_mask))
@@ -328,6 +330,9 @@ class DMN_basic:
             inp = [w for w in inp if len(w) > 0]
             q = x["Q"].lower().split(' ')
             q = [w for w in q if len(w) > 0]
+            print("Contenxt:",inp)
+            print("Question:",q)
+            print("Answer:",x["A"])
 
             inp_vector = [utils.process_word(word = w,
                                         word2vec = self.word2vec,
@@ -335,6 +340,10 @@ class DMN_basic:
                                         ivocab = self.ivocab,
                                         word_vector_size = self.word_vector_size,
                                         to_return = "word2vec") for w in inp]
+            
+            # print(inp)
+            # print([np.array(wvec).shape for wvec in inp_vector])
+            # print(np.array(inp_vector).shape)
 
             q_vector = [utils.process_word(word = w,
                                         word2vec = self.word2vec,
@@ -342,7 +351,6 @@ class DMN_basic:
                                         ivocab = self.ivocab,
                                         word_vector_size = self.word_vector_size,
                                         to_return = "word2vec") for w in q]
-
             inputs.append(np.vstack(inp_vector).astype(floatX))
             questions.append(np.vstack(q_vector).astype(floatX))
             if self.mode != 'deploy':

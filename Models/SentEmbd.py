@@ -143,7 +143,7 @@ class SentEmbd_basic(SentEmbd):
         self.hid1=self.hid_state1[-1]
         self.hid_state2,_=theano.scan(fn=self.computation,sequences=[self.sent2],outputs_info=[T.zeros_like(self.b_inp_hid)])
         self.hid2=self.hid_state2[-1]
-        self.predict=theano.function([self.sent1],self.hid1)
+        self.predict=theano.function([self.sent1],self.hid_state1)
         self.generate_function()
         self.get_similarity = theano.function([self.sent1,self.sent2],[self.score])
         self.train = theano.function([self.sent1,self.sent2,self.similarity_score],[],updates=self.updates)
