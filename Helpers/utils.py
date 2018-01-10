@@ -234,6 +234,7 @@ class dt_node:
 		self.text = node.text
 		self.pos_tag = node.pos_
 		self.dep_tag = node.dep_
+		self.head = node.head.text
 		self.word_vector = get_vector(node.text, load_glove())
 		self.hid_state = None
 		self.children = children
@@ -246,11 +247,6 @@ class dt_node:
 
 	def has_children(self):
 		return not (self.children == [])
-
-	def get_tree_as_list(self):
-		child_list = []
-		for cnode in self.children:
-			child_list.append(cnode.get_tree_as_list())
 
 	def count_nodes(self):
 
@@ -290,7 +286,9 @@ class dt_node:
 			elif mode == 'text':
 				node_list.append(node.text)
 
-			# else if mode == 'vector':
+			else if mode == 'vector':
+				node_list.append(node.word_vector)
+
 
 		return node_list
 
