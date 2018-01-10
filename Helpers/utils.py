@@ -3,19 +3,19 @@ import numpy as np
 import os
 import pickle
 import spacy
-
+from nltk import Tree
 
 def fetch_wikis():
 	with open('wiki_links.txt','r') as f:
 		for line in f:
 			link = line.strip()
 
-
 def fetch_wiki(url):
 	response = requests.get(url)
 	soup = bs(response.content,'html.parser')
 	print(soup.get_text())
 	return
+
 def create_vector(word, word2vec, word_vector_size, silent=False):
 	# if the word is missing from Glove, create some fake vector and store in glove!
 	vector = np.random.uniform(0.0,1.0,(word_vector_size,))
@@ -60,8 +60,6 @@ def init_babi_deploy(fname,query):
 	print("IN init_babi_deploy")
 	print(tasks)
 	return tasks
-
-
 
 def get_babi_raw(id, test_id):
 	babi_map = {
@@ -117,7 +115,6 @@ def get_babi_raw(id, test_id):
 	babi_test_raw = init_babi(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/%s_test.txt' % babi_test_name))
 	return babi_train_raw, babi_test_raw
 
-
 def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="word2vec", silent=False):
 	if not word in word2vec:
 		create_vector(word, word2vec, word_vector_size, silent)
@@ -133,7 +130,6 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		return vocab[word]
 	elif to_return == "one_hot":
 		raise Exception("to_return = 'one_hot' is not implemented yet")
-
 
 def load_glove(dim = 50):
 	glove = {}
@@ -157,7 +153,6 @@ def load_glove_visualisation(recreate=False):
 	with open(path,'wb') as f:
 		pickle.dump(glove,f)
 	return glove
-	
 
 def get_vector(word,glove,dim=50):
 	try:
@@ -180,7 +175,6 @@ def get_vector_sequence(sentence,glove,dim=50):
 def get_norm(x):
 	x = np.array(x)
 	return np.sum(x * x)
-
 
 def get_var_name(var,namespace):
 	return [name for name in namespace if namespace[name] is var][0]
@@ -211,12 +205,33 @@ def get_sent_details(sentence,glove,dep_tags_dict,nlp,wVec_size=50):
 	result2=get_depTags_sequence(sentence,dep_tags_dict,nlp)
 	return result1,result2
 
+def get_tree(sentence):
+	nlp = spacy.load('en')
+	doc = nlp(sentence)
+	sents = [sent for sent in doc.sents]
+	sent = sents[0]
+	return get_tree_node(sent.root)
+
+def get_tree_node(node):
+	if node.n_lefts + node.n_rights > 0:
+		return Tree(node,[get_tree_node(child) for child in node.children])
+	else:
+		return node
+
+def print_token_details(sentence):
+	nlp = spacy.load('en')
+	doc = nlp(sentence)
+
+	print("Token","\t","POS","\t","DEP","\t","Head")
+
+	for token in doc:
+		print(token,"\t",token.pos_,"\t",token.dep_,"\t",token.head)
+	return
 
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"
 	fetch_wiki(url)
 	return
-
 
 if __name__ == '__main__':
 	main()
