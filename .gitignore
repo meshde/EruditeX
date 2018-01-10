@@ -15,3 +15,8 @@ tests/
 *.pkl
 hell*
 share/
+logs/
+states/
+man/
+hope
+
