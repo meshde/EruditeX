@@ -268,26 +268,40 @@ class dt_node(object):
 
 		return po_list
 
-	def get_tree_traversal(self, po_list, mode):
+	def get_rnn_input(self):
+		postorder = self.postorder()
+
+		word_vector_list = self.get_tree_traversal(postorder,'word_vector')
+		parent_index_list = self.get_tree_traversal(postorder,'parent_index')
+		is_leaf_list = self.get_tree_traversal(postorder,'is_leaf')
+		# dependency_tag_list = self.get_tree_traversal(postorder,'dependency_tag')
+
+		return word_vector_list,parent_index_list,is_leaf_list
+
+	def get_tree_traversal(self,postorder,mode):
 		node_list = []
-
-		for node in po_list:
-
-			if mode == 'head-index':
+		
+		if mode == 'parent_index':
+			node_list = []
+			for node in postorder:
 				count = 0
-				for n in po_list:
+				for n in postorder:
 					if n.text == node.head:
 						node_list.append(count)
 						break
 					else:
 						count += 1
 
-			elif mode == 'text':
-				node_list.append(node.text)
+		elif mode == 'text':
+			node_list = [node.text for node in postorder]
 
-			elif mode == 'vector':
-				node_list.append(node.word_vector)
+		elif mode == 'word_vector':
+			node_list = [node.word_vector for node in postorder]
 
+		elif mode == 'is_leaf':
+			node_list = [0 if node.has_children() else 1 for node in postorder]
+
+		# elif mode == 'dependency_tag':
 		return node_list
 
 
