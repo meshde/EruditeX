@@ -229,8 +229,8 @@ def get_sent_details(sentence, glove, dep_tags_dict, nlp, wVec_size=50):
 	return result1, result2
 
 
-class dt_node:
-	def __init__(self, node, children):
+class dt_node(object):
+	def __init__(self, node, children = []):
 		self.text = node.text
 		self.pos_tag = node.pos_
 		self.dep_tag = node.dep_
@@ -246,7 +246,7 @@ class dt_node:
 		return self.children
 
 	def has_children(self):
-		return not (self.children == [])
+		return not (len(self.children) == 0)
 
 	def count_nodes(self):
 
@@ -268,9 +268,8 @@ class dt_node:
 
 		return po_list
 
-	def get_tree_traversal(self, mode):
+	def get_tree_traversal(self, po_list, mode):
 		node_list = []
-		po_list = self.postorder()
 
 		for node in po_list:
 
@@ -286,9 +285,8 @@ class dt_node:
 			elif mode == 'text':
 				node_list.append(node.text)
 
-			else if mode == 'vector':
+			elif mode == 'vector':
 				node_list.append(node.word_vector)
-
 
 		return node_list
 
@@ -302,10 +300,7 @@ def get_dtree(sentence):
 
 
 def get_tree_node(node):
-	if node.n_lefts + node.n_rights > 0:
-		return dt_node(node, [get_tree_node(child) for child in node.children])
-	else:
-		return node
+	return dt_node(node, [get_tree_node(child) for child in node.children])
 
 
 def print_token_details(sentence):
