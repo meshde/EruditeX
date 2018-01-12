@@ -4,10 +4,10 @@ from Helpers import nn_utils
 
 
 class DT_RNN(object):
-	def __init__(self,dim=50,word_vector_size=50):
+	def __init__(self,dep_len=56,dim=50,word_vector_size=50):
 		self.dim = dim
 		self.word_vector_size = word_vector_size
-		self.dep_len = 20 # Mit please handle dep tags
+		self.dep_len = dep_len
 
 		self.W_x =  nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
 		self.W_dep = nn_utils.normal_param(std=0.1, shape=(self.dep_len, self.dim, self.dim))

@@ -273,9 +273,9 @@ class dt_node(object):
 		word_vector_list = self.get_tree_traversal(postorder,'word_vector')
 		parent_index_list = self.get_tree_traversal(postorder,'parent_index')
 		is_leaf_list = self.get_tree_traversal(postorder,'is_leaf')
-		# dep_tag_list = self.get_tree_traversal(postorder,'dep_tag')
+		dep_tag_list = self.get_tree_traversal(postorder,'dep_tag')
 
-		return word_vector_list,parent_index_list,is_leaf_list
+		return word_vector_list,parent_index_list,is_leaf_list,dep_tag_list
 
 	def get_tree_traversal(self,postorder,mode):
 		node_list = []
@@ -299,9 +299,11 @@ class dt_node(object):
 		elif mode == 'is_leaf':
 			node_list = [0 if node.has_children() else 1 for node in postorder]
 
-		# elif mode == 'dep_tag':
+		elif mode == 'dep_tag':
+			dep_tags_dict=load_dep_tags()
+			node_list = [dep_tags_dict[node.dep_tag.upper()] for node in postorder]
 		return node_list
-
+		
 
 def get_dtree(sentence):
 	nlp = spacy.load('en')
