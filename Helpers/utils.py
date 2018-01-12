@@ -274,13 +274,12 @@ class dt_node(object):
 		word_vector_list = self.get_tree_traversal(postorder,'word_vector')
 		parent_index_list = self.get_tree_traversal(postorder,'parent_index')
 		is_leaf_list = self.get_tree_traversal(postorder,'is_leaf')
-		# dependency_tag_list = self.get_tree_traversal(postorder,'dependency_tag')
+		# dep_tag_list = self.get_tree_traversal(postorder,'dep_tag')
 
 		return word_vector_list,parent_index_list,is_leaf_list
 
 	def get_tree_traversal(self,postorder,mode):
 		node_list = []
-		
 		if mode == 'parent_index':
 			node_list = []
 			for node in postorder:
@@ -301,7 +300,7 @@ class dt_node(object):
 		elif mode == 'is_leaf':
 			node_list = [0 if node.has_children() else 1 for node in postorder]
 
-		# elif mode == 'dependency_tag':
+		# elif mode == 'dep_tag':
 		return node_list
 
 
@@ -321,10 +320,10 @@ def print_token_details(sentence):
 	nlp = spacy.load('en')
 	doc = nlp(sentence)
 
-	print("Token", "\t", "POS", "\t", "DEP", "\t", "Head")
+	print("Token", "\t", "POS", "\t", "DEP", "\t", "Head", "\t", "DEP_CODE")
 
 	for token in doc:
-		print(token, "\t", token.pos_, "\t", token.dep_, "\t", token.head)
+		print(token, "\t", token.pos_, "\t", token.dep_, "\t", token.head, "\t", token.dep)
 	return
 
 
