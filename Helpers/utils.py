@@ -201,8 +201,7 @@ def get_var_name(var, namespace):
 
 
 def load_dep_tags():
-	path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),
-	                    'depTags.txt')
+	path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'depTags.txt')
 	dep_tags = []
 	dep_tags_dict = {}
 	with open(path, 'r') as file1:

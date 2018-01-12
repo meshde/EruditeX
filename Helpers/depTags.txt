@@ -1,0 +1,56 @@
+ACOMP: adjectival complement
+ADVCL: adverbial clause modifier
+ADVMOD: adverbial modifier
+AGENT: agent
+AMOD: adjectival modifier
+APPOS: appositional modifier
+ATTR: attribute
+AUX: auxiliary
+AUXPASS: passive auxiliary
+CC: coordinating conjunction
+CCOMP: clausal complement
+COMPLM: complementizer
+CONJ: conjunct
+CSUBJ: clausal subject
+CSUBJPASS: clausal passive subject
+DEP: unclassified dependent
+DET: determiner
+DOBJ: direct object
+EXPL: expletive
+HMOD: modifier in hyphenation
+HYPH: hyphen
+INFMOD: infinitival modifier
+INTJ: interjection
+IOBJ: indirect object
+MARK: maker
+META: meta modifier
+NEG: negation modifier
+NMOD: modifier of nominal
+NN: noun compound modifier
+NPADVMOD: noun phrase as adverbial modifier
+NSUBJ: nominal subject
+NSUBJPASS: nominal passive subject
+NUM: numeric modifier
+NUMBER: number compound modifier
+OPRD: object predicate
+PARATAXIS: parenthetical modifier
+PARTMOD: participial modifier
+PCOMP: complement of a preposition
+POBJ: object of a preposition
+POSS: possession modifier
+POSSESSIVE: possessive modifier
+PRECONJ: pre-correlative conjunction
+PREDET: predeterminer (not used by Spacy - see below)
+PREP: prepositional modifier
+PRT: particle
+PUNCT: punctuation
+QUANTMOD: quantifier phrase modifier
+RCMOD: relative clause modifier (not used by Spacy - relcl is used instead as noted below)
+ROOT: root
+XCOMP: open clausal complement
+ACL: finite and non-finite clausal modifier.
+CASE: CASE MARKER
+COMPOUND: COMPOUND NOUNS/NUMBERS
+DATIVE: DATIVE
+NUMMOD: NUMERIC MODIFIERS
+RELCL: RELATIVE CLAUSE MODIFIERS
