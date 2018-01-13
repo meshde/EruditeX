@@ -241,6 +241,7 @@ class dt_node(object):
 		self.word_vector = get_vector(node.text, load_glove(dim), dim)
 		self.hid_state = None
 		self.children = children
+		self.word_vector_size = dim
 
 	def get_text(self):
 		return self.text
@@ -278,7 +279,9 @@ class dt_node(object):
 		is_leaf_list = self.get_tree_traversal(postorder,'is_leaf')
 		dep_tag_list = self.get_tree_traversal(postorder,'dep_tag')
 
-		return word_vector_list,parent_index_list,is_leaf_list,dep_tag_list
+		word_vector_array = np.array(word_vector_list).reshape((-1,self.word_vector_size))
+
+		return word_vector_array,parent_index_list,is_leaf_list,dep_tag_list
 
 	def get_tree_traversal(self,postorder,mode):
 		node_list = []
