@@ -142,6 +142,10 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 
 
 def load_glove(dim=50):
+
+	if dim == 3:
+		return load_glove_visualisation()
+
 	glove = {}
 	# path = "/Users/meshde/Mehmood/EruditeX/data/glove/glove.6B.50d.txt"
 	path = os.path.join(
@@ -229,12 +233,12 @@ def get_sent_details(sentence, glove, dep_tags_dict, nlp, wVec_size=50):
 
 
 class dt_node(object):
-	def __init__(self, node, children = []):
+	def __init__(self, node, children=[],dim=50):
 		self.text = node.text
 		self.pos_tag = node.pos_
 		self.dep_tag = node.dep_
 		self.head = node.head.text
-		self.word_vector = get_vector(node.text, load_glove())
+		self.word_vector = get_vector(node.text, load_glove(dim), dim)
 		self.hid_state = None
 		self.children = children
 
@@ -248,7 +252,6 @@ class dt_node(object):
 		return not (len(self.children) == 0)
 
 	def count_nodes(self):
-
 		count = 0
 		if self.has_children():
 			for cnode in self.children:
@@ -305,16 +308,16 @@ class dt_node(object):
 		return node_list
 		
 
-def get_dtree(sentence):
+def get_dtree(sentence, dim=50):
 	nlp = spacy.load('en')
 	doc = nlp(sentence)
 	sents = [sent for sent in doc.sents]
 	sent = sents[0]
-	return get_tree_node(sent.root)
+	return get_tree_node(sent.root,dim)
 
 
-def get_tree_node(node):
-	return dt_node(node, [get_tree_node(child) for child in node.children])
+def get_tree_node(node,dim=50):
+	return dt_node(node, [get_tree_node(child,dim) for child in node.children],dim)
 
 
 def print_token_details(sentence):
