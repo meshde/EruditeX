@@ -41,10 +41,11 @@ class DT_RNN(object):
 			return hidden_states
 
 		hidden_states,_ = theano.scan(fn=outer_loop, sequences=T.arange(vectors.shape[0]), outputs_info=T.zeros((vectors.shape[0],self.dim)), non_sequences=[vectors,parent_indices,is_leaf,dep_tags,self.W_x,self.W_dep,self.b])
-		hidden_states = hidden_states[-1]
-		sentence_embedding = hidden_states[-1]
+		self.hidden_states = hidden_states[-1]
+		self.sentence_embedding = self.hidden_states[-1]
 
-		self.get_sentence_embedding = theano.function([vectors,parent_indices,is_leaf,dep_tags],sentence_embedding)
+		self.get_sentence_embedding = theano.function([vectors,parent_indices,is_leaf,dep_tags],self.sentence_embedding)
+		self.get_hidden_states = theano.function([vectors,parent_indices,is_leaf,dep_tags],self.hidden_states)
 
 		return
 
