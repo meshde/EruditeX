@@ -242,6 +242,7 @@ class dt_node(object):
 		self.hid_state = None
 		self.children = children
 		self.word_vector_size = dim
+		self.count = None
 
 	def get_text(self):
 		return self.text
@@ -253,11 +254,16 @@ class dt_node(object):
 		return not (len(self.children) == 0)
 
 	def count_nodes(self):
+		if self.count != None:
+			return self.count
+		
 		count = 0
 		if self.has_children():
 			for cnode in self.children:
 				count += cnode.count_nodes()
-		return 1 + count
+		
+		self.count = 1 + count
+		return self.count
 
 	def postorder(self):
 		po_list = []
@@ -322,6 +328,11 @@ def get_dtree(sentence, dim=50):
 def get_tree_node(node,dim=50):
 	return dt_node(node, [get_tree_node(child,dim) for child in node.children],dim)
 
+def pad_vector_with_zeros(arr, pad_width):
+	return np.lib.pad(arr, pad_width=(0,pad_width), mode='constant')
+
+def pad_matrix_with_zeros(arr, pad_width):
+	return np.lib.pad(arr, pad_width=((0,pad_width),(0,0)), mode='constant')
 
 def print_token_details(sentence):
 	nlp = spacy.load('en')
@@ -332,6 +343,7 @@ def print_token_details(sentence):
 	for token in doc:
 		print(token, "\t", token.pos_, "\t", token.dep_, "\t", token.head, "\t", token.dep)
 	return
+
 
 
 def main():
