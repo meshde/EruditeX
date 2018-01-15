@@ -10,7 +10,27 @@ class EruditeX(object):
 		self.word_vector_size = word_vector_size
 		self.dt_rnn = dt_rnn.DT_RNN(dim=dim, word_vector_size=word_vector_size)
 
-	def process_input(self, sentences, question=None):
+		self.theano_build()
+
+
+	def theano_build(self):	
+		vectors_list = T.tensor3()
+		parent_indices_list = T.matrix()
+		is_leaf_list = T.matrix()
+		dep_tags_list = T.imatrix()
+
+		def dt_rnn_func(idx, vectors_list, parent_indices_list, is_leaf_list, dep_tags_list):
+			hidden_states, sentence_embeddings = self.dt_rnn.get_theano_graph(vectors_list[idx], parent_indices_list[idx], is_leaf_list[idx], dep_tags_list[idx])
+			return hidden_states, sentence_embeddings
+
+		(hidden_states, sentence_embeddings),_ = theano.scan(fn=dt_rnn_func, sequences=T.arange(vectors_list.shape[0]), non_sequences=[vectors_list,parent_indices_list,is_leaf_list,dep_tags_list])
+
+		self.get_sentence_embeddings = theano.function([vectors_list, parent_indices_list, is_leaf_list, dep_tags_list], sentence_embeddings)
+		
+		return
+
+
+	def process_context(self, sentences):
 		vectors_list = []
 		parent_indices_list = []
 		is_leaf_list = []
@@ -33,9 +53,9 @@ class EruditeX(object):
 			is_leaf_list.append(utils.pad_vector_with_zeros(is_leaf, pad_width=pad_width))
 			dep_tags_list.append(utils.pad_vector_with_zeros(dep_tags, pad_width=pad_width))
 
-		print(vectors_list)
-		print(parent_indices_list)
-		print(is_leaf_list)
-		print(dep_tags_list)
+		self.vectors_list = vectors_list
+		self.parent_indices_list = parent_indices_list
+		self.is_leaf_list = is_leaf_list
+		self.dep_tags_list = dep_tags_list
 
 		return
