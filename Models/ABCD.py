@@ -17,13 +17,15 @@ import pickle as pickle
 from Helpers import utils
 from Helpers import nn_utils
 
+from Models import SentEmbd
+
 floatX = theano.config.floatX
 
 
 class DMN:
-    def __init__(self, babi_train_raw, babi_test_raw, word2vec, word_vector_size,
+    def __init__(self, babi_train_raw, babi_test_raw,babi_deploy_raw, word2vec, word_vector_size,
                 dim, mode, answer_module, input_mask_mode, memory_hops, l2,
-                normalize_attention, answer_vec, debug, **kwargs):
+                normalize_attention, answer_vec, debug,sentEmbdType="basic",**kwargs):
 
         self.vocab = {}
         self.ivocab = {}
@@ -40,12 +42,15 @@ class DMN:
         self.l2 = l2
         self.normalize_attention = normalize_attention
         self.answer_vec = answer_vec
+        self.sentEmbdType=sentEmbdType
 
-        if self.mode != 'deploy': print("==> not used params in DMN class:", kwargs.keys())
+        if self.mode != 'deploy':
+            print("==> not used params in DMN class:", kwargs.keys())
+            self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
+            self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
+        else:
+            self.deploy_input, self.deploy_q, self.deploy_answer, self.deploy_mask = self._process_input(babi_deploy_raw)
 
-
-        self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
-        self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
         self.vocab_size = len(self.vocab)
 
 
@@ -56,12 +61,6 @@ class DMN:
             print('Mask:',np.array(self.train_input_mask))
             sys.exit(0)
 
-        # if self.mode == 'deploy':
-        #     self.input_var = T.tensor3('input_var')
-        #     self.q_var = T.tensor3('question_var')
-        #     self.input_mask_var = T.ivector('input_mask_var')
-
-        # else:
         if self.answer_vec == 'word2vec':
             self.answer_var = T.vector('answer_var')
         else:
@@ -73,6 +72,14 @@ class DMN:
             self.answer_size = self.word_vector_size
         else:
             raise Exception("Invalid answer_vec type")
+
+        #Setting up pre-trained Sentence Embedder for question and input module:
+        if self.mode != 'deploy': print("==> Setting up pre-trained Sentence Embedder")       
+        if self.sentEmbdType=="basic":
+            self.sent_embd=SentEmbd.SentEmbd_basic(self.word_vector_size,self.dim)
+        else:
+            dep_tags=utils.load_dep_tags
+            self.sent_embd=SentEmbd.SentEmbd_syntacti
 
 
         if self.mode != 'deploy': print("==> building input module")
@@ -115,35 +122,35 @@ class DMN:
         if self.answer_module == 'feedforward':
             self.prediction = nn_utils.softmax(T.dot(self.W_a, self.last_mem))
 
-        elif self.answer_module == 'recurrent':
-            self.W_ans_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
-            self.W_ans_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
-            self.b_ans_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
+        # elif self.answer_module == 'recurrent':
+        #     self.W_ans_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
+        #     self.W_ans_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        #     self.b_ans_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-            self.W_ans_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
-            self.W_ans_upd_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
-            self.b_ans_upd = nn_utils.constant_param(value=0.0, shape=(self.dim,))
+        #     self.W_ans_upd_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
+        #     self.W_ans_upd_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        #     self.b_ans_upd = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-            self.W_ans_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
-            self.W_ans_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
-            self.b_ans_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
+        #     self.W_ans_hid_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.answer_size))
+        #     self.W_ans_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
+        #     self.b_ans_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
-            def answer_step(prev_a, prev_y):
-                a = self.GRU_update(prev_a, T.concatenate([prev_y, self.q_q]),
-                                  self.W_ans_res_in, self.W_ans_res_hid, self.b_ans_res,
-                                  self.W_ans_upd_in, self.W_ans_upd_hid, self.b_ans_upd,
-                                  self.W_ans_hid_in, self.W_ans_hid_hid, self.b_ans_hid)
-                y = T.dot(self.W_a, a)
-                if self.answer_vec == 'one_hot' or self.answer_vec == 'index':
-                    y = nn_utils.softmax(y)
-                return [a, y]
+        #     def answer_step(prev_a, prev_y):
+        #         a = self.GRU_update(prev_a, T.concatenate([prev_y, self.q_q]),
+        #                           self.W_ans_res_in, self.W_ans_res_hid, self.b_ans_res,
+        #                           self.W_ans_upd_in, self.W_ans_upd_hid, self.b_ans_upd,
+        #                           self.W_ans_hid_in, self.W_ans_hid_hid, self.b_ans_hid)
+        #         y = T.dot(self.W_a, a)
+        #         if self.answer_vec == 'one_hot' or self.answer_vec == 'index':
+        #             y = nn_utils.softmax(y)
+        #         return [a, y]
 
-            # TODO: add conditional ending
-            dummy = theano.shared(np.zeros((self.answer_size, ), dtype=floatX))
-            results, updates = theano.scan(fn=answer_step,
-                outputs_info=[self.last_mem, T.zeros_like(dummy)],
-                n_steps=1)
-            self.prediction = results[1][-1]
+        #     # TODO: add conditional ending
+        #     dummy = theano.shared(np.zeros((self.answer_size, ), dtype=floatX))
+        #     results, updates = theano.scan(fn=answer_step,
+        #         outputs_info=[self.last_mem, T.zeros_like(dummy)],
+        #         n_steps=1)
+        #     self.prediction = results[1][-1]
 
         else:
             raise Exception("invalid answer_module")
@@ -178,6 +185,15 @@ class DMN:
 
         if debug: print(self.loss.ndim)
         # if self.debug: print(self.loss.eval({self.input_var:self.train_input,self.q_var:self.train_q,self.answer_var:self.train_answer,self.input_mask_var:self.train_input_mask}))
+
+    def get_SentenceVecs(self,sentences):
+        # print(np.array(sentences).shape)
+        if self.sentEmbdType == 'basic':
+            sentVecs=self.sent_embd.predict(np.array(sentences))
+        elif self.sentEmbdType == 'advanced':
+            print("TODO")
+            #TODO
+        return sentVecs
 
 
     def GRU_update(self, h, x, W_res_in, W_res_hid, b_res,
@@ -321,7 +337,7 @@ class DMN:
         self.train_input, self.train_q, self.train_answer, self.train_input_mask = zip(*combined)
 
 
-    def step(self, batch_index, mode):
+    def get_step_inputs(self, batch_index, mode):
         if mode == "train" and self.mode == "test":
             raise Exception("Cannot train during test mode")
 
@@ -345,31 +361,33 @@ class DMN:
         ans = answers[batch_index]
         input_mask = input_masks[batch_index]
 
-        skipped = 0
-        grad_norm = float('NaN')
+        return theano_fn,inp,q,ans,input_mask
 
-        if mode == 'train':
-            gradient_value = self.get_gradient_fn(inp, q, ans, input_mask)
-            grad_norm = np.max([utils.get_norm(x) for x in gradient_value])
+        # skipped = 0
+        # grad_norm = float('NaN')
 
-            if (np.isnan(grad_norm)):
-                print("==> gradient is nan at index %d." % batch_index)
-                print("==> skipping")
-                skipped = 1
+        # if mode == 'train':
+        #     gradient_value = self.get_gradient_fn(inp, q, ans, input_mask)
+        #     grad_norm = np.max([utils.get_norm(x) for x in gradient_value])
 
-        if skipped == 0:
-            ret = theano_fn(inp, q, ans, input_mask)
-        else:
-            ret = [-1, -1]
+        #     if (np.isnan(grad_norm)):
+        #         print("==> gradient is nan at index %d." % batch_index)
+        #         print("==> skipping")
+        #         skipped = 1
 
-        param_norm = np.max([utils.get_norm(x.get_value()) for x in self.params])
+        # if skipped == 0:
+        #     ret = theano_fn(inp, q, ans, input_mask)
+        # else:
+        #     ret = [-1, -1]
 
-        return {"prediction": np.array([ret[0]]),
-                "answers": np.array([ans]),
-                "current_loss": ret[1],
-                "skipped": skipped,
-                "log": "pn: %.3f \t gn: %.3f" % (param_norm, grad_norm)
-                }
+        # param_norm = np.max([utils.get_norm(x.get_value()) for x in self.params])
+
+        # return {"prediction": np.array([ret[0]]),
+        #         "answers": np.array([ans]),
+        #         "current_loss": ret[1],
+        #         "skipped": skipped,
+        #         "log": "pn: %.3f \t gn: %.3f" % (param_norm, grad_norm)
+        #         }
     def step_deploy(self):
         inputs = self.train_input
         q = self.train_q
@@ -382,6 +400,8 @@ class DMN:
             self.deploy_fn = theano.function(inputs=input_list,outputs=[self.prediction],on_unused_input='ignore')
 
         else:
+            updates = lasagne.updates.adadelta(self.loss, self.params)
+
             if self.mode == 'train':
                 print("==> compiling train_fn")
                 self.train_fn = theano.function(inputs=input_list,
@@ -409,6 +429,7 @@ class DMN_basic(DMN):
         self.q_var = T.matrix('question_var')
         self.input_mask_var = T.ivector('input_mask_var')
 
+        # Setting up Sentence Embedder Module
         self.W_inp_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
         self.W_inp_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
@@ -441,7 +462,6 @@ class DMN_basic(DMN):
                   self.W_inp_upd_in, self.W_inp_upd_hid, self.b_inp_upd,
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid]
 
-        updates = lasagne.updates.adadelta(self.loss, self.params)
 
         input_list = [self.input_var, self.q_var, self.answer_var, self.input_mask_var]
         output_list = [self.inp_c,self.q_q]
@@ -453,18 +473,68 @@ class DMN_basic(DMN):
         return self.GRU_update(prev_h, x, self.W_inp_res_in, self.W_inp_res_hid, self.b_inp_res,
                                      self.W_inp_upd_in, self.W_inp_upd_hid, self.b_inp_upd,
                                      self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid)
+    def step(self, batch_index, mode):
+        theano_fn,inp,q,ans,input_mask=self.get_step_inputs(batch_index,mode)
+        ret = theano_fn(inp, q, ans, input_mask)
+        return {"prediction": np.array([ret[0]]),
+                "answers": np.array([ans]),
+                "current_loss": ret[1],
+                # "skipped": skipped,
+                # "log": "pn: %.3f \t gn: %.3f" % (param_norm, grad_norm)
+                }
+
 
 class DMN_Erudite(DMN):
     def __init__(self,**kwargs):
         self.inp_c = T.matrix('inp')
         self.q_q = T.vector('q_q')
         
-        memory = [self.q_q]
+        self.memory = [self.q_q.copy()]
         
         super().__init__(**kwargs)
 
-        updates = lasagne.updates.adadelta(self.loss, self.params)
-
-        input_list = [self.inp_c,self.q_q]
+        if(self.mode == 'deploy'):
+            input_list = [self.inp_c,self.q_q]
+        else:
+            input_list = [self.inp_c,self.q_q,self.answer_var]
         
         self.generate_functions(input_list)
+
+
+
+    def step_deploy(self):
+        inputs=self.deploy_input
+        q=self.deploy_q
+        input_mask=self.deploy_mask
+        inp_vec=self.get_SentenceVecs(inputs[0])
+        inp_vec=inp_vec.take(input_mask, axis=0)
+        # inp_vec=inp_vec[0]
+        q_vec=self.get_SentenceVecs(q[0])
+        q_vec=q_vec[-1]
+        print(inp_vec.shape)
+        print(q_vec.shape)
+        prediction = self.deploy_fn(inp_vec,q_vec)
+        ans_ind=np.argmax(prediction)
+        print(ans_ind)
+        print(self.ivocab)
+        print(self.ivocab[ans_ind])
+        return prediction
+
+    def step(self, batch_index, mode):
+        theano_fn,inp,q,ans,input_mask=self.get_step_inputs(batch_index,mode)
+        
+        inp_vec=self.get_SentenceVecs(inp)
+        inp_vec=inp_vec.take(input_mask, axis=0)
+        
+        q_vec=self.get_SentenceVecs(q)
+        q_vec=q_vec[-1]
+
+        ret = theano_fn(inp_vec, q_vec, ans)
+
+        return {"prediction": np.array([ret[0]]),
+                "answers": np.array([ans]),
+                "current_loss": ret[1],
+                # "skipped": skipped,
+                # "log": "pn: %.3f \t gn: %.3f" % (param_norm, grad_norm)
+                }
+

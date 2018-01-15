@@ -11,7 +11,7 @@ from Helpers import nn_utils
 print("==> parsing input arguments")
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="dmn_basic", help='network type: dmn_basic, dmn_smooth, or dmn_batch')
+parser.add_argument('--network', type=str, default="dmn_erudite", help='network type: dmn_basic, dmn_smooth, or dmn_batch')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=50, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=5, help='number of epochs')
@@ -58,15 +58,17 @@ if(args.mode != 'deploy'):
 	babi_train_raw, babi_test_raw = utils.get_babi_raw(args.babi_id, args.babi_test_id)
 word2vec = utils.load_glove(args.word_vector_size)
 args_dict = dict(args._get_kwargs())
-raw_task=None
+
 if(args.mode != 'deploy'):
 	args_dict['babi_train_raw'] = babi_train_raw
 	args_dict['babi_test_raw'] = babi_test_raw
+	args_dict['babi_deploy_raw']=None
 else:
 	raw_task=utils.init_babi_deploy('/home/mit/Desktop/EruditeX/data/corpus/babi.txt',args.query)
-	args_dict['babi_train_raw'] = raw_task
+	args_dict['babi_train_raw'] = None
 	args_dict['babi_test_raw'] = None
-	print(raw_task)
+	args_dict['babi_deploy_raw']=raw_task
+	# print(raw_task)
 	
 
 
@@ -84,26 +86,16 @@ with open('results.txt', 'a') as f:
 #     dmn = dmn_batch.DMN_batch(**args_dict)
 
 # elif args.network == 'dmn_basic':
+
+if (args.batch_size != 1):
+	print("==> No minibatch training, argument batch_size is useless")
+	args.batch_size = 1
 if args.network == 'dmn_basic':
 	from Models import dmn
-	if (args.batch_size != 1):
-		print("==> No minibatch training, argument batch_size is useless")
-		args.batch_size = 1
 	dmn = dmn.DMN(**args_dict)
-
-# elif args.network == 'dmn_smooth':
-#     import dmn_smooth
-#     if (args.batch_size != 1):
-#         print "==> no minibatch training, argument batch_size is useless"
-#         args.batch_size = 1
-#     dmn = dmn_smooth.DMN_smooth(**args_dict)
-
-# elif args.network == 'dmn_qa':
-#     import dmn_qa_draft
-#     if (args.batch_size != 1):
-#         print "==> no minibatch training, argument batch_size is useless"
-#         args.batch_size = 1
-#     dmn = dmn_qa_draft.DMN_qa(**args_dict)
+elif args.network == 'dmn_erudite':
+	from Models import ABCD
+	dmn = ABCD.DMN_Erudite(**args_dict)
 
 else:
 	raise Exception("No such network known: " + args.network)
@@ -128,7 +120,7 @@ def do_epoch(mode, epoch, skipped=0):
 		answers = step_data["answers"]
 		current_loss = step_data["current_loss"]
 		current_skip = (step_data["skipped"] if "skipped" in step_data else 0)
-		log = step_data["log"]
+		log = (step_data["log"] if "log" in step_data else 0)
 
 		skipped += current_skip
 

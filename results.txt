@@ -243,3 +243,51 @@ babi: 1
 babi: 1
 babi: 1
 babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+babi: 1
+accuracy: 2.60 percent  epoch: 0accuracy: 4.16 percent  epoch: 0  time: 75.19215416908264
+accuracy: 4.56 percent  epoch: 1accuracy: 4.53 percent  epoch: 1  time: 76.60818815231323
+accuracy: 5.18 percent  epoch: 2accuracy: 4.75 percent  epoch: 2  time: 75.68798923492432
+accuracy: 5.34 percent  epoch: 3accuracy: 4.77 percent  epoch: 3  time: 78.0986487865448
+accuracy: 5.39 percent  epoch: 4accuracy: 4.63 percent  epoch: 4  time: 77.69977140426636
+babi: 1
+accuracy: 21.90 percent  epoch: 0accuracy: 24.30 percent  epoch: 0  time: 83.67907977104187
+accuracy: 32.80 percent  epoch: 1accuracy: 37.40 percent  epoch: 1  time: 83.05035614967346
+accuracy: 46.50 percent  epoch: 2accuracy: 43.30 percent  epoch: 2  time: 93.08476710319519
+babi: 1
+accuracy: 25.90 percent  epoch: 0accuracy: 40.40 percent  epoch: 0  time: 88.99454760551453
+accuracy: 45.80 percent  epoch: 1accuracy: 43.80 percent  epoch: 1  time: 87.18651843070984
+accuracy: 51.10 percent  epoch: 2accuracy: 47.20 percent  epoch: 2  time: 99.49141144752502
+accuracy: 52.80 percent  epoch: 3accuracy: 47.60 percent  epoch: 3  time: 86.88777279853821
+accuracy: 54.80 percent  epoch: 4accuracy: 48.10 percent  epoch: 4  time: 89.31089043617249
+babi: 1
+babi: 1
+accuracy: 28.40 percent  epoch: 0accuracy: 44.30 percent  epoch: 0  time: 94.72782063484192
+accuracy: 47.00 percent  epoch: 1accuracy: 45.60 percent  epoch: 1  time: 87.66077589988708
+accuracy: 51.10 percent  epoch: 2accuracy: 47.40 percent  epoch: 2  time: 85.40643906593323
+accuracy: 52.00 percent  epoch: 3accuracy: 47.00 percent  epoch: 3  time: 84.27897429466248
+accuracy: 54.70 percent  epoch: 4accuracy: 48.90 percent  epoch: 4  time: 83.0723569393158
+accuracy: 56.60 percent  epoch: 5accuracy: 47.30 percent  epoch: 5  time: 85.99582576751709
+accuracy: 58.30 percent  epoch: 6accuracy: 46.30 percent  epoch: 6  time: 83.16682004928589
+accuracy: 60.00 percent  epoch: 7accuracy: 45.90 percent  epoch: 7  time: 82.7639832496643
+accuracy: 60.70 percent  epoch: 8accuracy: 45.20 percent  epoch: 8  time: 83.38196301460266
+accuracy: 62.50 percent  epoch: 9accuracy: 44.70 percent  epoch: 9  time: 1961.5606076717377
