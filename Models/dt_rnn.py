@@ -27,6 +27,15 @@ class DT_RNN(object):
 
 		# hidden_states = T.zeros((vectors.shape[0],self.dim))
 
+		hidden_states, sentence_embedding = self.get_theano_graph(vectors, parent_indices, is_leaf, dep_tags)
+
+		self.get_sentence_embedding = theano.function([vectors,parent_indices,is_leaf,dep_tags],sentence_embedding)
+		self.get_hidden_states = theano.function([vectors,parent_indices,is_leaf,dep_tags],hidden_states)
+
+		return
+
+	def get_theano_graph(self, vectors, parent_indices, is_leaf, dep_tags):
+
 		def inner_loop(idy, prev_val, idx, hidden_states, parent_indices, dep_tags, W):
 			temp = ifelse(T.eq(parent_indices[idy],idx),T.dot(hidden_states[idy],W[dep_tags[idy]]),T.zeros_like(prev_val))
 			val = prev_val + temp
@@ -41,13 +50,10 @@ class DT_RNN(object):
 			return hidden_states
 
 		hidden_states,_ = theano.scan(fn=outer_loop, sequences=T.arange(vectors.shape[0]), outputs_info=T.zeros((vectors.shape[0],self.dim)), non_sequences=[vectors,parent_indices,is_leaf,dep_tags,self.W_x,self.W_dep,self.b])
-		self.hidden_states = hidden_states[-1]
-		self.sentence_embedding = self.hidden_states[-1]
+		hidden_states = hidden_states[-1]
+		sentence_embedding = hidden_states[-1]
 
-		self.get_sentence_embedding = theano.function([vectors,parent_indices,is_leaf,dep_tags],self.sentence_embedding)
-		self.get_hidden_states = theano.function([vectors,parent_indices,is_leaf,dep_tags],self.hidden_states)
-
-		return
+		return hidden_states, sentence_embedding
 
 
 import numpy as np
