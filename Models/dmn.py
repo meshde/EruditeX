@@ -46,8 +46,13 @@ class DMN:
 
         if self.mode != 'deploy':
             print("==> not used params in DMN class:", kwargs.keys())
-            self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
-            self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
+
+            if(self.sentEmbdType != "basic"):
+                self.dep_tags_dict=utils.load_dep_tags()
+                import spacy
+                self.nlp=spacy.load('en')
+            self.train_input, self.train_q, self.train_answer, self.train_input_mask, self.train_input_dep_tags, self.train_q_dep_tags = self._process_input(babi_train_raw,self.sentEmbdType)
+            self.test_input, self.test_q, self.test_answer, self.test_input_mask, self.test_input_dep_tags, self.test_q_dep_tags = self._process_input(babi_test_raw,self.sentEmbdType)
         else:
             self.deploy_input, self.deploy_q, self.deploy_answer, self.deploy_mask = self._process_input(babi_deploy_raw)
 
@@ -72,15 +77,6 @@ class DMN:
             self.answer_size = self.word_vector_size
         else:
             raise Exception("Invalid answer_vec type")
-
-        #Setting up pre-trained Sentence Embedder for question and input module:
-        if self.mode != 'deploy': print("==> Setting up pre-trained Sentence Embedder")       
-        if self.sentEmbdType=="basic":
-            self.sent_embd=SentEmbd.SentEmbd_basic(self.word_vector_size,self.dim)
-        else:
-            dep_tags=utils.load_dep_tags
-            self.sent_embd=SentEmbd.SentEmbd_syntacti
-
 
         if self.mode != 'deploy': print("==> building input module")
 
@@ -186,13 +182,12 @@ class DMN:
         if debug: print(self.loss.ndim)
         # if self.debug: print(self.loss.eval({self.input_var:self.train_input,self.q_var:self.train_q,self.answer_var:self.train_answer,self.input_mask_var:self.train_input_mask}))
 
-    def get_SentenceVecs(self,sentences):
+    def get_SentenceVecs(self,sentences,tags=None):
         # print(np.array(sentences).shape)
         if self.sentEmbdType == 'basic':
             sentVecs=self.sent_embd.predict(np.array(sentences))
         elif self.sentEmbdType == 'advanced':
-            print("TODO")
-            #TODO
+            sentVecs=self.sent_embd.predict(np.array(sentences),np.array(tags).reshape(-1))
         return sentVecs
 
 
@@ -276,11 +271,13 @@ class DMN:
                 x.set_value(y)
 
 
-    def _process_input(self, data_raw):
+    def _process_input(self, data_raw, sentEmbdType):
         questions = []
         inputs = []
         answers = []
         input_masks = []
+        dep_tags_inputs=[]
+        dep_tags_q=[]
         for x in data_raw:
             inp = x["C"].lower().split(' ')
             inp = [w for w in inp if len(w) > 0]
@@ -301,6 +298,15 @@ class DMN:
                                         word_vector_size = self.word_vector_size,
                                         to_return = "word2vec") for w in q]
 
+            if(sentEmbdType!="basic"):
+                # print(x["C"])
+                # print(x["Q"])
+                dep_tags_inp_vector = utils.get_depTags_sequence(x["C"], self.dep_tags_dict, self.nlp)
+                dep_tags_q_vector = utils.get_depTags_sequence(x["Q"], self.dep_tags_dict, self.nlp)
+                dep_tags_inputs.append(np.vstack(dep_tags_inp_vector))
+                dep_tags_q.append(np.vstack(dep_tags_q_vector))
+
+
             inputs.append(np.vstack(inp_vector).astype(floatX))
             questions.append(np.vstack(q_vector).astype(floatX))
             if self.mode != 'deploy':
@@ -318,7 +324,7 @@ class DMN:
             else:
                 raise Exception("invalid input_mask_mode")
 
-        return inputs, questions, answers, input_masks
+        return inputs, questions, answers, input_masks,dep_tags_inputs,dep_tags_q
 
 
     def get_batches_per_epoch(self, mode):
@@ -341,18 +347,27 @@ class DMN:
         if mode == "train" and self.mode == "test":
             raise Exception("Cannot train during test mode")
 
+        sent_dep_tags=None
+        q_dep_tags=None
+
         if mode == "train":
             theano_fn = self.train_fn
             inputs = self.train_input
             qs = self.train_q
             answers = self.train_answer
             input_masks = self.train_input_mask
+            if(self.sentEmbdType=='advanced'):
+                sent_dep_tags=self.train_input_dep_tags[batch_index]
+                q_dep_tags=self.train_q_dep_tags[batch_index]
         elif mode == "test":
             theano_fn = self.test_fn
             inputs = self.test_input
             qs = self.test_q
             answers = self.test_answer
             input_masks = self.test_input_mask
+            if(self.sentEmbdType=='advanced'):
+                sent_dep_tags=self.test_input_dep_tags[batch_index]
+                q_dep_tags=self.test_q_dep_tags[batch_index]
         else:
             raise Exception("Invalid mode")
 
@@ -361,7 +376,8 @@ class DMN:
         ans = answers[batch_index]
         input_mask = input_masks[batch_index]
 
-        return theano_fn,inp,q,ans,input_mask
+
+        return theano_fn,inp,q,ans,input_mask,sent_dep_tags,q_dep_tags
 
         # skipped = 0
         # grad_norm = float('NaN')
@@ -474,7 +490,7 @@ class DMN_basic(DMN):
                                      self.W_inp_upd_in, self.W_inp_upd_hid, self.b_inp_upd,
                                      self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid)
     def step(self, batch_index, mode):
-        theano_fn,inp,q,ans,input_mask=self.get_step_inputs(batch_index,mode)
+        theano_fn,inp,q,ans,input_mask,_,_=self.get_step_inputs(batch_index,mode)
         ret = theano_fn(inp, q, ans, input_mask)
         return {"prediction": np.array([ret[0]]),
                 "answers": np.array([ans]),
@@ -493,14 +509,19 @@ class DMN_Erudite(DMN):
         
         super().__init__(**kwargs)
 
+        #Setting up pre-trained Sentence Embedder for question and input module:
+        if self.mode != 'deploy': print("==> Setting up pre-trained Sentence Embedder")       
+        if self.sentEmbdType=="basic":
+            self.sent_embd=SentEmbd.SentEmbd_basic(self.word_vector_size,self.dim)
+        else:
+            self.sent_embd=SentEmbd.SentEmbd_syntactic(self.word_vector_size,self.dim,len(self.dep_tags_dict))
+
         if(self.mode == 'deploy'):
             input_list = [self.inp_c,self.q_q]
         else:
             input_list = [self.inp_c,self.q_q,self.answer_var]
         
         self.generate_functions(input_list)
-
-
 
     def step_deploy(self):
         inputs=self.deploy_input
@@ -521,12 +542,12 @@ class DMN_Erudite(DMN):
         return prediction
 
     def step(self, batch_index, mode):
-        theano_fn,inp,q,ans,input_mask=self.get_step_inputs(batch_index,mode)
+        theano_fn,inp,q,ans,input_mask,sent_dep_tags,q_dep_tags=self.get_step_inputs(batch_index,mode)
         
-        inp_vec=self.get_SentenceVecs(inp)
+        inp_vec=self.get_SentenceVecs(inp,sent_dep_tags)
         inp_vec=inp_vec.take(input_mask, axis=0)
         
-        q_vec=self.get_SentenceVecs(q)
+        q_vec=self.get_SentenceVecs(q,q_dep_tags)
         q_vec=q_vec[-1]
 
         ret = theano_fn(inp_vec, q_vec, ans)

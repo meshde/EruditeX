@@ -11,7 +11,7 @@ from Helpers import nn_utils
 print("==> parsing input arguments")
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="dmn_erudite", help='network type: dmn_basic, dmn_smooth, or dmn_batch')
+parser.add_argument('--network', type=str, default="dmn_erudite", help='network type: dmn_basic, dmn_erudite, or dmn_initial')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=50, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=5, help='number of epochs')
@@ -91,11 +91,11 @@ if (args.batch_size != 1):
 	print("==> No minibatch training, argument batch_size is useless")
 	args.batch_size = 1
 if args.network == 'dmn_basic':
-	from Models import dmn
-	dmn = dmn.DMN(**args_dict)
+	from Models import dmn_initial
+	dmn = dmn_initial.DMN(**args_dict)
 elif args.network == 'dmn_erudite':
-	from Models import ABCD
-	dmn = ABCD.DMN_Erudite(**args_dict)
+	from Models import dmn
+	dmn = dmn.DMN_Erudite(**args_dict)
 
 else:
 	raise Exception("No such network known: " + args.network)
