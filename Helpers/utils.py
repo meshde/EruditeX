@@ -59,10 +59,9 @@ def init_babi_deploy(fname, query):
 			line = line.strip()
 			line = line.replace('.', ' . ')
 			task['C'] += line
-			task['C'] += " "
+			# task['C'] += " "
 	tasks = []
 	tasks.append(task.copy())
-	print("IN init_babi_deploy")
 	print(tasks)
 	return tasks
 

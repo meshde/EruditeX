@@ -43,18 +43,18 @@ class DMN:
         self.normalize_attention = normalize_attention
         self.answer_vec = answer_vec
         self.sentEmbdType=sentEmbdType
+        if(self.sentEmbdType != "basic"):
+            self.dep_tags_dict=utils.load_dep_tags()
+            import spacy
+            self.nlp=spacy.load('en')
 
         if self.mode != 'deploy':
             print("==> not used params in DMN class:", kwargs.keys())
 
-            if(self.sentEmbdType != "basic"):
-                self.dep_tags_dict=utils.load_dep_tags()
-                import spacy
-                self.nlp=spacy.load('en')
             self.train_input, self.train_q, self.train_answer, self.train_input_mask, self.train_input_dep_tags, self.train_q_dep_tags = self._process_input(babi_train_raw,self.sentEmbdType)
             self.test_input, self.test_q, self.test_answer, self.test_input_mask, self.test_input_dep_tags, self.test_q_dep_tags = self._process_input(babi_test_raw,self.sentEmbdType)
         else:
-            self.deploy_input, self.deploy_q, self.deploy_answer, self.deploy_mask = self._process_input(babi_deploy_raw)
+            self.deploy_input, self.deploy_q, self.deploy_answer, self.deploy_mask, self.deploy_input_dep_tags, self.deploy_q_dep_tags = self._process_input(babi_deploy_raw,self.sentEmbdType)
 
         self.vocab_size = len(self.vocab)
 
@@ -524,21 +524,30 @@ class DMN_Erudite(DMN):
         self.generate_functions(input_list)
 
     def step_deploy(self):
+        
         inputs=self.deploy_input
         q=self.deploy_q
         input_mask=self.deploy_mask
-        inp_vec=self.get_SentenceVecs(inputs[0])
+        # print(self.deploy_input_dep_tags[0])
+        # print(self.deploy_q_dep_tags[0])
+        
+        if(self.sentEmbdType=='basic'):
+            inp_vec=self.get_SentenceVecs(inputs[0])
+            q_vec=self.get_SentenceVecs(q[0])
+        elif(self.sentEmbdType=='advanced'):
+            inp_vec=self.get_SentenceVecs(inputs[0],self.deploy_input_dep_tags[0])
+            q_vec=self.get_SentenceVecs(q[0],self.deploy_q_dep_tags[0])
+
         inp_vec=inp_vec.take(input_mask, axis=0)
-        # inp_vec=inp_vec[0]
-        q_vec=self.get_SentenceVecs(q[0])
         q_vec=q_vec[-1]
-        print(inp_vec.shape)
-        print(q_vec.shape)
-        prediction = self.deploy_fn(inp_vec,q_vec)
+        
+        prediction = self.deploy_fn(inp_vec[0],q_vec)
         ans_ind=np.argmax(prediction)
+        
         print(ans_ind)
         print(self.ivocab)
         print(self.ivocab[ans_ind])
+        
         return prediction
 
     def step(self, batch_index, mode):
