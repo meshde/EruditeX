@@ -2,14 +2,14 @@ import theano
 import theano.tensor as T
 from theano.ifelse import ifelse
 
-from Models import dt_rnn
+from Models import DT_RNN
 from Helpers import utils
 
 class EruditeX(object):
 	def __init__(self, dim=50, word_vector_size=50):
 		self.dim = dim
 		self.word_vector_size = word_vector_size
-		self.dt_rnn = dt_rnn.DT_RNN(dim=dim, word_vector_size=word_vector_size)
+		self.dt_rnn = DT_RNN(dim=dim, word_vector_size=word_vector_size)
 
 		self.theano_build()
 
