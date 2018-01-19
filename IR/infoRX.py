@@ -5,9 +5,9 @@ import os
 import string
 from nltk import word_tokenize
 from nltk.corpus import stopwords
+sys.path.append('../')
 
-from utils import load_glove
-from utils import get_vector
+from Helpers import utils
 
 
 def centroid(wordvecs):
@@ -18,7 +18,7 @@ def centroid(wordvecs):
 def get_word_vecs(line, glove):
 	l = []
 	for word in line.split():
-		l.append(get_vector(word.lower(), glove))
+		l.append(utils.get_vector(word.lower(), glove))
 	return l
 
 
@@ -58,7 +58,7 @@ def tf_idf(doc, query):
 		tfidf.append(0)
 		para = " ".join(l for l in doc[i] if l not in string.punctuation)
 		wcount_total.append(len(para.split()))
-		print(wcount_total[i])
+		# print(wcount_total[i])
 
 	for term in imp_tokens:
 		doc_freq = 0
@@ -68,19 +68,19 @@ def tf_idf(doc, query):
 			if term_count > 0:
 				doc_freq += 1
 			tf.append(term_count / wcount_total[i])
-			print(term, term_count, doc_freq)
+			# print(term, term_count, doc_freq)
 
 		idf = math.log(doc_count_total / doc_freq)
 
 		for i in range(0, doc_count_total):
 			tfidf[i] += tf[i] * idf
 
-		print(tfidf)
+		# print(tfidf)
 		return tfidf
 
 
 def main():
-	glove = load_glove()
+	glove = utils.load_glove()
 	vector = []
 
 	# query = sys.argv[1]

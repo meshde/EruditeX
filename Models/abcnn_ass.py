@@ -5,7 +5,14 @@ Attention-Based Bi CNN for Answer Sentence Selection from context.
 
 import tensorflow as tf
 import numpy as np
+import sys
+sys.path.append('../')
+
 from Helpers import utils
+from IR import infoRX
+from nltk.corpus import stopwords
+from nltk import word_tokenize
+
 
 class abcnn_model:
 
@@ -22,10 +29,17 @@ class abcnn_model:
 		self.q = tf.placeholder(tf.float32, [self.vector_dim, self.max_sent_len], 'question')
 		self.a = tf.placeholder(tf.float32, [self.vector_dim, self.max_sent_len], 'answer')
 
+		self.Q_ = tf.placeholder(tf.float32, [self.vector_dim])
+		self.A_ = tf.placeholder(tf.float32, [self.vector_dim])
+
+		# [self.max_sent_len, self.vector_dim]
 		self.W_q = tf.Variable(tf.random_normal([self.vector_dim, self.max_sent_len]))
 		self.W_a = tf.Variable(tf.random_normal([self.vector_dim, self.max_sent_len]))
 
-	
+		self.W_lr = tf.Variable(tf.random_normal([3]))
+		self.B_lr = tf.Variable(tf.random_normal([3]))
+
+
 	def attention_pooling(feature_map, attn_):
 
 		attn_pool_mat = tf.placeholder(tf.float32, [None, None])
@@ -78,7 +92,6 @@ class abcnn_model:
 		q_vector = attention_pooling(q_vector, attn_)
 		a_vector = attention_pooling(a_vector, tf.transpose(attn_))
 
-
 		# Convolutional Layer2
 		q_conv2 = tf.layers.conv2d(
 			inputs=q_vector,
@@ -94,110 +107,75 @@ class abcnn_model:
 			padding="same",
 			activation=tf.nn.relu)
 
-			
-		dense = tf.layers.dense(inputs=pool_concat, units=1024, activation=tf.nn.relu)
-
-		dropout = tf.layers.dropout(
-			inputs=dense, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
-		# Logits Layer
-		logits = tf.layers.dense(inputs=dropout, units=10)
-
-		predictions = {
-			"classes": tf.argmax(input=logits, axis=1),
-			"probabilities": tf.nn.softmax(logits, name="softmax_tensor")
-		}
-
-		if mode == tf.estimator.ModeKeys.PREDICT:
-			return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions)
-
-		onehot_labels = tf.one_hot(indices=tf.cast(labels, tf.int32), depth=10)
-		loss = tf.losses.softmax_cross_entropy(
-			onehot_labels=onehot_labels, logits=logits)
-
-		if mode == tf.estimator.ModeKeys.TRAIN:
-			optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
-			train_op = optimizer.minimize(
-				loss=loss,
-				global_step=tf.train.get_global_step())
-			return tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)
-
-		# Add evaluation metrics (for EVAL mode)
-		eval_metric_ops = {
-			"accuracy": tf.metrics.accuracy(
-				labels=labels, predictions=predictions["classes"])}
-		return tf.estimator.EstimatorSpec(
-			mode=mode, loss=loss, eval_metric_ops=eval_metric_ops)
+		attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.sub(q_vector, a_vector)), reduction_indices=1))
+	
+		q_vector = attention_pooling(q_vector, attn_)
+		a_vector = attention_pooling(a_vector, tf.transpose(attn_))			
 		
+		pool1 = tf.layers.average_pooling2d(inputs=q_vector, pool_size=[self.vector_dim, self.max_sent_len])
+		pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.vector_dim, self.max_sent_len])
 
-	def get_score(self, q_vector, q_len, a_vector, a_len):
+		return pool1, pool2
 
-		# s = max(q_len, a_len)
-		q_vector = utils.pad_matrix_with_zeros(q_vector, 40 - q_len)
-		a_vector = utils.pad_matrix_with_zeros(a_vector, 40 - a_len)
+
+	def get_score(self, q_vector, a_vector, label, q_len, a_len, word_cnt, tfidf):
+
+		# s = max(q_len, a_len)	
+
+		q_vector = utils.pad_matrix_with_zeros(q_vector, self.max_sent_len - q_len)
+		a_vector = utils.pad_matrix_with_zeros(a_vector, self.max_sent_len - a_len)
+		print(" > Vector Padded")
 
 		input_dict = {q: q_vector, a: a_vector}
 		score = -1
 
 		optimizer = tf.train.Adamoptimizer(self.learning_rate)
-		# TODO: define loss
-		train_step = optimizer.minimize(loss)
 
-		Y = self.model(self.q, self.a)
+		Q_, A_ = self.model(self.q, self.a)
+
+		cos_sim = infoRX.cosine_similarity(Q_, A_)
+		features = np.array([cos_sim, word_cnt, tfidf])
+
+		output_layer = tf.nn.sigmoid(tf.add(tf.matmul(self.W_lr, features), self.B_lr))
+
+		# cross entropy loss
+		loss = -tf.reduce_sum(label * tf.log(output_layer))
+
+		correct = tf.equal(label, output_layer)
+		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+
+		train_step = optimizer.minimize(loss)
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
-			score = sessn.run(train_step, feed_dict=input_dict)
+			sessn.run(train_step, feed_dict=input_dict)
+			score, l = sessn.run([output_layer, loss], feed_dict=input_dict)
 
 		return score
-
-	def train_neural_net(X):
-		Y = abcnn_model(X)
-
-		cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=Y, labels=Y_)  # loss function
-		cross_entropy = tf.reduce_mean(cross_entropy) * 100
-
-		correct = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
-		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
-
-		# Training Step
-
-		optimizer = tf.train.GradientDescentOptimizer(0.003)
-		train_step = optimizer.minimize(cross_entropy)
-
-		no_epochs = 1
-
-		with tf.Session() as sessn:
-			# Training Stage
-			for epoch in range(no_epochs):
-				epoch_loss = 0
-
-				batch_X = np.reshape(batch_X, (-1, 28, 28, 1))
-				train_dict = {X: batch_X, Y_: batch_Y}
-
-				sessn.run(train_step, feed_dict=train_dict)
-				a, c = sessn.run([accuracy, cross_entropy], feed_dict=train_dict)
-				# print('Batch',i,' / Cost :', c, ' / Accuracy :', a)
-				epoch_loss += c
-
-			print('Finished Epoch', epoch, '> loss : ', epoch_loss)
-
-test_data = {X: np.reshape(
-	a, c=sessn.run([accuracy, cross_entropy], feed_dict=test_data))
-	print('Test Accuracy : ', a)
-
+ 
 
 # model verification
 if __name__ == '__main__':
 
 	q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-train.tsv")
+	print(" > Dataset initialized.")
 
 	for i in range(len(q_list)):
 		q = q_list[i]
-		for a in a_list[i]:
-			result = abcnn_model.get_score(utils.get_vector_sequence(q, utils.load_glove()), len(q.split()),
-		                               utils.get_vector_sequence(a, utils.load_glove()), len(a.split()))
+		tfidf = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
 
-	print(i + " : " + result)
+		for a in a_list[i].keys():
+
+			word_cnt = 0
+			imp_tokens = [i for i in word_tokenize(q.lower()) if i not in set(stopwords.words('english'))]
+			for x in imp_tokens:
+				if x in a:
+					word_cnt += 1
+
+			glove = utils.load_glove()		
+			result = abcnn_model.get_score(utils.get_vector_sequence(q, glove) , utils.get_vector_sequence(a, glove), a_list[i][a], len(q.split()), len(a.split()), word_cnt, tfidf)
+
+		print(i + " : " + result)
 
 	# 	print("Question:", q_list[i])
 	# 	print("Answers:", a_list[i])

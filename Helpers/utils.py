@@ -151,7 +151,7 @@ def load_glove(dim=200):
 	path = os.path.join(
 		os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),
 		             'glove'), 'glove.6B.%sd.txt' % dim)
-	with open(path, 'r') as f:
+	with open(path, 'r', encoding="utf8") as f:
 		for line in f:
 			l = line.split()
 			glove[l[0]] = list(map(float, l[1:]))
@@ -352,20 +352,20 @@ def _process_wikiqa_dataset(file):
 	with open(file, encoding="utf8") as data_file:
 		source = list(csv.reader(data_file, delimiter="\t", quotechar='"'))
 		q_index = 'Q-1'
-		ans_sents = []
+		ans_sents = {}
 
 		for row in source[1:]:
 
 			if q_index != row[0]:
 				answers.append(ans_sents)
-				ans_sents = []
+				ans_sents = {}
 				questions.append(row[1])
 				q_index = row[0]
 
-		ans_sents.append({row[5]: row[6]})
+			ans_sents[row[5]] = row[6]
 
-	answers.append(ans_sents)
-	answers = answers[1:]
+		answers.append(ans_sents)
+		answers = answers[1:]
 
 	# for i in range(len(questions)):
 	# 	print("Question:", questions[i])
