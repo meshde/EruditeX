@@ -12,11 +12,12 @@ from Helpers import utils
 from IR import infoRX
 from nltk.corpus import stopwords
 from nltk import word_tokenize
+from sklearn.metrics.pairwise import euclidean_distances
 
 
 class abcnn_model:
 
-	def __init__(self, input_data, mode):
+	def __init__(self):
 
 		# Hyperparameters
 
@@ -26,15 +27,15 @@ class abcnn_model:
 		self.n_filters = 50  # num_filters
 		self.learning_rate = 0.05  # learning_rate
 
-		self.q = tf.placeholder(tf.float32, [self.vector_dim, self.max_sent_len], 'question')
-		self.a = tf.placeholder(tf.float32, [self.vector_dim, self.max_sent_len], 'answer')
+		self.q = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'question')
+		self.a = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'answer')
 
 		self.Q_ = tf.placeholder(tf.float32, [self.vector_dim])
 		self.A_ = tf.placeholder(tf.float32, [self.vector_dim])
 
-		# [self.max_sent_len, self.vector_dim]
-		self.W_q = tf.Variable(tf.random_normal([self.vector_dim, self.max_sent_len]))
-		self.W_a = tf.Variable(tf.random_normal([self.vector_dim, self.max_sent_len]))
+		# [self.max_sent_len, self.vector_dim] [self.vector_dim, self.max_sent_len]
+		self.W_q = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
+		self.W_a = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
 
 		self.W_lr = tf.Variable(tf.random_normal([3]))
 		self.B_lr = tf.Variable(tf.random_normal([3]))
@@ -62,12 +63,13 @@ class abcnn_model:
 		return attn_pool_mat
 
 
-	def model(q_vector, a_vector):
+	def model(self, q_vector, a_vector):
 
-		attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.sub(q_vector, a_vector)), reduction_indices=1))
+		# attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(q_vector, a_vector)), reduction_indices=1))
+		attn_ = euclidean_distances(q_vector, a_vector)
 
-		q_feature_ = tf.matmul(attn_, W_q)
-		a_feature_ = tf.matmul(attn_, W_a, transpose_a=True)
+		q_feature_ = tf.matmul(attn_, self.W_q)
+		a_feature_ = tf.matmul(attn_, self.W_a, transpose_a=True)
 
 		q_vector = tf.stack([q_feature_, q_vector])
 		a_vector = tf.stack([a_feature_, a_vector])
@@ -87,8 +89,8 @@ class abcnn_model:
 			padding="same",
 			activation=tf.nn.relu)
 
-		attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.sub(q_vector, a_vector)), reduction_indices=1))
-	
+		attn_ = euclidean_distances(q_vector, a_vector)
+
 		q_vector = attention_pooling(q_vector, attn_)
 		a_vector = attention_pooling(a_vector, tf.transpose(attn_))
 
@@ -107,7 +109,7 @@ class abcnn_model:
 			padding="same",
 			activation=tf.nn.relu)
 
-		attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.sub(q_vector, a_vector)), reduction_indices=1))
+		attn_ = euclidean_distances(q_vector, a_vector)
 	
 		q_vector = attention_pooling(q_vector, attn_)
 		a_vector = attention_pooling(a_vector, tf.transpose(attn_))			
@@ -124,12 +126,12 @@ class abcnn_model:
 
 		q_vector = utils.pad_matrix_with_zeros(q_vector, self.max_sent_len - q_len)
 		a_vector = utils.pad_matrix_with_zeros(a_vector, self.max_sent_len - a_len)
-		print(" > Vector Padded")
+		print(" > Vectors Padded")
 
 		input_dict = {q: q_vector, a: a_vector}
 		score = -1
 
-		optimizer = tf.train.Adamoptimizer(self.learning_rate)
+		optimizer = tf.train.AdamOptimizer(self.learning_rate)
 
 		Q_, A_ = self.model(self.q, self.a)
 
@@ -157,6 +159,8 @@ class abcnn_model:
 # model verification
 if __name__ == '__main__':
 
+	selector = abcnn_model()
+
 	q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-train.tsv")
 	print(" > Dataset initialized.")
 
@@ -173,7 +177,7 @@ if __name__ == '__main__':
 					word_cnt += 1
 
 			glove = utils.load_glove()		
-			result = abcnn_model.get_score(utils.get_vector_sequence(q, glove) , utils.get_vector_sequence(a, glove), a_list[i][a], len(q.split()), len(a.split()), word_cnt, tfidf)
+			result = selector.get_score(utils.get_vector_sequence(q, glove) , utils.get_vector_sequence(a, glove), a_list[i][a], len(q.split()), len(a.split()), word_cnt, tfidf)
 
 		print(i + " : " + result)
 
