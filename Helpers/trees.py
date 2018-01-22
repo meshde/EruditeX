@@ -1,4 +1,5 @@
-import utils
+import numpy as np
+from . import utils
 
 class dt_node(object):
 	def __init__(self, node, glove, children=[], dim=50):
@@ -80,6 +81,25 @@ class dt_node(object):
 			node_list = [0 if node.has_children() else 1 for node in postorder]
 
 		elif mode == 'dep_tag':
-			dep_tags_dict=load_dep_tags()
+			dep_tags_dict = utils.load_dep_tags()
 			node_list = [dep_tags_dict[node.dep_tag.upper()] for node in postorder]
 		return node_list
+
+
+class dtne_node(dt_node):
+	def __init__(self, node, glove, children=[], dim=50):
+		super().__init__(node, glove, children, dim)
+		self.ent_type = utils.get_ne_index(node.ent_type)
+
+	def get_tree_traversal(self, postorder, mode):
+		if mode == 'ent_type':
+			return [node.ent_type for node in postorder]
+		return super().get_tree_traversal(postorder, mode)
+
+	def get_rnn_input(self):
+		inputs = super().get_rnn_input()
+
+		postorder = self.postorder()
+		ent_type = self.get_tree_traversal(postorder, 'ent_type')
+
+		return inputs, ent_type

@@ -3,7 +3,7 @@ import numpy as np
 import os
 import pickle
 import spacy
-import trees
+from . import trees
 
 def fetch_wikis():
 	with open('wiki_links.txt', 'r') as f:
@@ -242,6 +242,22 @@ def get_dtree(sentence, dim=50):
 def get_tree_node(node, glove, dim=50):
 	return trees.dt_node(node, glove, [get_tree_node(child,dim) for child in node.children], dim)
 
+def get_dtne_tree(sentence, dim=50):
+	nlp = spacy.load('en')
+	doc = nlp(sentence)
+
+	for ent in doc.ents:
+		ent.merge()
+
+	sents = [sent for sent in doc.sents]
+	sent = sents[0]
+
+	glove = load_glove(dim)
+	return get_dtne_node(sent.root, glove, dim)
+
+def get_dtne_node(node, glove, dim=50):
+	return trees.dtne_node(node, glove, [get_dtne_node(child,dim) for child in node.children], dim)
+
 def pad_vector_with_zeros(arr, pad_width):
 	return np.lib.pad(arr, pad_width=(0,pad_width), mode='constant')
 
@@ -257,6 +273,13 @@ def print_token_details(sentence):
 	for token in doc:
 		print(token, "\t", token.pos_, "\t", token.dep_, "\t", token.head, "\t", token.dep)
 	return
+
+def get_ne_index(ent_type):
+	if ent_type == 0:
+		return 0
+	if ent_type == 448:
+		return 18
+	return ent_type - 378 + 1
 
 
 
