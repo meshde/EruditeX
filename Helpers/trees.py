@@ -12,6 +12,7 @@ class dt_node(object):
 		self.children = children
 		self.word_vector_size = dim
 		self.count = None
+		self.po_list = None
 
 	def get_text(self):
 		return self.text
@@ -35,6 +36,9 @@ class dt_node(object):
 		return self.count
 
 	def postorder(self):
+		if self.po_list:
+			return self.po_list
+
 		po_list = []
 
 		if self.has_children():
@@ -44,21 +48,21 @@ class dt_node(object):
 
 		po_list.append(self)
 
-		return po_list
+		self.po_list = po_list
+		return self.po_list
 
 	def get_rnn_input(self):
-		postorder = self.postorder()
-
-		word_vector_list = self.get_tree_traversal(postorder,'word_vector')
-		parent_index_list = self.get_tree_traversal(postorder,'parent_index')
-		is_leaf_list = self.get_tree_traversal(postorder,'is_leaf')
-		dep_tag_list = self.get_tree_traversal(postorder,'dep_tag')
+		word_vector_list = self.get_tree_traversal('word_vector')
+		parent_index_list = self.get_tree_traversal('parent_index')
+		is_leaf_list = self.get_tree_traversal('is_leaf')
+		dep_tag_list = self.get_tree_traversal('dep_tag')
 
 		word_vector_array = np.array(word_vector_list).reshape((-1,self.word_vector_size))
 
 		return word_vector_array,parent_index_list,is_leaf_list,dep_tag_list
 
-	def get_tree_traversal(self,postorder,mode):
+	def get_tree_traversal(self,mode):
+		postorder = self.postorder()
 		node_list = []
 		if mode == 'parent_index':
 			node_list = []
@@ -91,15 +95,14 @@ class dtne_node(dt_node):
 		super().__init__(node, glove, children, dim)
 		self.ent_type = utils.get_ne_index(node.ent_type)
 
-	def get_tree_traversal(self, postorder, mode):
+	def get_tree_traversal(self, mode):
+		postorder = self.postorder()
 		if mode == 'ent_type':
 			return [node.ent_type for node in postorder]
-		return super().get_tree_traversal(postorder, mode)
+		return super().get_tree_traversal(mode)
 
 	def get_rnn_input(self):
 		inputs = super().get_rnn_input()
-
-		postorder = self.postorder()
-		ent_type = self.get_tree_traversal(postorder, 'ent_type')
+		ent_type = self.get_tree_traversal('ent_type')
 
 		return inputs, ent_type
