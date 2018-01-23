@@ -22,17 +22,23 @@ class DT_RNN_Train(object):
 		self.sent_embd=dt_rnn.Dt_RNN()
 		self.params=self.sent_embd.params
 
+		inputs=sent_embd.get_graph_input()
+
+		
+
 		print("Building loss layer")
 
-		self.hid1=T.vector('hid1')
-		self.hid2=T.vector('hid2')
+		self.hid1=self.sent_embd.get_theano_graph(inputs)
+		self.hid2=self.sent_embd.get_theano_graph(inputs)
 		self.similarity_score = T.dscalar('score')
 
 		self.score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
 		self.loss = T.sqrt(abs(T.square(self.score)-T.square(self.similarity_score)))
 		self.updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
 
-		self.train = theano.function([self.hid1,self.hid2,self.similarity_score],[],updates=self.updates)
+		inputs.append(self.similarity_score)
+
+		self.train = theano.function(inputs,[],updates=self.updates)
 
 		self.get_similarity = theano.function([self.hid1,self.hid2],[self.score])
 
@@ -40,8 +46,8 @@ class DT_RNN_Train(object):
 		sent_tree_set2=[]
 		nlp = spacy.load('en')
 		for num in range(len(training_dataset1)):
-			sent_tree1=utils.get_dtree(training_dataset1[num].strp())
-			sent_tree2=utils.get_dtree(training_dataset2[num].strp())
+			sent_tree1=training_dataset1[num]
+			sent_tree2=training_dataset2[num]
 
 			sent_tree1_inputs=sent_tree1.get_rnn_input()
 			sent_tree2_inputs=sent_tree2.get_rnn_input()
@@ -100,8 +106,8 @@ class DT_RNN_Train(object):
 			# print(item[0])
 			# print(item[1])
 			# print(item[2])
-			training_dataset1.append(utils.get_dtree(item[0].strip()))
-			training_dataset2.append(utils.get_dtree(item[1].strip()))
+			training_dataset1.append(utils.get_dtree(item[0].strip(),nlp))
+			training_dataset2.append(utils.get_dtree(item[1].strip(),nlp))
 			relatedness_scores.append(float(item[2]))
 
 

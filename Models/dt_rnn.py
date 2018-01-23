@@ -11,7 +11,7 @@ class DT_RNN(object):
 		self.word_vector_size = word_vector_size
 		self.dep_len = dep_len
 		self.set_params()
-		self.theano_build()
+		# self.theano_build()
 
 	def set_params(self):
 		self.W_x =  nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
@@ -39,7 +39,7 @@ class DT_RNN(object):
 		self.get_sentence_embedding = theano.function(inputs, sentence_embedding)
 		self.get_hidden_states = theano.function(inputs, hidden_states)
 
-		return
+		return 
 
 
 	@staticmethod

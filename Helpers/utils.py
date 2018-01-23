@@ -231,8 +231,8 @@ def get_sent_details(sentence, glove, dep_tags_dict, nlp, wVec_size=50):
 	return result1, result2
 
 
-def get_dtree(sentence, dim=50):
-	nlp = spacy.load('en')
+def get_dtree(sentence, nlp, dim=50):
+	
 	doc = nlp(sentence)
 	sents = [sent for sent in doc.sents]
 	sent = sents[0]
