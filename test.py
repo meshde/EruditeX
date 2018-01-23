@@ -1,33 +1,26 @@
-import sys
-import utils
-import os
-import dmn_basic
-import time
+from Helpers import utils
 
-def main():
-	start = time.time()
-	query = sys.argv[1]
-	glove = utils.load_glove()
-	quest = utils.init_babi_deploy(os.path.join(os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)),'data'),'corpus'),'babi.txt'),query)
+def test_dt_rnn():
+	import numpy as np
+	from Models import DT_RNN
+	from Models import np_dt_rnn
 
-	dmn = dmn_basic.DMN_basic(babi_train_raw=quest,babi_test_raw=[],word2vec=glove,word_vector_size=50,dim=40,mode='deploy',answer_module='feedforward', input_mask_mode="sentence", memory_hops=5, l2=0, 
-                normalize_attention=False, answer_vec='index', debug=False)
+	model = DT_RNN(dim=3, word_vector_size=3)
 
-	dmn.load_state('states/dmn_basic.mh5.n40.bs10.babi1.epoch2.test1.20454.state')
+	np_W_dep = model.W_dep.get_value()
+	np_W_x = model.W_x.get_value()
+	np_b = model.b.get_value()
 
-	prediction = dmn.step_deploy()
+	sentence = "welcome to my house"
+	dtree = utils.get_dtree(sentence, dim=3)
+	vectors,parent_indices,is_leaf,dep_tags = dtree.get_rnn_input()
 
-	prediction = prediction[0][0]
-	for ind in prediction.argsort()[::-1]:
-		if ind < dmn.answer_size:
-			print(dmn.ivocab[ind])
-			break
-	print('Time taken:',time.time()-start)
-	# print(len(dmn.ivocab))
-	# print(len(dmn.vocab))
-	# print(dmn.answer_size)
-	# print(prediction.argmax())
-	# print(len(prediction[0][0]))
-	# print(prediction.shape)
-if __name__ == '__main__':
-	main()
+	np_ans = np_dt_rnn(vectors, parent_indices, is_leaf, dep_tags, np_W_x, np_W_dep, np_b)
+	theano_ans = model.get_hidden_states(vectors, parent_indices, is_leaf, dep_tags)
+
+	print(np_ans)
+	print(theano_ans)
+
+	assert(np.allclose(np_ans, theano_ans, rtol=1e-04, atol=1e-07))
+
+	return
