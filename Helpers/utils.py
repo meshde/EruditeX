@@ -241,7 +241,7 @@ def get_dtree(sentence, dim=50):
 
 
 def get_tree_node(node, glove, dim=50):
-	return trees.dt_node(node, glove, [get_tree_node(child,dim) for child in node.children], dim)
+	return trees.dt_node(node, glove, [get_tree_node(child, glove, dim) for child in node.children], dim)
 
 def get_dtne_tree(sentence, dim=50):
 	nlp = spacy.load('en')

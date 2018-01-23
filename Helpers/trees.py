@@ -57,6 +57,11 @@ class dt_node(object):
 		is_leaf_list = self.get_tree_traversal('is_leaf')
 		dep_tag_list = self.get_tree_traversal('dep_tag')
 
+		# print(len(word_vector_list))
+		# print(word_vector_list[0].shape)
+		# print(self.word_vector_size)
+		# print(word_vector_list)
+
 		word_vector_array = np.array(word_vector_list).reshape((-1,self.word_vector_size))
 
 		return word_vector_array,parent_index_list,is_leaf_list,dep_tag_list
