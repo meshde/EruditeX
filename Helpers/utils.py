@@ -1,6 +1,7 @@
 import requests
 import numpy as np
 import os
+import csv
 import pickle
 import spacy
 from . import trees
@@ -139,7 +140,7 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
-def load_glove(dim=50):
+def load_glove(dim=200):
 
 	if dim == 3:
 		return load_glove_visualisation()
@@ -149,7 +150,7 @@ def load_glove(dim=50):
 	path = os.path.join(
 		os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data'),
 		             'glove'), 'glove.6B.%sd.txt' % dim)
-	with open(path, 'r') as f:
+	with open(path, 'r', encoding="utf8") as f:
 		for line in f:
 			l = line.split()
 			glove[l[0]] = list(map(float, l[1:]))
@@ -281,7 +282,34 @@ def get_ne_index(ent_type):
 		return 18
 	return ent_type - 378 + 1
 
+def _process_wikiqa_dataset(file):
+	questions = []
+	answers = []
+	# file = ".\Dataset\WikiQACorpus\WikiQA-dev.tsv"
 
+	with open(file, encoding="utf8") as data_file:
+		source = list(csv.reader(data_file, delimiter="\t", quotechar='"'))
+		q_index = 'Q-1'
+		ans_sents = {}
+
+		for row in source[1:]:
+
+			if q_index != row[0]:
+				answers.append(ans_sents)
+				ans_sents = {}
+				questions.append(row[1])
+				q_index = row[0]
+
+			ans_sents[row[5]] = row[6]
+
+		answers.append(ans_sents)
+		answers = answers[1:]
+
+	# for i in range(len(questions)):
+	# 	print("Question:", questions[i])
+	# 	print("Answers:", answers[i])
+
+	return questions, answers
 
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"

@@ -5,201 +5,184 @@ Attention-Based Bi CNN for Answer Sentence Selection from context.
 
 import tensorflow as tf
 import numpy as np
-import csv
-import glove_utils as glove
+import sys
+sys.path.append('../')
+
 from Helpers import utils
-from nltk.tokenize.moses import MosesTokenizer
-
-tokenizer = MosesTokenizer()
-glove_wordmap = glove.get_glove()
-
-
-def sentence2sequence(sentence):
-	tokens = tokenizer.tokenize(sentence.lower())
-	rows = []
-	words = []
-
-	for token in tokens:
-		i = len(token)
-		while len(token) > 0:
-			word = token[:i]
-			if word in glove_wordmap:
-				rows.append(glove_wordmap[word])
-				words.append(word)
-				token = token[i:]
-				i = len(token)
-				continue
-			else:
-				i -= 1
-			if i == 0:
-				rows.append(glove.fill_unknown(token))
-				words.append(token)
-				break
-	return np.array(rows), words
+from IR import infoRX
+from nltk.corpus import stopwords
+from nltk import word_tokenize
+from sklearn.metrics.pairwise import euclidean_distances
 
 
-def _process_dataset(self, file):
-	questions = []
-	answers = []
-	file = ".\Dataset\WikiQACorpus\WikiQA-dev.tsv"
+class abcnn_model:
 
-	with open(file, encoding="utf8") as data_file:
-		source = list(csv.reader(data_file, delimiter="\t", quotechar='"'))
-		q_index = 'Q-1'
-		ans_sents = []
+	def __init__(self):
 
-		for row in source[1:]:
+		# Hyperparameters
 
-			if q_index != row[0]:
-				answers.append(ans_sents)
-				ans_sents = []
-				questions.append(row[1])
-				q_index = row[0]
+		self.vector_dim = 200  # vector_dim
+		self.max_sent_len = 40  # max_sent_length
+		self.filter_size = 4  # filter_size
+		self.n_filters = 50  # num_filters
+		self.learning_rate = 0.05  # learning_rate
 
-		ans_sents.append({row[5]: row[6]})
+		self.q = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'question')
+		self.a = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'answer')
 
-	answers.append(ans_sents)
-	answers = answers[1:]
+		self.Q_ = tf.placeholder(tf.float32, [self.vector_dim])
+		self.A_ = tf.placeholder(tf.float32, [self.vector_dim])
 
-	for i in range(len(questions)):
-		print("Question:", questions[i])
-		print("Answers:", answers[i])
+		# [self.max_sent_len, self.vector_dim] [self.vector_dim, self.max_sent_len]
+		self.W_q = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
+		self.W_a = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
 
-	return questions, answers
+		self.W_lr = tf.Variable(tf.random_normal([3]))
+		self.B_lr = tf.Variable(tf.random_normal([3]))
 
 
-# Hyperparameters
+	def attention_pooling(feature_map, attn_):
 
-sequence_length  # no of tokens
-# no_classes #output label classes
+		attn_pool_mat = tf.placeholder(tf.float32, [None, None])
 
-d = 200  # vector_dim
-s = 40 #max_sent_length
-h = 4  # filter_size
-m = 50  # num_filters
-alpha = 0.05 # learning_rate
+		for i in range(self.max_sent_len):
+			# ind_attn_ft = tf.constant([i, i+self.filter_size])
 
-# Q = tf.placeholder(tf.float32, [None, sequence_length, 50])
-# A = tf.placeholder(tf.float32, [None, )
+			# r_feature = tf.gather(feature_map, ind_attn_ft)
+			# r_attn = tf.gather(attn_, ind_attn_ft)
 
-# Y_ = tf.placeholder(tf.float32, [None, 10])
+			temp_mat = tf.placeholder(tf.float32, [None])
 
-W_q = tf.Variable(tf.random_normal([]))
-W_a = tf.Variable(tf.random_normal([]))
+			for j in range(i, i+self.filter_size):
+			
+				index = tf.constant([j])
+				tf.concat(temp_mat, tf.matmul(tf.gather(feature_map, index), tf.gather(attn_, index)))
 
+			tf.concat([attn_pool_mat, tf.reduce_sum(temp_mat, 1)], 0)
 
-def abcnn_model(input_data, mode):
-
-	q_set = input_data["Q"]
-	a_set = input_data["A"]
-
-	for i in range(len(q_set)):
-		q_vector, _ = sentence2sequence(q_set[i])
-
-		# for a in a_set[i]:
-		a_vector, _ = sentence2sequence(a_set[i][0])
-
-		attn_ = tf.sqrt( tf.reduce_sum(tf.square(tf.sub(q_vector, a_vector)), reduction_indices=1))
-
-		q_feature_ = tf.matmul(attn_, W_q) 
-		a_feature_ = tf.matmul(attn_, W_a, transpose_a=True)	
-
-		q_vector = tf.reshape([q_feature_, q_vector], [None, d, 2])
-		a_vector = tf.reshape([a_feature_, a_vector], [N])
+		return attn_pool_mat
 
 
+	def model(self, q_vector, a_vector):
 
-		# Convolutional Layer
-		q_conv = tf.layers.conv2d(
+		# attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(q_vector, a_vector)), reduction_indices=1))
+		attn_ = euclidean_distances(q_vector, a_vector)
+
+		q_feature_ = tf.matmul(attn_, self.W_q)
+		a_feature_ = tf.matmul(attn_, self.W_a, transpose_a=True)
+
+		q_vector = tf.stack([q_feature_, q_vector])
+		a_vector = tf.stack([a_feature_, a_vector])
+		
+		# Convolutional Layer1
+		q_conv1 = tf.layers.conv2d(
 			inputs=q_vector,
-			# filters=m,
-			kernel_size=[h, d],
+			filters=self.n_filters,
+			kernel_size=[self.filter_size, self.vector_dim],
 			padding="same",
 			activation=tf.nn.relu)
 
-		a_conv = tf.layers.conv2d(
+		a_conv2 = tf.layers.conv2d(
 			inputs=a_vector,
-			# filters=m,
-			kernel_size=[h, d],
+			filters=self.n_filters,
+			kernel_size=[self.filter_size, self.vector_dim],
 			padding="same",
 			activation=tf.nn.relu)
 
-		# TODO: Define pool sizes and strides
-		pool1 = tf.layers.average_pooling2d(inputs=q_conv, pool_size=[2, 2], strides=2)
-		pool2 = tf.layers.average_pooling2d(inputs=a_conv, pool_size=[2, 2], strides=2)
+		attn_ = euclidean_distances(q_vector, a_vector)
 
-		pool_concat = tf.concat([pool1, pool2], 0)
-		dense = tf.layers.dense(inputs=pool_concat, units=1024, activation=tf.nn.relu)
+		q_vector = attention_pooling(q_vector, attn_)
+		a_vector = attention_pooling(a_vector, tf.transpose(attn_))
 
-		dropout = tf.layers.dropout(
-			inputs=dense, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
-		# Logits Layer
-		logits = tf.layers.dense(inputs=dropout, units=10)
+		# Convolutional Layer2
+		q_conv2 = tf.layers.conv2d(
+			inputs=q_vector,
+			filters=self.n_filters,
+			kernel_size=[self.filter_size, self.vector_dim],
+			padding="same",
+			activation=tf.nn.relu)
 
-		predictions = {
-			"classes": tf.argmax(input=logits, axis=1),
-			"probabilities": tf.nn.softmax(logits, name="softmax_tensor")
-		}
+		a_conv2 = tf.layers.conv2d(
+			inputs=a_vector,
+			filters=self.n_filters,
+			kernel_size=[self.filter_size, self.vector_dim],
+			padding="same",
+			activation=tf.nn.relu)
 
-		if mode == tf.estimator.ModeKeys.PREDICT:
-			return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions)
+		attn_ = euclidean_distances(q_vector, a_vector)
+	
+		q_vector = attention_pooling(q_vector, attn_)
+		a_vector = attention_pooling(a_vector, tf.transpose(attn_))			
+		
+		pool1 = tf.layers.average_pooling2d(inputs=q_vector, pool_size=[self.vector_dim, self.max_sent_len])
+		pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.vector_dim, self.max_sent_len])
 
-		onehot_labels = tf.one_hot(indices=tf.cast(labels, tf.int32), depth=10)
-		loss = tf.losses.softmax_cross_entropy(
-			onehot_labels=onehot_labels, logits=logits)
-
-		if mode == tf.estimator.ModeKeys.TRAIN:
-			optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
-			train_op = optimizer.minimize(
-				loss=loss,
-				global_step=tf.train.get_global_step())
-			return tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)
-
-		# Add evaluation metrics (for EVAL mode)
-		eval_metric_ops = {
-			"accuracy": tf.metrics.accuracy(
-				labels=labels, predictions=predictions["classes"])}
-		return tf.estimator.EstimatorSpec(
-			mode=mode, loss=loss, eval_metric_ops=eval_metric_ops)
+		return pool1, pool2
 
 
-def train_neural_net(X):
-	Y = abcnn_model(X)
+	def get_score(self, q_vector, a_vector, label, q_len, a_len, word_cnt, tfidf):
 
-	cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=Y, labels=Y_)  # loss function
-	cross_entropy = tf.reduce_mean(cross_entropy) * 100
+		# s = max(q_len, a_len)	
 
-	correct = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
-	accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+		q_vector = utils.pad_matrix_with_zeros(q_vector, self.max_sent_len - q_len)
+		a_vector = utils.pad_matrix_with_zeros(a_vector, self.max_sent_len - a_len)
+		print(" > Vectors Padded")
 
-	# Training Step
+		input_dict = {q: q_vector, a: a_vector}
+		score = -1
 
-	optimizer = tf.train.GradientDescentOptimizer(0.003)
-	train_step = optimizer.minimize(cross_entropy)
+		optimizer = tf.train.AdamOptimizer(self.learning_rate)
 
-	no_epochs = 1
+		Q_, A_ = self.model(self.q, self.a)
 
-	with tf.Session() as sessn:
-		sessn.run(tf.global_variables_initializer())
+		cos_sim = infoRX.cosine_similarity(Q_, A_)
+		features = np.array([cos_sim, word_cnt, tfidf])
 
-		# Training Stage
-		for epoch in range(no_epochs):
-			epoch_loss = 0
+		output_layer = tf.nn.sigmoid(tf.add(tf.matmul(self.W_lr, features), self.B_lr))
 
-				batch_X = np.reshape(batch_X, (-1, 28, 28, 1))
-				train_dict = {X: batch_X, Y_: batch_Y}
+		# cross entropy loss
+		loss = -tf.reduce_sum(label * tf.log(output_layer))
 
-				sessn.run(train_step, feed_dict=train_dict)
-				a, c = sessn.run([accuracy, cross_entropy], feed_dict=train_dict)
-				# print('Batch',i,' / Cost :', c, ' / Accuracy :', a)
-				epoch_loss += c
+		correct = tf.equal(label, output_layer)
+		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
-			print('Finished Epoch', epoch, '> loss : ', epoch_loss)
+		train_step = optimizer.minimize(loss)
 
+		with tf.Session() as sessn:
+			sessn.run(tf.global_variables_initializer())
+			sessn.run(train_step, feed_dict=input_dict)
+			score, l = sessn.run([output_layer, loss], feed_dict=input_dict)
 
-test_data = {X: np.reshape(
-a, c = sessn.run([accuracy, cross_entropy], feed_dict=test_data)
-print('Test Accuracy : ', a)
+		return score
+ 
 
+# model verification
 if __name__ == '__main__':
-	train_neural_net(X)
+
+	selector = abcnn_model()
+
+	q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-train.tsv")
+	print(" > Dataset initialized.")
+
+	for i in range(len(q_list)):
+		q = q_list[i]
+		tfidf = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
+
+		for a in a_list[i].keys():
+
+			word_cnt = 0
+			imp_tokens = [i for i in word_tokenize(q.lower()) if i not in set(stopwords.words('english'))]
+			for x in imp_tokens:
+				if x in a:
+					word_cnt += 1
+
+			glove = utils.load_glove()		
+			result = selector.get_score(utils.get_vector_sequence(q, glove) , utils.get_vector_sequence(a, glove), a_list[i][a], len(q.split()), len(a.split()), word_cnt, tfidf)
+
+		print(i + " : " + result)
+
+	# 	print("Question:", q_list[i])
+	# 	print("Answers:", a_list[i])
+
+
+	# q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-test.tsv")
