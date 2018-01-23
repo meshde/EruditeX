@@ -65,6 +65,26 @@ class DT_RNN(object):
 
 		return hidden_states, sentence_embedding
 
+	def save_params(self,file_name,epochs):
+		with open(file_name, 'wb') as save_file:
+			pickle.dump(
+				obj = {
+					'params' : [x.get_value() for x in self.params],
+					'epoch' : epochs,
+				},
+				file = save_file,
+				protocol = -1
+			)
+		return
+
+	def load_params(self,file_name):
+		with open(file_name, 'rb') as load_file:
+			dict = pickle.load(load_file)
+			loaded_params = dict['params']
+			for (x, y) in zip(self.params, loaded_params):
+				x.set_value(y)
+		return
+
 
 class DTNE_RNN(DT_RNN):
 	def __init__(self, dep_len=56, dim=50, word_vector_size=50, ne_len=18):
