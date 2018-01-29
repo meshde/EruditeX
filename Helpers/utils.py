@@ -231,20 +231,21 @@ def get_sent_details(sentence, glove, dep_tags_dict, nlp, wVec_size=50):
 	return result1, result2
 
 
-def get_dtree(sentence, dim=50):
-	nlp = spacy.load('en')
+def get_dtree(sentence, nlp=None, dim=50):
+	if not nlp:
+		nlp = spacy.load('en')
 	doc = nlp(sentence)
 	sents = [sent for sent in doc.sents]
 	sent = sents[0]
 	glove = load_glove(dim)
 	return get_tree_node(sent.root, glove, dim)
 
-
 def get_tree_node(node, glove, dim=50):
 	return trees.dt_node(node, glove, [get_tree_node(child, glove, dim) for child in node.children], dim)
 
-def get_dtne_tree(sentence, dim=50):
-	nlp = spacy.load('en')
+def get_dtne_tree(sentence, nlp=None, dim=50):
+	if not nlp:
+		nlp = spacy.load('en')
 	doc = nlp(sentence)
 
 	for ent in doc.ents:
@@ -258,6 +259,11 @@ def get_dtne_tree(sentence, dim=50):
 
 def get_dtne_node(node, glove, dim=50):
 	return trees.dtne_node(node, glove, [get_dtne_node(child,dim) for child in node.children], dim)
+
+def get_sentence_from_doc(doc):
+	sents = [sent for sent in doc.sents]
+	sent = sents[0]
+	return sent
 
 def pad_vector_with_zeros(arr, pad_width):
 	return np.lib.pad(arr, pad_width=(0,pad_width), mode='constant')
