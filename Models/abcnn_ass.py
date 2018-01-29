@@ -7,6 +7,7 @@ import tensorflow as tf
 import numpy as np
 import sys
 sys.path.append('../')
+from os import path as path
 
 from Helpers import utils
 from IR import infoRX
@@ -160,8 +161,8 @@ class abcnn_model:
 if __name__ == '__main__':
 
 	selector = abcnn_model()
-
-	q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-train.tsv")
+	filepath = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/wikiqa/WikiQA-train.tsv')
+	q_list, a_list = utils._process_wikiqa_dataset(filepath)
 	print(" > Dataset initialized.")
 
 	for i in range(len(q_list)):
