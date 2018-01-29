@@ -1,9 +1,9 @@
-from Helpers import utils
 
 def test_dt_rnn():
 	import numpy as np
 	from Models import DT_RNN
 	from Models import np_dt_rnn
+	from Helpers import utils
 
 	model = DT_RNN(dim=3, word_vector_size=3)
 
@@ -22,5 +22,34 @@ def test_dt_rnn():
 	print(theano_ans)
 
 	assert(np.allclose(np_ans, theano_ans, rtol=1e-04, atol=1e-07))
-
 	return
+
+
+def test_sick_preprocess():
+	from Helpers.preprocess import SICK
+	from Helpers import utils
+
+	import spacy
+	nlp = spacy.load('en')
+
+	sick = SICK.get_data()
+	glove = utils.load_glove(200)
+
+	data = sick[0]
+	assert('senetnce_A' not in data['A'])
+
+	dtree_entry, dtne_entry = SICK.get_input_tree_single(data, nlp, glove)
+
+	for entry in [dtree_entry, dtne_entry]:
+		for x in ['A', 'B', 'score']:
+			assert(x in entry)
+
+			if x != 'score':
+				for y in ['word_vectors', 'parent_indices', 'is_leaf', 'dep_tags', 'text']:
+					assert(y in entry[x])
+
+	assert('ent_type' in dtne_entry['A'])
+	assert('ent_type' in dtne_entry['B'])
+	return
+
+
