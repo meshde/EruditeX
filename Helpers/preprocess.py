@@ -56,7 +56,7 @@ class SICK:
 			dtree_entry, dtne_entry = SICK.get_input_tree_single(data, nlp, glove)
 			dataset_dtree.append(dtree_entry)
 			dataset_dtne.append(dtne_entry)
-		return
+		return dataset_dtree, dataset_dtne
 	
 
 def get_single_sentence_input_dtree(doc, glove):
