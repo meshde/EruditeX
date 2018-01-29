@@ -140,7 +140,7 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
-def load_glove(dim=200):
+def load_glove(dim=50):
 
 	if dim == 3:
 		return load_glove_visualisation()
@@ -258,7 +258,7 @@ def get_dtne_tree(sentence, nlp=None, dim=50):
 	return get_dtne_node(sent.root, glove, dim)
 
 def get_dtne_node(node, glove, dim=50):
-	return trees.dtne_node(node, glove, [get_dtne_node(child,dim) for child in node.children], dim)
+	return trees.dtne_node(node, glove, [get_dtne_node(child, glove, dim) for child in node.children], dim)
 
 def get_sentence_from_doc(doc):
 	sents = [sent for sent in doc.sents]

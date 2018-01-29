@@ -107,7 +107,7 @@ class dtne_node(dt_node):
 		return super().get_tree_traversal(mode)
 
 	def get_rnn_input(self):
-		inputs = super().get_rnn_input()
+		word_vector_array, parent_index_list, is_leaf_list, dep_tag_list = super().get_rnn_input()
 		ent_type = self.get_tree_traversal('ent_type')
 
-		return inputs, ent_type
+		return word_vector_array, parent_index_list, is_leaf_list, dep_tag_list, ent_type
