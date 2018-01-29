@@ -57,6 +57,21 @@ class SICK:
 			dataset_dtree.append(dtree_entry)
 			dataset_dtne.append(dtne_entry)
 		return dataset_dtree, dataset_dtne
+
+	def get_final_input():
+		from os import path as path
+		import pickle as pkl
+		dataset_dtree, dataset_dtne = [], []
+		file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/cache/SICK_cache.pkl')
+		if path.isfile(file_path):
+			with open(file_path, 'rb') as f:
+				dataset_dtree, dataset_dtne = pkl.load(f)
+			return dataset_dtree, dataset_dtne
+		else:
+			dataset_dtree, dataset_dtne = get_input_tree()
+			with open(file_path, 'wb') as f:
+				pkl.dump((dataset_dtree, dataset_dtne), f)
+			return dataset_dtree, dataset_dtne
 	
 
 def get_single_sentence_input_dtree(doc, glove):
