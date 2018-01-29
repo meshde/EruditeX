@@ -140,7 +140,7 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
-def load_glove(dim=50):
+def _load_glove(dim=50):
 
 	if dim == 3:
 		return load_glove_visualisation()
@@ -156,6 +156,21 @@ def load_glove(dim=50):
 			glove[l[0]] = list(map(float, l[1:]))
 	return glove
 
+def load_glove(dim=50):
+	# if you were using the old load_glove fn, continue to use as is, this wont affect you
+	if dim == 3:
+		return _load_glove(dim)
+	else:
+		glove = {}
+		file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/')
+		if os.path.isfile(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim)))):
+			with open(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim))), 'rb') as f:
+				glove = pickle.load(f)
+		else:
+			glove = _load_glove(dim)
+			with open(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim))), 'wb') as f:
+				pickle.dump(glove, f)
+		return glove
 
 def load_glove_visualisation(recreate=False):
 	path = os.path.join(
