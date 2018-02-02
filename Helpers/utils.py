@@ -140,7 +140,7 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
-def load_glove(dim=200):
+def load_glove(dim=50):
 
 	if dim == 3:
 		return load_glove_visualisation()
@@ -181,15 +181,15 @@ def get_vector(word, glove, dim=50):
 		return np.random.rand(1, dim)
 
 
-def get_list_sequence(sentence, glove):
+def get_list_sequence(sentence, glove, dim=50):
 	result = []
 	for word in sentence.split():
-		result.append(get_vector(word, glove))
+		result.append(get_vector(word, glove, dim))
 	return result
 
 
 def get_vector_sequence(sentence, glove, dim=50):
-	list_sequence = get_list_sequence(sentence, glove)
+	list_sequence = get_list_sequence(sentence, glove, dim)
 	result = np.array(list_sequence).reshape((-1, dim))
 	return result
 

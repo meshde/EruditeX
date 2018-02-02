@@ -14,6 +14,7 @@ from IR import infoRX
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 from sklearn.metrics.pairwise import euclidean_distances
+# from scipy.spatial.distance import cdist
 
 
 class abcnn_model:
@@ -23,16 +24,21 @@ class abcnn_model:
 		# Hyperparameters
 
 		self.vector_dim = 200  # vector_dim
-		self.max_sent_len = 40  # max_sent_length
-		self.filter_size = 4  # filter_size
+		self.max_sent_len = 100  # max_sent_length
+		self.filter_size = 4 # filter_size
 		self.n_filters = 50  # num_filters
 		self.learning_rate = 0.05  # learning_rate
+		self.pad_len = self.filter_size - 1
 
 		self.q = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'question')
 		self.a = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'answer')
+		self.label = tf.placeholder(tf.float32, name='label')
+		self.word_cnt = tf.placeholder(tf.float32, name='word_cnt')
+		self.tfidf = tf.placeholder(tf.float32, name='tfidf')
 
-		self.Q_ = tf.placeholder(tf.float32, [self.vector_dim])
-		self.A_ = tf.placeholder(tf.float32, [self.vector_dim])
+
+		# self.Q_ = tf.placeholder(tf.float32, [self.vector_dim])
+		# self.A_ = tf.placeholder(tf.float32, [self.vector_dim])
 
 		# [self.max_sent_len, self.vector_dim] [self.vector_dim, self.max_sent_len]
 		self.W_q = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
@@ -41,149 +47,278 @@ class abcnn_model:
 		self.W_lr = tf.Variable(tf.random_normal([3]))
 		self.B_lr = tf.Variable(tf.random_normal([3]))
 
+	def get_pool_size(self):
+		return self.max_sent_len
 
-	def attention_pooling(feature_map, attn_):
+	def pairwise_euclidean_dist(self, m0, m1):
 
-		attn_pool_mat = tf.placeholder(tf.float32, [None, None])
+		ted = tf.TensorArray(dtype=tf.float32, size=self.max_sent_len)
+		ted.unstack(tf.zeros([self.max_sent_len, self.max_sent_len]))
 
-		for i in range(self.max_sent_len):
-			# ind_attn_ft = tf.constant([i, i+self.filter_size])
+		c1 = lambda i, j, m0, m1, ta: j < self.max_sent_len 
+		def body1(i, j, m0, m1, ta):
+			x =  tf.reciprocal(1+tf.sqrt(tf.reduce_sum(tf.square(m0[i]-m1[j]))))
+			to = ta.write(j, x)
+			return i, j+1, m0, m1, to
 
-			# r_feature = tf.gather(feature_map, ind_attn_ft)
-			# r_attn = tf.gather(attn_, ind_attn_ft)
+		c0 = lambda i, m0, m1, ted: i < self.max_sent_len
+		def body0(i, m0, m1, ted):
+			ta = tf.TensorArray(dtype=tf.float32, size=self.max_sent_len)
+			ta.unstack(tf.zeros([self.max_sent_len]))
 
-			temp_mat = tf.placeholder(tf.float32, [None])
+			tb = tf.while_loop(c1, body1, loop_vars=[i, 0, m0, m1, ta])[-1]
+			tc = tb.stack()
+			ted = ted.write(i, tc)
+			return i+1, m0, m1, ted
 
-			for j in range(i, i+self.filter_size):
-			
-				index = tf.constant([j])
-				tf.concat(temp_mat, tf.matmul(tf.gather(feature_map, index), tf.gather(attn_, index)))
+		ta_final = tf.while_loop(c0, body0, loop_vars=[0, m0, m1, ted])[-1]
+		result = ta_final.stack()
+		# print("Attn:", result.shape)
 
-			tf.concat([attn_pool_mat, tf.reduce_sum(temp_mat, 1)], 0)
+		return result
 
-		return attn_pool_mat
+	def attention_pooling(self, feature_map, attn_, axis):
+
+	    # attn = tf.random_normal([10, 10])
+	    # attn = tf.constant(3.0, shape=[10, 10])
+
+	    attn = tf.reduce_sum(attn_, axis=axis)
+	    # tf.Print(attn, [attn])
+	    print(feature_map.get_shape(), attn.get_shape())
+
+	    ta = tf.TensorArray(dtype=tf.float32, size=self.get_pool_size())
+
+	    def body(i, w, a, attn, ta):
+	        def c1(j, jw, a, attn, sumi):
+	            return j < jw
+	        def b1(j, jw, a, attn, sumi):
+	        	v = attn[i]
+	        	q = a[j]
+	        	return j+1, jw, a, attn, sumi + (q * v)
+	            # return i+1, w, a, attn, sumi + (a[i] * attn[i])
+
+	        res = tf.while_loop(c1, b1, loop_vars=[i, i+w, a, attn, tf.zeros_like(a[0])])[-1]
+
+	        return i+1, w, a, attn, ta.write(i, res)
+
+	    def cond(i, w, a, attn, ta):
+	        return i < self.max_sent_len
+
+	    result = tf.while_loop(cond, body, loop_vars=[0, self.filter_size, feature_map, attn, ta])[-1]
+	    return result.stack()
 
 
-	def model(self, q_vector, a_vector):
+	def model(self):
 
-		# attn_ = tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(q_vector, a_vector)), reduction_indices=1))
-		attn_ = euclidean_distances(q_vector, a_vector)
+		attn_ = self.pairwise_euclidean_dist(self.q, self.a)
+		
+		# attn_ = tf.cast(euclidean_distances(q_vector, a_vector), tf.float32)
+		# attn_ = tf.cast( tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(q_vector, a_vector)), 1)), tf.float32)
+		# attn_ = cdist(q_vector, a_vector)
+
+		# print(q_vector.get_shape(), a_vector.get_shape())
+		# print(type(q_vector), type(a_vector))
+		# print(attn_.get_shape(), self.W_q.get_shape(), self.W_a.get_shape())
 
 		q_feature_ = tf.matmul(attn_, self.W_q)
 		a_feature_ = tf.matmul(attn_, self.W_a, transpose_a=True)
 
-		q_vector = tf.stack([q_feature_, q_vector])
-		a_vector = tf.stack([a_feature_, a_vector])
+		q_vector = tf.stack([q_feature_, self.q], 2)
+		a_vector = tf.stack([a_feature_, self.a], 2)
+
+		print(" > Stack:", q_vector.get_shape(), a_vector.get_shape())
+
+		# Expanding dimensions for conv input
+		q_vector = tf.reshape(q_vector, [1, self.max_sent_len, self.vector_dim, 2])
+		a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 2])
+		# print(q_vector.get_shape(), a_vector.get_shape())
+
+		# Conv parameter definition
+		# filter_4d = tf.constant(np.ones((self.filter_size, self.vector_dim, 2, 1)), dtype=tf.float32)
+		# kernel_4d = tf.reshape(filter_4d, [filter_height, filter_width, in_channels, out_channels])
+		# strides_2d = [1, 1, 1, 1]
 		
 		# Convolutional Layer1
-		q_conv1 = tf.layers.conv2d(
+
+		q_conv = tf.layers.conv2d(
 			inputs=q_vector,
 			filters=self.n_filters,
-			kernel_size=[self.filter_size, self.vector_dim],
-			padding="same",
+			kernel_size=[self.filter_size, 1],
+			padding="valid",
 			activation=tf.nn.relu)
 
-		a_conv2 = tf.layers.conv2d(
+		a_conv = tf.layers.conv2d(
 			inputs=a_vector,
 			filters=self.n_filters,
-			kernel_size=[self.filter_size, self.vector_dim],
-			padding="same",
+			kernel_size=[self.filter_size, 1],
+			padding="valid",
 			activation=tf.nn.relu)
 
-		attn_ = euclidean_distances(q_vector, a_vector)
+		print(" > Conv1 Output:", a_conv.get_shape(), q_conv.get_shape())
 
-		q_vector = attention_pooling(q_vector, attn_)
-		a_vector = attention_pooling(a_vector, tf.transpose(attn_))
+		# Padding before pooling
+		padding = tf.constant([[self.pad_len, self.pad_len], [0, 0], [0, 0]])
+		# assert padding.get_shape() == (3,2)
+		q_vector = tf.pad(tf.squeeze(q_conv), padding)
+		a_vector = tf.pad(tf.squeeze(a_conv), padding)
 
-		# Convolutional Layer2
-		q_conv2 = tf.layers.conv2d(
-			inputs=q_vector,
-			filters=self.n_filters,
-			kernel_size=[self.filter_size, self.vector_dim],
-			padding="same",
-			activation=tf.nn.relu)
+		print(" > Pad1 Output:", q_vector.get_shape(), a_vector.get_shape())
+		# print(type(q_conv1), type(a_conv1))
 
-		a_conv2 = tf.layers.conv2d(
-			inputs=a_vector,
-			filters=self.n_filters,
-			kernel_size=[self.filter_size, self.vector_dim],
-			padding="same",
-			activation=tf.nn.relu)
+		attn_ = self.pairwise_euclidean_dist(q_vector, a_vector)
+		print(" > Attention:", attn_.get_shape())
 
-		attn_ = euclidean_distances(q_vector, a_vector)
-	
-		q_vector = attention_pooling(q_vector, attn_)
-		a_vector = attention_pooling(a_vector, tf.transpose(attn_))			
+		# q_vector = self.attention_pooling(q_vector, attn_)
+		# a_vector = self.attention_pooling(a_vector, tf.transpose(attn_))
+
+		# Attention-based Pooling
+		q_vector = self.attention_pooling(q_vector, attn_, 0)
+		a_vector = self.attention_pooling(a_vector, attn_, 1)
+
+		print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
+
+		q_feature_ = tf.matmul(attn_, self.W_q)
+		a_feature_ = tf.matmul(attn_, self.W_a, transpose_a=True)
+
+		# q_vector = tf.stack([q_feature_, q_vector], 2)
+		# a_vector = tf.stack([a_feature_, a_vector], 2)
+
+		q_feature_ = tf.reshape(q_feature_, [self.max_sent_len, self.vector_dim, 1])
+		a_feature_ = tf.reshape(a_feature_, [self.max_sent_len, self.vector_dim, 1])
 		
-		pool1 = tf.layers.average_pooling2d(inputs=q_vector, pool_size=[self.vector_dim, self.max_sent_len])
-		pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.vector_dim, self.max_sent_len])
+		q_vector = tf.concat([q_feature_, q_vector], 2)
+		a_vector = tf.concat([a_feature_, a_vector], 2)
 
-		return pool1, pool2
+		# Expanding dimensions for conv input
+		q_vector = tf.reshape(q_vector, [1, self.max_sent_len, self.vector_dim, 51])
+		a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 51])
+		
+		# Convolutional Layer2
+
+		q_conv = tf.layers.conv2d(
+			inputs=q_vector,
+			filters=self.n_filters,
+			kernel_size=[self.filter_size, 1],
+			padding="valid",
+			activation=tf.nn.relu)
+
+		a_conv = tf.layers.conv2d(
+			inputs=a_vector,
+			filters=self.n_filters,
+			kernel_size=[self.filter_size, 1],
+			padding="valid",
+			activation=tf.nn.relu)
+
+		# Padding before pooling
+		# q_vector = tf.pad(tf.reduce_sum(tf.squeeze(q_conv), 2), padding)
+		# a_vector = tf.pad(tf.reduce_sum(tf.squeeze(a_conv), 2), padding)
+		
+		q_vector = tf.pad(tf.squeeze(q_conv), padding)
+		a_vector = tf.pad(tf.squeeze(a_conv), padding)
 
 
-	def get_score(self, q_vector, a_vector, label, q_len, a_len, word_cnt, tfidf):
+		# q_conv = tf.nn.conv2d(
+		# 	input=q_vector,
+		# 	filter=filter_4d,
+		# 	strides=strides_2d,
+		# 	padding="SAME")
 
-		# s = max(q_len, a_len)	
+		# a_conv = tf.nn.conv2d(
+		# 	input=a_vector,
+		# 	filter=filter_4d,
+		# 	strides=strides_2d,
+		# 	padding="SAME")
 
-		q_vector = utils.pad_matrix_with_zeros(q_vector, self.max_sent_len - q_len)
-		a_vector = utils.pad_matrix_with_zeros(a_vector, self.max_sent_len - a_len)
-		print(" > Vectors Padded")
+		print(" > Conv2 Output:", q_vector.get_shape(), a_vector.get_shape())
+		
+		attn_ = self.pairwise_euclidean_dist(q_vector, a_vector)
 
-		input_dict = {q: q_vector, a: a_vector}
-		score = -1
+		print(" > Attention:", attn_.get_shape())
+
+		q_vector = self.attention_pooling(q_vector, attn_, 0)
+		a_vector = self.attention_pooling(a_vector, attn_, 1)
+
+		print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
+
+		q_vector = tf.reshape(q_vector, [1, self.max_sent_len, self.vector_dim, 50])
+		a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 50])
+
+		# print(q_vector.get_shape(), a_vector.get_shape())
+		
+		pool1 = tf.layers.average_pooling2d(inputs=q_vector, pool_size=[self.max_sent_len, self.vector_dim], strides=1)
+		pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.max_sent_len, self.vector_dim], strides=1)
+
+		print(" > Model Output:", pool1.get_shape(), pool2.get_shape())
 
 		optimizer = tf.train.AdamOptimizer(self.learning_rate)
 
-		Q_, A_ = self.model(self.q, self.a)
+		cos_sim = tf.losses.cosine_distance(pool1, pool2, 0)
+		print(" > Cosine:", cos_sim.dtype)
 
-		cos_sim = infoRX.cosine_similarity(Q_, A_)
-		features = np.array([cos_sim, word_cnt, tfidf])
+		features = tf.stack([cos_sim, self.word_cnt, self.tfidf])
 
-		output_layer = tf.nn.sigmoid(tf.add(tf.matmul(self.W_lr, features), self.B_lr))
+		output_layer = tf.nn.sigmoid(tf.add(tf.tensordot(self.W_lr, features, 1), self.B_lr))
 
 		# cross entropy loss
-		loss = -tf.reduce_sum(label * tf.log(output_layer))
+		loss = -tf.reduce_sum(self.label * tf.log(output_layer))
 
-		correct = tf.equal(label, output_layer)
+		correct = tf.equal(self.label, output_layer)
 		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
 		train_step = optimizer.minimize(loss)
 
+		return train_step, output_layer, loss
+
+
+	def get_score(self, mode):
+
+		score = -1
+		train_step, output_layer, loss = self.model()
+		glove = utils.load_glove(200)		
+
+		if mode == 'train':
+			q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-train.tsv")
+
+		else:
+			q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-test.tsv")
+
+		print(" > Dataset initialized.")
+		q_list = q_list[:25]
+		a_list = a_list[:25]
+
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
-			sessn.run(train_step, feed_dict=input_dict)
-			score, l = sessn.run([output_layer, loss], feed_dict=input_dict)
+	
+			for i in range(len(q_list)):
+				q = q_list[i]
+				tfidf, imp_tokens = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
+				j = 0
 
-		return score
- 
+				for a in a_list[i].keys():
+
+					word_cnt = 0
+					for x in imp_tokens:
+						if x in a:
+							word_cnt += 1
+
+					q_vector = utils.get_vector_sequence(q, glove, 200)
+					a_vector = utils.get_vector_sequence(a, glove, 200)
+					q_vector = utils.pad_matrix_with_zeros(q_vector, self.max_sent_len - len(q.split()))
+					a_vector = utils.pad_matrix_with_zeros(a_vector, self.max_sent_len - len(a.split()))
+					# print(q_vector.shape, a_vector.shape)
+					# print(" > Vectors Padded")
+
+					input_dict = {self.q: q_vector, self.a: a_vector, self.label: a_list[i][a], self.word_cnt: word_cnt, self.tfidf: tfidf[j]}
+	
+					_, score, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
+					
+					print("> Q_Iteration", i, "-", j, " score : ", score, l)
+					j+=1
+			
 
 # model verification
 if __name__ == '__main__':
 
 	selector = abcnn_model()
-	filepath = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/wikiqa/WikiQA-train.tsv')
-	q_list, a_list = utils._process_wikiqa_dataset(filepath)
-	print(" > Dataset initialized.")
-
-	for i in range(len(q_list)):
-		q = q_list[i]
-		tfidf = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
-
-		for a in a_list[i].keys():
-
-			word_cnt = 0
-			imp_tokens = [i for i in word_tokenize(q.lower()) if i not in set(stopwords.words('english'))]
-			for x in imp_tokens:
-				if x in a:
-					word_cnt += 1
-
-			glove = utils.load_glove()		
-			result = selector.get_score(utils.get_vector_sequence(q, glove) , utils.get_vector_sequence(a, glove), a_list[i][a], len(q.split()), len(a.split()), word_cnt, tfidf)
-
-		print(i + " : " + result)
-
-	# 	print("Question:", q_list[i])
-	# 	print("Answers:", a_list[i])
-
-
-	# q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-test.tsv")
+	selector.get_score('train')
+	
