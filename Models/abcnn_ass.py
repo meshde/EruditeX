@@ -6,14 +6,17 @@ Attention-Based Bi CNN for Answer Sentence Selection from context.
 import tensorflow as tf
 import numpy as np
 import sys
+import time
+
 sys.path.append('../')
 from os import path as path
 
 from Helpers import utils
 from IR import infoRX
-from nltk.corpus import stopwords
-from nltk import word_tokenize
-from sklearn.metrics.pairwise import euclidean_distances
+
+# from nltk.corpus import stopwords
+# from nltk import word_tokenize
+# from sklearn.metrics.pairwise import euclidean_distances
 # from scipy.spatial.distance import cdist
 
 
@@ -25,7 +28,7 @@ class abcnn_model:
 
 		self.vector_dim = 200  # vector_dim
 		self.max_sent_len = 100  # max_sent_length
-		self.filter_size = 4 # filter_size
+		self.filter_size = 4  # filter_size
 		self.n_filters = 50  # num_filters
 		self.learning_rate = 0.05  # learning_rate
 		self.pad_len = self.filter_size - 1
@@ -36,13 +39,12 @@ class abcnn_model:
 		self.word_cnt = tf.placeholder(tf.float32, name='word_cnt')
 		self.tfidf = tf.placeholder(tf.float32, name='tfidf')
 
-
 		# self.Q_ = tf.placeholder(tf.float32, [self.vector_dim])
 		# self.A_ = tf.placeholder(tf.float32, [self.vector_dim])
 
 		# [self.max_sent_len, self.vector_dim] [self.vector_dim, self.max_sent_len]
-		self.W_q = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
-		self.W_a = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim] ))
+		self.W_q = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim]))
+		self.W_a = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim]))
 
 		self.W_lr = tf.Variable(tf.random_normal([3]))
 		self.B_lr = tf.Variable(tf.random_normal([3]))
@@ -50,18 +52,21 @@ class abcnn_model:
 	def get_pool_size(self):
 		return self.max_sent_len
 
+
 	def pairwise_euclidean_dist(self, m0, m1):
 
 		ted = tf.TensorArray(dtype=tf.float32, size=self.max_sent_len)
 		ted.unstack(tf.zeros([self.max_sent_len, self.max_sent_len]))
 
-		c1 = lambda i, j, m0, m1, ta: j < self.max_sent_len 
+		c1 = lambda i, j, m0, m1, ta: j < self.max_sent_len
+
 		def body1(i, j, m0, m1, ta):
-			x =  tf.reciprocal(1+tf.sqrt(tf.reduce_sum(tf.square(m0[i]-m1[j]))))
+			x = tf.reciprocal(1 + tf.sqrt(tf.reduce_sum(tf.square(m0[i] - m1[j]))))
 			to = ta.write(j, x)
-			return i, j+1, m0, m1, to
+			return i, j + 1, m0, m1, to
 
 		c0 = lambda i, m0, m1, ted: i < self.max_sent_len
+
 		def body0(i, m0, m1, ted):
 			ta = tf.TensorArray(dtype=tf.float32, size=self.max_sent_len)
 			ta.unstack(tf.zeros([self.max_sent_len]))
@@ -69,7 +74,7 @@ class abcnn_model:
 			tb = tf.while_loop(c1, body1, loop_vars=[i, 0, m0, m1, ta])[-1]
 			tc = tb.stack()
 			ted = ted.write(i, tc)
-			return i+1, m0, m1, ted
+			return i + 1, m0, m1, ted
 
 		ta_final = tf.while_loop(c0, body0, loop_vars=[0, m0, m1, ted])[-1]
 		result = ta_final.stack()
@@ -77,41 +82,40 @@ class abcnn_model:
 
 		return result
 
+
 	def attention_pooling(self, feature_map, attn_, axis):
 
-	    # attn = tf.random_normal([10, 10])
-	    # attn = tf.constant(3.0, shape=[10, 10])
+		attn = tf.reduce_sum(attn_, axis=axis)
+		# print(feature_map.get_shape(), attn.get_shape())
 
-	    attn = tf.reduce_sum(attn_, axis=axis)
-	    # tf.Print(attn, [attn])
-	    print(feature_map.get_shape(), attn.get_shape())
+		ta = tf.TensorArray(dtype=tf.float32, size=self.get_pool_size())
 
-	    ta = tf.TensorArray(dtype=tf.float32, size=self.get_pool_size())
+		def body(i, w, a, attn, ta):
+			def c1(j, jw, a, attn, sumi):
+				return j < jw
 
-	    def body(i, w, a, attn, ta):
-	        def c1(j, jw, a, attn, sumi):
-	            return j < jw
-	        def b1(j, jw, a, attn, sumi):
-	        	v = attn[i]
-	        	q = a[j]
-	        	return j+1, jw, a, attn, sumi + (q * v)
-	            # return i+1, w, a, attn, sumi + (a[i] * attn[i])
+			def b1(j, jw, a, attn, sumi):
+				v = attn[i]
+				q = a[j]
+				return j + 1, jw, a, attn, sumi + (q * v)
+				# return i+1, w, a, attn, sumi + (a[i] * attn[i])
 
-	        res = tf.while_loop(c1, b1, loop_vars=[i, i+w, a, attn, tf.zeros_like(a[0])])[-1]
+			res = tf.while_loop(c1, b1, loop_vars=[i, i + w, a, attn, tf.zeros_like(a[0])])[-1]
 
-	        return i+1, w, a, attn, ta.write(i, res)
+			return i + 1, w, a, attn, ta.write(i, res)
 
-	    def cond(i, w, a, attn, ta):
-	        return i < self.max_sent_len
+		def cond(i, w, a, attn, ta):
+			return i < self.max_sent_len
 
-	    result = tf.while_loop(cond, body, loop_vars=[0, self.filter_size, feature_map, attn, ta])[-1]
-	    return result.stack()
+		result = tf.while_loop(cond, body, loop_vars=[0, self.filter_size, feature_map, attn, ta])[-1]
+		return result.stack()
 
 
 	def model(self):
 
 		attn_ = self.pairwise_euclidean_dist(self.q, self.a)
-		
+		print(" > Attention matrix:", attn_.get_shape())
+
 		# attn_ = tf.cast(euclidean_distances(q_vector, a_vector), tf.float32)
 		# attn_ = tf.cast( tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(q_vector, a_vector)), 1)), tf.float32)
 		# attn_ = cdist(q_vector, a_vector)
@@ -137,9 +141,9 @@ class abcnn_model:
 		# filter_4d = tf.constant(np.ones((self.filter_size, self.vector_dim, 2, 1)), dtype=tf.float32)
 		# kernel_4d = tf.reshape(filter_4d, [filter_height, filter_width, in_channels, out_channels])
 		# strides_2d = [1, 1, 1, 1]
-		
-		# Convolutional Layer1
 
+
+		# Convolutional Layer1
 		q_conv = tf.layers.conv2d(
 			inputs=q_vector,
 			filters=self.n_filters,
@@ -163,15 +167,14 @@ class abcnn_model:
 		a_vector = tf.pad(tf.squeeze(a_conv), padding)
 
 		print(" > Pad1 Output:", q_vector.get_shape(), a_vector.get_shape())
-		# print(type(q_conv1), type(a_conv1))
 
 		attn_ = self.pairwise_euclidean_dist(q_vector, a_vector)
-		print(" > Attention:", attn_.get_shape())
+		print(" > Attention matrix:", attn_.get_shape())
 
-		# q_vector = self.attention_pooling(q_vector, attn_)
-		# a_vector = self.attention_pooling(a_vector, tf.transpose(attn_))
 
 		# Attention-based Pooling
+		# q_vector = self.attention_pooling(q_vector, attn_)
+		# a_vector = self.attention_pooling(a_vector, tf.transpose(attn_))
 		q_vector = self.attention_pooling(q_vector, attn_, 0)
 		a_vector = self.attention_pooling(a_vector, attn_, 1)
 
@@ -185,15 +188,26 @@ class abcnn_model:
 
 		q_feature_ = tf.reshape(q_feature_, [self.max_sent_len, self.vector_dim, 1])
 		a_feature_ = tf.reshape(a_feature_, [self.max_sent_len, self.vector_dim, 1])
-		
+
 		q_vector = tf.concat([q_feature_, q_vector], 2)
 		a_vector = tf.concat([a_feature_, a_vector], 2)
 
 		# Expanding dimensions for conv input
 		q_vector = tf.reshape(q_vector, [1, self.max_sent_len, self.vector_dim, 51])
 		a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 51])
-		
+
 		# Convolutional Layer2
+
+		# q_conv = tf.nn.conv2d(
+		# 	input=q_vector,
+		# 	filter=filter_4d,
+		# 	strides=strides_2d,
+		# 	padding="SAME")
+		# a_conv = tf.nn.conv2d(
+		# 	input=a_vector,
+		# 	filter=filter_4d,
+		# 	strides=strides_2d,
+		# 	padding="SAME")
 
 		q_conv = tf.layers.conv2d(
 			inputs=q_vector,
@@ -212,25 +226,12 @@ class abcnn_model:
 		# Padding before pooling
 		# q_vector = tf.pad(tf.reduce_sum(tf.squeeze(q_conv), 2), padding)
 		# a_vector = tf.pad(tf.reduce_sum(tf.squeeze(a_conv), 2), padding)
-		
+
 		q_vector = tf.pad(tf.squeeze(q_conv), padding)
 		a_vector = tf.pad(tf.squeeze(a_conv), padding)
 
-
-		# q_conv = tf.nn.conv2d(
-		# 	input=q_vector,
-		# 	filter=filter_4d,
-		# 	strides=strides_2d,
-		# 	padding="SAME")
-
-		# a_conv = tf.nn.conv2d(
-		# 	input=a_vector,
-		# 	filter=filter_4d,
-		# 	strides=strides_2d,
-		# 	padding="SAME")
-
 		print(" > Conv2 Output:", q_vector.get_shape(), a_vector.get_shape())
-		
+
 		attn_ = self.pairwise_euclidean_dist(q_vector, a_vector)
 
 		print(" > Attention:", attn_.get_shape())
@@ -244,16 +245,18 @@ class abcnn_model:
 		a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 50])
 
 		# print(q_vector.get_shape(), a_vector.get_shape())
-		
-		pool1 = tf.layers.average_pooling2d(inputs=q_vector, pool_size=[self.max_sent_len, self.vector_dim], strides=1)
-		pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.max_sent_len, self.vector_dim], strides=1)
+
+		pool1 = tf.layers.average_pooling2d(inputs=q_vector, pool_size=[self.max_sent_len, self.vector_dim],
+		                                    strides=1)
+		pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.max_sent_len, self.vector_dim],
+		                                    strides=1)
 
 		print(" > Model Output:", pool1.get_shape(), pool2.get_shape())
 
 		optimizer = tf.train.AdamOptimizer(self.learning_rate)
 
 		cos_sim = tf.losses.cosine_distance(pool1, pool2, 0)
-		print(" > Cosine:", cos_sim.dtype)
+		# print(" > Cosine:", cos_sim.dtype)
 
 		features = tf.stack([cos_sim, self.word_cnt, self.tfidf])
 
@@ -272,23 +275,21 @@ class abcnn_model:
 
 	def get_score(self, mode):
 
+		mark_init = time.time()
 		score = -1
 		train_step, output_layer, loss = self.model()
-		glove = utils.load_glove(200)		
+		glove = utils.load_glove(200)
 
-		if mode == 'train':
-			q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-train.tsv")
+		file = path.join('..\data\wikiqa\WikiQA-%s.tsv' % mode)
+		q_list, a_list = utils._process_wikiqa_dataset(file)
 
-		else:
-			q_list, a_list = utils._process_wikiqa_dataset("..\data\wikiqa\WikiQA-test.tsv")
-
-		print(" > Dataset initialized.")
+		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
 		q_list = q_list[:25]
 		a_list = a_list[:25]
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
-	
+
 			for i in range(len(q_list)):
 				q = q_list[i]
 				tfidf, imp_tokens = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
@@ -296,29 +297,32 @@ class abcnn_model:
 
 				for a in a_list[i].keys():
 
+					mark_start = time.time()
 					word_cnt = 0
+
 					for x in imp_tokens:
 						if x in a:
 							word_cnt += 1
 
 					q_vector = utils.get_vector_sequence(q, glove, 200)
 					a_vector = utils.get_vector_sequence(a, glove, 200)
-					q_vector = utils.pad_matrix_with_zeros(q_vector, self.max_sent_len - len(q.split()))
-					a_vector = utils.pad_matrix_with_zeros(a_vector, self.max_sent_len - len(a.split()))
+					q_vector = utils.pad_matrix_with_zeros(q_vector,
+					                                       self.max_sent_len - len(q.split()))
+					a_vector = utils.pad_matrix_with_zeros(a_vector,
+					                                       self.max_sent_len - len(a.split()))
 					# print(q_vector.shape, a_vector.shape)
 					# print(" > Vectors Padded")
 
-					input_dict = {self.q: q_vector, self.a: a_vector, self.label: a_list[i][a], self.word_cnt: word_cnt, self.tfidf: tfidf[j]}
-	
-					_, score, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
-					
-					print("> Q_Iteration", i, "-", j, " score : ", score, l)
-					j+=1
-			
+					input_dict = {self.q: q_vector, self.a: a_vector, self.label: a_list[i][a],
+					              self.word_cnt: word_cnt, self.tfidf: tfidf[j]}
+
+					_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
+
+					print("> QA_Iteration", i, "-", j, "| Features: ", output, " | Score:", l, "| Elapsed:", time.time() - mark_start)
+					j += 1
+
 
 # model verification
 if __name__ == '__main__':
-
 	selector = abcnn_model()
 	selector.get_score('train')
-	

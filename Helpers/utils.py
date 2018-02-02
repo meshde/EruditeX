@@ -300,7 +300,8 @@ def _process_wikiqa_dataset(file):
 				questions.append(row[1])
 				q_index = row[0]
 
-			ans_sents[row[5]] = row[6]
+			if len(row[5].split()) <= 100:	
+				ans_sents[row[5]] = row[6]
 
 		answers.append(ans_sents)
 		answers = answers[1:]
