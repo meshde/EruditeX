@@ -64,45 +64,52 @@ def main():
     epochs=int(sys.argv[2])
     choice = int(sys.argv[4])
     test = sys.argv[5]
-    start=time.time()
-    if(choice == 1):
-        print("SentEmbd_Normal")
-        sent_embd=SentEmbd.SentEmbd_basic(50,hid_dim) #GRU INITIALIZATION
-        start = time.time()
-        sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],epochs) #Training THE GRU using the SICK dataset
+    SentEmbd_type="SentEmbd"
 
-
-    else:
-        print("SentEmbd_syntactic")
-        sent_embd=SentEmbd.SentEmbd_syntactic(50,hid_dim,len(dep_tags)) #GRU INITIALIZATION
-        start = time.time()
-        sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],depTags_training_dataset[:n],depTags_sim_dataset[:n],epochs) #Training THE GRU using the SICK dataset
-    
-
-    print("Time taken for training:\t"+str(time.time()-start))
-
-    z=str(datetime.datetime.now()).split(' ')
-
-    #To Check for accuracy after training.
-    acc="Nan"
-    if test == 'test':
-        file_name = "SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
-        path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)
+    for val in range(epochs):
         if(choice == 1):
-            accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],path,choice)
-        if(choice == 2):
+            print("SentEmbd_Normal")
+            sent_embd=SentEmbd.SentEmbd_basic(50,hid_dim) #GRU INITIALIZATION
+            SentEmbd_type="SentEmbd_Normal_"
+
+        else:
+            print("SentEmbd_syntactic")
+            sent_embd=SentEmbd.SentEmbd_syntactic(50,hid_dim,len(dep_tags)) #GRU INITIALIZATION
+            SentEmbd_type="SentEmbd_syntactic_"
+
+        print("Training")
+
+        if(choice==1):
+            start = time.time()
+            sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],1) #Training THE GRU using the SICK dataset
+        else:
+            start = time.time()
+            sent_embd.trainx(training_dataset[:n],sim_dataset[:n],relatedness_scores[:n],depTags_training_dataset[:n],depTags_sim_dataset[:n],1) #Training THE GRU using the SICK dataset
+
+        print("Epoch %d completed"%(val+1))
+        print("Time taken for training:\t"+str(time.time()-start))
+
+        z=str(datetime.datetime.now()).split(' ')
+        file_name = SentEmbd_type+str(val+1)+"_"+str(n)+"_"+str(hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
+        logs_path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)    
+
+        print('Testing:')            
+        
+        if(choice==1):
+            accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],logs_path,choice)
+        else:
             additional_inputs=[depTags_training_dataset[n+1:],depTags_sim_dataset[n+1:]]
-            accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],path,choice,additional_inputs)
+            accuracy=sent_embd.testing(training_dataset[n+1:],sim_dataset[n+1:],relatedness_scores[n+1:],logs_path,choice,additional_inputs)
+
+        print("Test Accuracy: %.3f"%(accuracy))
+
         acc="{0:.3}".format(accuracy)
         acc+="%"
-
-    # Saving the trained Model:
-    
-    # print(z)
-    file_name="SentEmbd_"+str(epochs)+"_"+str(n)+"_"+str(hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
-    path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)
-    sent_embd.save_params(path,epochs)
-
+        
+        file_name=SentEmbd_type+str(val+1)+"_"+str(n)+"_"+str(hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+        save_path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)       
+            
+        sent_embd.save_params(save_path,epochs)
 
 
     print("Current model params saved in- ",file_name)

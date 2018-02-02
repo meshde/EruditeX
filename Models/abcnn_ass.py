@@ -7,6 +7,7 @@ import tensorflow as tf
 import numpy as np
 import sys
 sys.path.append('../')
+from os import path as path
 
 from Helpers import utils
 from IR import infoRX
