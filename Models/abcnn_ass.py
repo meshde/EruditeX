@@ -29,7 +29,7 @@ class abcnn_model:
 		# Hyperparameters
 
 		self.vector_dim = 200  # vector_dim
-		self.max_sent_len = 100  # max_sent_length
+		self.max_sent_len = 50  # max_sent_length
 		self.filter_size = 4  # filter_size
 		self.n_filters = 50  # num_filters
 		self.learning_rate = 0.05  # learning_rate
@@ -282,8 +282,9 @@ class abcnn_model:
 		train_step, output_layer, loss = self.model()
 		glove = utils.load_glove(200)
 
-		file = path.join('..\data\wikiqa\WikiQA-%s.tsv' % mode)
-		q_list, a_list = utils._process_wikiqa_dataset(file)
+		# file = path.join('..\data\wikiqa\WikiQA-%s.tsv' % mode)
+		file = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
+		q_list, a_list = utils._process_wikiqa_dataset(file, self.max_sent_len)
 
 		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
 		q_list = q_list[:25]

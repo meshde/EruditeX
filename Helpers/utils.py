@@ -282,7 +282,7 @@ def get_ne_index(ent_type):
 		return 18
 	return ent_type - 378 + 1
 
-def _process_wikiqa_dataset(file):
+def _process_wikiqa_dataset(file, max_sent_len=50):
 	questions = []
 	answers = []
 	# file = ".\Dataset\WikiQACorpus\WikiQA-dev.tsv"
@@ -300,7 +300,7 @@ def _process_wikiqa_dataset(file):
 				questions.append(row[1])
 				q_index = row[0]
 
-			if len(row[5].split()) <= 100:	
+			if len(row[5].split()) <= max_sent_len:	
 				ans_sents[row[5]] = row[6]
 
 		answers.append(ans_sents)
