@@ -10,6 +10,8 @@ import time
 
 sys.path.append('../')
 from os import path as path
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # To remove the tensorflow warnings completely
 
 from Helpers import utils
 from IR import infoRX
