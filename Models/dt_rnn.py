@@ -11,7 +11,7 @@ class DT_RNN(object):
 		self.word_vector_size = word_vector_size
 		self.dep_len = dep_len
 		self.set_params()
-		self.theano_build()
+		# self.theano_build()
 
 	def set_params(self):
 		self.W_x =  nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
@@ -39,7 +39,7 @@ class DT_RNN(object):
 		self.get_sentence_embedding = theano.function(inputs, sentence_embedding)
 		self.get_hidden_states = theano.function(inputs, hidden_states)
 
-		return
+		return 
 
 
 	@staticmethod
@@ -64,6 +64,26 @@ class DT_RNN(object):
 		sentence_embedding = hidden_states[-1]
 
 		return hidden_states, sentence_embedding
+
+	def save_params(self,file_name,epochs):
+		with open(file_name, 'wb') as save_file:
+			pickle.dump(
+				obj = {
+					'params' : [x.get_value() for x in self.params],
+					'epoch' : epochs,
+				},
+				file = save_file,
+				protocol = -1
+			)
+		return
+
+	def load_params(self,file_name):
+		with open(file_name, 'rb') as load_file:
+			dict = pickle.load(load_file)
+			loaded_params = dict['params']
+			for (x, y) in zip(self.params, loaded_params):
+				x.set_value(y)
+		return
 
 
 class DTNE_RNN(DT_RNN):

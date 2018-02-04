@@ -140,7 +140,9 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
+
 def _load_glove(dim=50):
+
 
 	if dim == 3:
 		return load_glove_visualisation()
@@ -196,15 +198,15 @@ def get_vector(word, glove, dim=50):
 		return np.random.rand(1, dim)
 
 
-def get_list_sequence(sentence, glove):
+def get_list_sequence(sentence, glove, dim=50):
 	result = []
 	for word in sentence.split():
-		result.append(get_vector(word, glove))
+		result.append(get_vector(word, glove, dim))
 	return result
 
 
 def get_vector_sequence(sentence, glove, dim=50):
-	list_sequence = get_list_sequence(sentence, glove)
+	list_sequence = get_list_sequence(sentence, glove, dim)
 	result = np.array(list_sequence).reshape((-1, dim))
 	return result
 
@@ -244,6 +246,7 @@ def get_sent_details(sentence, glove, dep_tags_dict, nlp, wVec_size=50):
 	result1 = get_vector_sequence(sentence, glove, wVec_size)
 	result2 = get_depTags_sequence(sentence, dep_tags_dict, nlp)
 	return result1, result2
+
 
 
 def get_dtree(sentence, nlp=None, dim=50):
@@ -303,7 +306,7 @@ def get_ne_index(ent_type):
 		return 18
 	return ent_type - 378 + 1
 
-def _process_wikiqa_dataset(file):
+def _process_wikiqa_dataset(file, max_sent_len=50):
 	questions = []
 	answers = []
 	# file = ".\Dataset\WikiQACorpus\WikiQA-dev.tsv"
@@ -321,7 +324,8 @@ def _process_wikiqa_dataset(file):
 				questions.append(row[1])
 				q_index = row[0]
 
-			ans_sents[row[5]] = row[6]
+			if len(row[5].split()) <= max_sent_len:	
+				ans_sents[row[5]] = row[6]
 
 		answers.append(ans_sents)
 		answers = answers[1:]
