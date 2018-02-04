@@ -4,7 +4,7 @@ import os
 import csv
 import pickle
 import spacy
-from . import trees
+import trees
 
 def fetch_wikis():
 	with open('wiki_links.txt', 'r') as f:
@@ -140,7 +140,9 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 		raise Exception("to_return = 'one_hot' is not implemented yet")
 
 
-def load_glove(dim=50):
+
+def _load_glove(dim=50):
+
 
 	if dim == 3:
 		return load_glove_visualisation()
@@ -156,6 +158,21 @@ def load_glove(dim=50):
 			glove[l[0]] = list(map(float, l[1:]))
 	return glove
 
+def load_glove(dim=50):
+	# if you were using the old load_glove fn, continue to use as is, this wont affect you
+	if dim == 3:
+		return _load_glove(dim)
+	else:
+		glove = {}
+		file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/')
+		if os.path.isfile(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim)))):
+			with open(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim))), 'rb') as f:
+				glove = pickle.load(f)
+		else:
+			glove = _load_glove(dim)
+			with open(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim))), 'wb') as f:
+				pickle.dump(glove, f)
+		return glove
 
 def load_glove_visualisation(recreate=False):
 	path = os.path.join(
@@ -231,20 +248,22 @@ def get_sent_details(sentence, glove, dep_tags_dict, nlp, wVec_size=50):
 	return result1, result2
 
 
-def get_dtree(sentence, nlp, dim=50):
-	
+
+def get_dtree(sentence, nlp=None, dim=50):
+	if not nlp:
+		nlp = spacy.load('en')
 	doc = nlp(sentence)
 	sents = [sent for sent in doc.sents]
 	sent = sents[0]
 	glove = load_glove(dim)
 	return get_tree_node(sent.root, glove, dim)
 
-
 def get_tree_node(node, glove, dim=50):
 	return trees.dt_node(node, glove, [get_tree_node(child, glove, dim) for child in node.children], dim)
 
-def get_dtne_tree(sentence, dim=50):
-	nlp = spacy.load('en')
+def get_dtne_tree(sentence, nlp=None, dim=50):
+	if not nlp:
+		nlp = spacy.load('en')
 	doc = nlp(sentence)
 
 	for ent in doc.ents:
@@ -257,7 +276,12 @@ def get_dtne_tree(sentence, dim=50):
 	return get_dtne_node(sent.root, glove, dim)
 
 def get_dtne_node(node, glove, dim=50):
-	return trees.dtne_node(node, glove, [get_dtne_node(child,dim) for child in node.children], dim)
+	return trees.dtne_node(node, glove, [get_dtne_node(child, glove, dim) for child in node.children], dim)
+
+def get_sentence_from_doc(doc):
+	sents = [sent for sent in doc.sents]
+	sent = sents[0]
+	return sent
 
 def pad_vector_with_zeros(arr, pad_width):
 	return np.lib.pad(arr, pad_width=(0,pad_width), mode='constant')
