@@ -1,5 +1,5 @@
-from . import path_utils
-from . import utils
+import path_utils
+import utils
 
 
 class SICK:
@@ -68,7 +68,7 @@ class SICK:
 				dataset_dtree, dataset_dtne = pkl.load(f)
 			return dataset_dtree, dataset_dtne
 		else:
-			dataset_dtree, dataset_dtne = get_input_tree()
+			dataset_dtree, dataset_dtne = SICK.get_input_tree()
 			with open(file_path, 'wb') as f:
 				pkl.dump((dataset_dtree, dataset_dtne), f)
 			return dataset_dtree, dataset_dtne
@@ -109,3 +109,5 @@ def get_single_sentence_input_dtne(doc, glove):
 
 	return dtne_entry 
 
+if __name__ == '__main__':
+	SICK.get_final_input()

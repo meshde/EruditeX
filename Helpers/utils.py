@@ -4,7 +4,7 @@ import os
 import csv
 import pickle
 import spacy
-from . import trees
+import trees
 
 def fetch_wikis():
 	with open('wiki_links.txt', 'r') as f:

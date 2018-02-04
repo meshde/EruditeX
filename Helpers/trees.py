@@ -1,5 +1,5 @@
 import numpy as np
-from . import utils
+import utils
 
 class dt_node(object):
 	def __init__(self, node, glove, children=[], dim=50):
