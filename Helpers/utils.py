@@ -358,6 +358,7 @@ def _process_wikiqa_dataset(mode, max_sent_len=50):
 
 	return questions, answers
 
+
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"
 	fetch_wiki(url)
