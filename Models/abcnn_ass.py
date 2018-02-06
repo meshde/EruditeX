@@ -5,8 +5,10 @@ Attention-Based Bi CNN for Answer Sentence Selection from context.
 
 import tensorflow as tf
 import numpy as np
+import pickle
 import sys
 import time
+import datetime
 
 sys.path.append('../')
 from os import path as path
@@ -281,10 +283,11 @@ class abcnn_model:
 		score = -1
 		train_step, output_layer, loss = self.model()
 		glove = utils.load_glove(200)
+		saver = tf.train.Saver()
+		
+		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
 
-		# file = path.join('..\data\wikiqa\WikiQA-%s.tsv' % mode)
-		file = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
-		q_list, a_list = utils._process_wikiqa_dataset(file, self.max_sent_len)
+		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
 		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
 		q_list = q_list[:25]
@@ -292,6 +295,13 @@ class abcnn_model:
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
+
+			if mode == 'test':
+				with open(filename + 'r.txt', 'rb') as fp:
+					now = pickle.load(fp)
+					file_path = filename + now + '.ckpt'
+					saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
+					print('> Model restored from @ ', now)
 
 			for i in range(len(q_list)):
 				q = q_list[i]
@@ -324,6 +334,13 @@ class abcnn_model:
 					print("> QA_Iteration", i, "-", j, "| Features: ", output, " | Score:", l, "| Elapsed:", time.time() - mark_start)
 					j += 1
 
+			if mode == 'train':
+				now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+				file_path = filename + now + '.ckpt'
+				saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
+				print('> Model state saved @ ', now)
+				with open(filename + 'r.txt', 'wb') as fp:
+					pickle.dump(now, fp)
 
 # model verification
 if __name__ == '__main__':
