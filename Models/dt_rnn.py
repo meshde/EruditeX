@@ -39,9 +39,6 @@ class DT_RNN(object):
 		self.get_sentence_embedding = theano.function(inputs, sentence_embedding)
 		self.get_hidden_states = theano.function(inputs, hidden_states)
 
-		return 
-
-
 	@staticmethod
 	def inner_loop(idy, prev_val, idx, hidden_states, parent_indices, dep_tags, W):
 		temp = ifelse(T.eq(parent_indices[idy],idx),T.dot(hidden_states[idy],W[dep_tags[idy]]),T.zeros_like(prev_val))
