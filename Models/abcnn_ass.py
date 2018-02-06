@@ -285,7 +285,7 @@ class abcnn_model:
 		glove = utils.load_glove(200)
 		saver = tf.train.Saver()
 		
-		filename = 'states/abcnn/state_'
+		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
 
 		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
