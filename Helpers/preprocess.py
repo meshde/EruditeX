@@ -1,5 +1,5 @@
-import path_utils
-import utils
+from . import path_utils
+from . import utils
 from tqdm import *
 
 
