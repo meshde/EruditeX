@@ -53,10 +53,14 @@ class SICK:
 		dataset_dtree = []
 		dataset_dtne = []
 
-		for data in tqdm(sick, total=len(sick), unit='sent_pair'):
-			dtree_entry, dtne_entry = SICK.get_input_tree_single(data, nlp, glove)
-			dataset_dtree.append(dtree_entry)
-			dataset_dtne.append(dtne_entry)
+		for i, data in tqdm(enumerate(sick), total=len(sick), unit='sent_pair'):
+			try:
+				dtree_entry, dtne_entry = SICK.get_input_tree_single(data, nlp, glove)
+				dataset_dtree.append(dtree_entry)
+				dataset_dtne.append(dtne_entry)
+			except:
+				print('Error in {}'.format(i))
+				pass
 		return dataset_dtree, dataset_dtne
 
 	def get_final_input():
