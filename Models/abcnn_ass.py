@@ -284,23 +284,20 @@ class abcnn_model:
 		train_step, output_layer, loss = self.model()
 		glove = utils.load_glove(200)
 		saver = tf.train.Saver()
+		
 		filename = 'states/abcnn/state_'
 
-		# file = path.join('..\data\wikiqa\WikiQA-%s.tsv' % mode)
-
-		
-		file = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
-		q_list, a_list = utils._process_wikiqa_dataset(file, self.max_sent_len)
+		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
 		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
-		q_list = q_list[:5]
-		a_list = a_list[:5]
+		q_list = q_list[:25]
+		a_list = a_list[:25]
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
 
 			if mode == 'test':
-				with open(filename, 'rb') as fp:
+				with open(filename + 'r.txt', 'rb') as fp:
 					now = pickle.load(fp)
 					file_path = filename + now + '.ckpt'
 					saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
@@ -342,7 +339,7 @@ class abcnn_model:
 				file_path = filename + now + '.ckpt'
 				saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
 				print('> Model state saved @ ', now)
-				with open(filename, 'wb') as fp:
+				with open(filename + 'r.txt', 'wb') as fp:
 					pickle.dump(now, fp)
 
 # model verification

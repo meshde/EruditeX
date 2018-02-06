@@ -306,29 +306,51 @@ def get_ne_index(ent_type):
 		return 18
 	return ent_type - 378 + 1
 
-def _process_wikiqa_dataset(file, max_sent_len=50):
+def _process_wikiqa_dataset(mode, max_sent_len=50):
 	questions = []
 	answers = []
 	# file = ".\Dataset\WikiQACorpus\WikiQA-dev.tsv"
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
+	qfile_cache = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/wikiqa_Q_{}.pkl'.format(mode))
+	afile_cache = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/wikiqa_A_{}.pkl'.format(mode))
+	
+	if os.path.isfile(qfile_cache) and os.path.isfile(afile_cache):
 
-	with open(file, encoding="utf8") as data_file:
-		source = list(csv.reader(data_file, delimiter="\t", quotechar='"'))
-		q_index = 'Q-1'
-		ans_sents = {}
+		with open(qfile_cache, 'rb') as f:
+			questions = pickle.load(f)
+	
+		with open(afile_cache, 'rb') as f:
+			answers = pickle.load(f)
 
-		for row in source[1:]:
+		print('> Loaded WikiQA cache.')
 
-			if q_index != row[0]:
-				answers.append(ans_sents)
-				ans_sents = {}
-				questions.append(row[1])
-				q_index = row[0]
+	else:
+		with open(file, encoding="utf8") as data_file:
+			source = list(csv.reader(data_file, delimiter="\t", quotechar='"'))
+			q_index = 'Q-1'
+			ans_sents = {}
 
-			if len(row[5].split()) <= max_sent_len:	
-				ans_sents[row[5]] = row[6]
+			for row in source[1:]:
 
-		answers.append(ans_sents)
-		answers = answers[1:]
+				if q_index != row[0]:
+					answers.append(ans_sents)
+					ans_sents = {}
+					questions.append(row[1])
+					q_index = row[0]
+
+				if len(row[5].split()) <= max_sent_len:	
+					ans_sents[row[5]] = row[6]
+
+			answers.append(ans_sents)
+			answers = answers[1:]
+
+		with open(qfile_cache, 'wb') as f:
+			pickle.dump(questions, f)
+		
+		with open(afile_cache, 'wb') as f:
+			pickle.dump(answers, f)
+
+		print('> No cache found. Pickled WikiQA')
 
 	# for i in range(len(questions)):
 	# 	print("Question:", questions[i])
