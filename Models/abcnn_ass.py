@@ -264,10 +264,10 @@ class abcnn_model:
 
 		features = tf.stack([cos_sim, self.word_cnt, self.tfidf])
 
-		output_layer = tf.nn.sigmoid(tf.add(tf.tensordot(self.W_lr, features, 1), self.B_lr))
+		output_layer = tf.nn.sigmoid(tf.add(tf.tensordot(features, self.W_lr, 1), self.B_lr))
 
 		# cross entropy loss
-		loss = -tf.reduce_sum(self.label * tf.log(output_layer))
+		loss = -tf.reduce_sum((self.label * tf.log(output_layer)) - ((1 - self.label) * tf.log(output_layer)))
 
 		correct = tf.equal(self.label, output_layer)
 		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
