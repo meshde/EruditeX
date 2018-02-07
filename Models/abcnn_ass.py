@@ -51,7 +51,7 @@ class abcnn_model:
 		self.W_a = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim]))
 
 		self.W_lr = tf.Variable(tf.random_normal([3]))
-		self.B_lr = tf.Variable(tf.random_normal([3]))
+		self.B_lr = tf.Variable(tf.random_normal([1]))
 
 	def get_pool_size(self):
 		return self.max_sent_len
@@ -267,7 +267,8 @@ class abcnn_model:
 		output_layer = tf.nn.sigmoid(tf.add(tf.tensordot(features, self.W_lr, 1), self.B_lr))
 
 		# cross entropy loss
-		loss = -tf.reduce_sum((self.label * tf.log(output_layer)) - ((1 - self.label) * tf.log(output_layer)))
+		loss = -((self.label * tf.log(output_layer)) - ((1 - self.label) *
+                                                 tf.log(output_layer)))
 
 		correct = tf.equal(self.label, output_layer)
 		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
