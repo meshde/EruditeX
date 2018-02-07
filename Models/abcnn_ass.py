@@ -264,11 +264,13 @@ class abcnn_model:
 
 		features = tf.stack([cos_sim, self.word_cnt, self.tfidf])
 
-		output_layer = tf.nn.sigmoid(tf.add(tf.tensordot(features, self.W_lr, 1), self.B_lr))
+		output_layer = tf.add(tf.tensordot(features, self.W_lr, 1), self.B_lr)
+		# output_layer += 1e-7
 
 		# cross entropy loss
-		loss = -((self.label * tf.log(output_layer)) - ((1 - self.label) *
-                                                 tf.log(output_layer)))
+		loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.label, logits=output_layer)
+		# loss = -((self.label * tf.log(output_layer)) + ((1 - self.label) *
+                                                 # tf.log(1 - output_layer)))
 
 		correct = tf.equal(self.label, output_layer)
 		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
@@ -291,8 +293,8 @@ class abcnn_model:
 		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
 		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
-		q_list = q_list[:25]
-		a_list = a_list[:25]
+		q_list = q_list[:3]
+		a_list = a_list[:3]
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
@@ -332,7 +334,7 @@ class abcnn_model:
 
 					_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
 
-					print("> QA_Iteration", i, "-", j, "| Features: ", output, " | Score:", l, "| Elapsed:", time.time() - mark_start)
+					print("> QA_Iteration", i, "-", j, "| Output Layer: ", output, " | Score:", l, "| Elapsed: {0:.2f}".format(time.time() - mark_start))
 					j += 1
 
 			if mode == 'train':
