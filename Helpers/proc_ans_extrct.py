@@ -10,7 +10,6 @@ def _process_ans_extract_dataset():
 
 	qalist = []
 
-	index = 0
 	for qapairs in e.findall('qapairs'):
 
 		qa = {}
@@ -30,23 +29,52 @@ def _process_ans_extract_dataset():
 	return qalist
 
 
-def json_write(qalist):
+def _process_babi(source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/ans_extrct_data.json')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/'+source+'.txt')
+	qalist = []
+	ans_sents = []
+	qa = {}
+
+	with open(file) as fp:
+		data = fp.readlines()
+		for line in data:
+			if line.split(' ', 1)[0] == '1':
+				# print(ans_sents)
+				ans_sents = []
+
+			ans_sents.append(line.split(' ', 1)[1][:-2])
+			if '?' in line:
+				line = line.split('\t')
+				# print(line)
+				qa['qstn'] = line[0].split(' ', 1)[1]
+				qa['ans_sent'] = ans_sents[int(line[2].replace('\n',''))-1]
+				qa['ans'] = line[1]
+				qalist.append(qa)
+				# print(qa)
+				qa = {}
+
+	return qalist
+
+
+def json_write(qalist, source):
+
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'_extract_data.json')
 	with open(file, 'w') as fp:
 		for qa in qalist:
 			json.dump(qa, fp)
 
-def ds_pickle(qalist):
+def ds_pickle(qalist, source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/ans_extrct_data.pkl')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'_extract_data.pkl')
+	
 	with open(file, 'wb') as fp:
 		pickle.dump(qalist, fp)
 
 
-def get_ans_ext_list():
+def get_ans_ext_list(source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/ans_extrct_data.pkl')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'_extract_data.pkl')
 
 	if os.path.isfile(file):
 		with open(file, 'rb') as fp:
@@ -61,8 +89,12 @@ def get_ans_ext_list():
 
 if __name__ == '__main__':
 	
-	qalist = _process_ans_extract_dataset()
-	json_write(qalist)
-	get_ans_ext_list()
-	# ds_pickle(qalist)
-	print(qalist)
+	# qalist = _process_ans_extract_dataset()
+	qalist = _process_babi('qa1_single-supporting-fact_train')
+	# qalist = _process_babi('qa2_two-supporting-facts_test')
+
+	# json_write(qalist)
+	# get_ans_ext_list()
+	ds_pickle(qalist, 'babi_qa1')
+
+	# print(qalist)
