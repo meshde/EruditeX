@@ -9,6 +9,7 @@ import pickle
 import sys
 import time
 import datetime
+from tqdm import tqdm
 
 sys.path.append('../')
 from os import path as path
@@ -293,8 +294,8 @@ class abcnn_model:
 		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
 		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
-		q_list = q_list[:3]
-		a_list = a_list[:3]
+		# q_list = q_list[:3]
+		# a_list = a_list[:3]
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
@@ -306,12 +307,12 @@ class abcnn_model:
 					saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
 					print('> Model restored from @ ', now)
 
-			for i in range(len(q_list)):
+			for i in tqdm(range(len(q_list)), total=len(q_list), unit='Question'):
 				q = q_list[i]
 				tfidf, imp_tokens = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
 				j = 0
 
-				for a in a_list[i].keys():
+				for a in tqdm(a_list[i].keys(), total=len(a_list[i].keys()), unit='Answer'):
 
 					mark_start = time.time()
 					word_cnt = 0
@@ -334,14 +335,16 @@ class abcnn_model:
 
 					_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
 
-					print("> QA_Iteration", i, "-", j, "| Output Layer: ", output, " | Score:", l, "| Elapsed: {0:.2f}".format(time.time() - mark_start))
+					with open('result_abcnn.txt', 'a') as f:
+						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(output) + ' | Score:' + str(l) + ' | Label: ' + str(a_list[i][a]) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
+						f.write(itr_res)
 					j += 1
 
 			if mode == 'train':
 				now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 				file_path = filename + now + '.ckpt'
 				saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
-				print('> Model state saved @ ', now)
+				print('\n> Model state saved @ ', now)
 				with open(filename + 'r.txt', 'wb') as fp:
 					pickle.dump(now, fp)
 
