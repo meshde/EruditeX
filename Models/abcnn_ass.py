@@ -33,10 +33,13 @@ class abcnn_model:
 
 		self.vector_dim = 200  # vector_dim
 		self.max_sent_len = 50  # max_sent_length
+		self.batch_size = 100
 		self.filter_size = 4  # filter_size
 		self.n_filters = 50  # num_filters
 		self.learning_rate = 0.05  # learning_rate
 		self.pad_len = self.filter_size - 1
+		self.save_state = 10 # will save state every 10 questions
+		self.predict_label = -1
 
 		self.q = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'question')
 		self.a = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'answer')
@@ -273,18 +276,22 @@ class abcnn_model:
 		# loss = -((self.label * tf.log(output_layer)) + ((1 - self.label) *
                                                  # tf.log(1 - output_layer)))
 
-		correct = tf.equal(self.label, output_layer)
-		accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+		# correct = tf.equal(self.label, output_layer)
+		# accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
 		train_step = optimizer.minimize(loss)
 
 		return train_step, output_layer, loss
 
 
+
 	def get_score(self, mode):
 
 		mark_init = time.time()
-		score = -1
+		score = 0
+		instances = 0
+		accuracy = []
+		one = tf.constant(1)
 		train_step, output_layer, loss = self.model()
 		glove = utils.load_glove(200)
 		saver = tf.train.Saver()
@@ -294,28 +301,40 @@ class abcnn_model:
 		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
 		print(" > Dataset initialized. | Elapsed:", time.time() - mark_init)
-		# q_list = q_list[:3]
-		# a_list = a_list[:3]
+		# q_list = q_list[:20]
+		# a_list = a_list[:20]
 
 		with tf.Session() as sessn:
 			sessn.run(tf.global_variables_initializer())
 
 			if mode == 'test':
 				with open(filename + 'r.txt', 'rb') as fp:
-					now = pickle.load(fp)
+					now, _ = pickle.load(fp)
 					file_path = filename + now + '.ckpt'
 					saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
 					print('> Model restored from @ ', now)
 
-			for i in tqdm(range(len(q_list)), total=len(q_list), unit='Question'):
+			try:
+				if mode == 'train':
+					with open(filename + 'r.txt', 'rb') as fp:
+						name, q_number = pickle.load(fp)
+						if name == 'temp':
+							saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_temp.ckpt'))
+							q_list = q_list[q_number:]
+							a_list = a_list[q_number:]
+			except:
+				pass
+
+			for i in tqdm(range(len(q_list)), total=len(q_list), ncols=75, unit='Question'):
 				q = q_list[i]
 				tfidf, imp_tokens = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
 				j = 0
 
-				for a in tqdm(a_list[i].keys(), total=len(a_list[i].keys()), unit='Answer'):
+				for a in tqdm(a_list[i].keys(), total=len(a_list[i].keys()), ncols=75, unit='Answer'):
 
 					mark_start = time.time()
 					word_cnt = 0
+					instances += 1
 
 					for x in imp_tokens:
 						if x in a:
@@ -333,12 +352,40 @@ class abcnn_model:
 					input_dict = {self.q: q_vector, self.a: a_vector, self.label: a_list[i][a],
 					              self.word_cnt: word_cnt, self.tfidf: tfidf[j]}
 
-					_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
+					if mode == 'train':
+						_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
+					
+					else:
+						l = sessn.run(loss, feed_dict=input_dict)
+					
+					if tf.greater(l, one):
+						self.predict_label = 1
+					else:
+						self.predict_label = 0
+
+					if self.predict_label == self.label:
+						score += 1
+
+
 
 					with open('result_abcnn.txt', 'a') as f:
 						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(output) + ' | Score:' + str(l) + ' | Label: ' + str(a_list[i][a]) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
 						f.write(itr_res)
 					j += 1
+
+				if i % self.save_state == 0 
+					if mode == 'train':
+						file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_temp.ckpt')
+						saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path))
+						with open(filename + 'r.txt', 'wb') as fp:
+							pickle.dump(('temp', i), fp)
+
+					accuracy = (score / instances) * 100 
+					score, instances = 0, 0
+					with open('result_abcnn.txt', 'a') as f:
+						itr_res = str('> Accuracy:', str(accuracy))
+						f.write(itr_res)
+
 
 			if mode == 'train':
 				now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
