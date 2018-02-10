@@ -3,9 +3,9 @@ import json
 import pickle
 import os
 
-def _process_ans_extract_dataset():
+def _process_ans_extract_dataset(source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/ans_extraction.xml')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'.xml')
 	e = xml.etree.ElementTree.parse(file).getroot()
 
 	qalist = []
@@ -27,7 +27,6 @@ def _process_ans_extract_dataset():
 
 		qalist.append(qa)
 	return qalist
-
 
 def _process_babi(source):
 
@@ -56,25 +55,37 @@ def _process_babi(source):
 
 	return qalist
 
-
 def json_write(qalist, source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'_extract_data.json')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'.json')
 	with open(file, 'w') as fp:
 		for qa in qalist:
 			json.dump(qa, fp)
 
 def ds_pickle(qalist, source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'_extract_data.pkl')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'.pkl')
 	
 	with open(file, 'wb') as fp:
 		pickle.dump(qalist, fp)
 
+def create_dataset(source):
+
+	if source == 'ans_extraction':
+		qalist = _process_ans_extract_dataset(source)
+		title = source
+		
+	else:	
+		qalist = _process_babi(source)
+		title = source.split('_')
+		title = 'babi'+'_'+title[0]+'_'+title[2]
+
+	json_write(qalist, title)
+	ds_pickle(qalist, title)
 
 def get_ans_ext_list(source):
 
-	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'_extract_data.pkl')
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/ans_extraction/'+source+'.pkl')
 
 	if os.path.isfile(file):
 		with open(file, 'rb') as fp:
@@ -86,15 +97,16 @@ def get_ans_ext_list(source):
 
 	return qalist
 
-
 if __name__ == '__main__':
 	
-	# qalist = _process_ans_extract_dataset()
-	qalist = _process_babi('qa1_single-supporting-fact_train')
-	# qalist = _process_babi('qa2_two-supporting-facts_test')
+	create_dataset('ans_extraction')
+	create_dataset('qa1_single-supporting-fact_train')
+	create_dataset('qa4_two-arg-relations_test')
+	create_dataset('qa5_three-arg-relations_test')
+	create_dataset('qa6_yes-no-questions_test')
+	create_dataset('qa9_simple-negation_test')
+	create_dataset('qa10_indefinite-knowledge_test')
+	create_dataset('qa12_conjunction_test')
+	create_dataset('qa20_agents-motivations_test')
 
-	# json_write(qalist)
 	# get_ans_ext_list()
-	ds_pickle(qalist, 'babi_qa1')
-
-	# print(qalist)

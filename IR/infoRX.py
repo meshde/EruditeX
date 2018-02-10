@@ -76,7 +76,7 @@ def tf_idf(doc, query):
 		# print(term, term_count)
 		idf = math.log(doc_count_total / doc_freq)
 		
-		for i in range(0, doc_count_total):
+		for i in range(0, int(doc_count_total)):
 			tfidf[i] += tf[i] * idf
 
 		# print(tfidf)
