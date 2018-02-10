@@ -15,21 +15,30 @@ import lasagne
 import numpy as np
 
 class DT_RNN_Train(object):
-	def __init__(self,load_input=""):
+	def __init__(self,load_input="", n=None, epochs=None, hid_dim=None):
 		SentEmbd_type="DT_RNN_"
 
-		self.n=int(sys.argv[1])
-		self.epochs=int(sys.argv[2])
-		self.hid_dim=int(sys.argv[3])
+		if not n:
+			self.n=int(sys.argv[1])
+		else:
+			self.n = n
+		if not epochs:
+			self.epochs=int(sys.argv[2])
+		else:
+			self.epochs = epochs
+		if not hid_dim:
+			self.hid_dim=int(sys.argv[3])
+		else:
+			self.hid_dim = hid_dim
 
 		print("Pre-Processing Data Set:")
 
 		if(load_input==""):
 			training_dataset1,training_dataset2,relatedness_scores= self.process_input_datast()
 		else:
-			training_dataset1=pickle.load(open('training_set1.p','rb'))
-			training_dataset2=pickle.load(open('training_set2.p','rb'))
-			relatedness_scores=pickle.load(open('scores.p','rb'))
+			training_dataset1=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/training_set1.p','rb'))
+			training_dataset2=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/training_set2.p','rb'))
+			relatedness_scores=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/scores.p','rb'))
 		
 		from Models import dt_rnn
 		self.sent_embd=dt_rnn.DT_RNN()
@@ -87,12 +96,12 @@ class DT_RNN_Train(object):
 				sent_tree_set1.append(sent_tree1_inputs)
 				sent_tree_set2.append(sent_tree2_inputs)
 
-			pickle.dump(sent_tree_set1, open( "sent_tree_set1.p", "wb" ) )
-			pickle.dump(sent_tree_set2, open( "sent_tree_set2.p", "wb" ) )
+			pickle.dump(sent_tree_set1, open("/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set1.p", "wb" ) )
+			pickle.dump(sent_tree_set2, open("/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set2.p", "wb" ) )
 
 		else:
-			sent_tree_set1=pickle.load(open('sent_tree_set1.p','rb'))
-			sent_tree_set2=pickle.load(open('sent_tree_set2.p','rb'))
+			sent_tree_set1=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set1.p','rb'))
+			sent_tree_set2=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set2.p','rb'))
 
 
 

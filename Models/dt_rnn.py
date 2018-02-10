@@ -27,7 +27,7 @@ class DT_RNN(object):
 		is_leaf = T.vector()
 
 		## It is important for dep_tags to be a vector of integers (ivector), or W[dep_tags[idy]] in inner_loop() gives an error "TypeError: Expected an integer"
-		dep_tags = T.ivector()
+		dep_tags = T.lvector()
 
 		return [vectors, parent_indices, is_leaf, dep_tags]
 	
