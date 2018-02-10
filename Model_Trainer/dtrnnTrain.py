@@ -12,6 +12,7 @@ import datetime
 import time
 import pickle
 import lasagne
+import numpy as np
 
 class DT_RNN_Train(object):
 	def __init__(self,load_input=""):
@@ -56,7 +57,7 @@ class DT_RNN_Train(object):
 
 		self.score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
 		self.loss = T.sqrt(abs(T.square(self.score)-T.square(self.similarity_score)))
-		self.updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
+		self.updates = lasagne.updates.sgd(self.loss, self.params,0.1) #BlackBox
 
 		inputs=[]
 
@@ -66,9 +67,10 @@ class DT_RNN_Train(object):
 
 		print(inputs)
 
-		self.train = theano.function(inputs,[],updates=self.updates)
+		self.train = theano.function(inputs, [self.loss],updates=self.updates)
 
-		self.get_similarity = theano.function([self.hid1,self.hid2],[self.score])
+		self.get_similarity = theano.function(inputs,[self.score],on_unused_input='ignore'
+)
 
 		sent_tree_set1=[]
 		sent_tree_set2=[]
@@ -96,6 +98,8 @@ class DT_RNN_Train(object):
 
 		# print(sent_tree_set1[0])
 
+		BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 		for epoch_val in range(self.epochs):
 			self.training(sent_tree_set1[:self.n],sent_tree_set2[:self.n],relatedness_scores[:self.n],epoch_val)
 
@@ -109,7 +113,7 @@ class DT_RNN_Train(object):
 			acc="{0:.3}".format(acc)
 			acc+="%"
 			
-			file_name=SentEmbd_type+str(val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+			file_name=SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
 			save_path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)       
 				
 			self.sent_embd.save_params(save_path,self.epochs)
@@ -168,16 +172,17 @@ class DT_RNN_Train(object):
 	def testing(self,sent_tree1_inputs,sent_tree2_inputs,relatedness_scores,log_file):
 		avg_acc=0.0
 		with open(log_file,'w') as f:
-			for num in np.arange(len(sent_tree_set1)):
+			inputs=[]
+			for num in np.arange(len(sent_tree1_inputs)):
+				inputs.extend(sent_tree1_inputs[num])
+				inputs.extend(sent_tree2_inputs[num])
 
-				sent_embedding1=self.get_sentence_embedding(sent_tree1_inputs[num])
-				sent_embedding2=self.get_sentence_embedding(sent_tree2_inputs[num])
+				score = self.get_similarity(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],relatedness_scores[num])
 
-				score = self.get_similarity(sent_embedding1,sent_embedding2,relatedness_scores[num])
 				f.write("Actual Similarity: "+str(score)+"\n")
 				f.write("Expected Similarity(From SICK.txt): "+str(relatedness_scores[num])+"\n")
 				avg_acc += (abs(score[0]-relatedness_scores[num])/relatedness_scores[num])
-			avg_acc =(avg_acc/len(training_dataset) * 100)
+			avg_acc =(avg_acc/len(sent_tree1_inputs) * 100)
 			f.write("Average Accuracy: "+str(avg_acc)+"\n")
 			return avg_acc
 
@@ -188,17 +193,21 @@ class DT_RNN_Train(object):
 			inputs1= sent_tree_set1[num]
 			inputs2=sent_tree_set2[num]
 
-			# print(inputs1[0])
-			# print(inputs1[1])
-			# print(inputs1[2])
-			# print(inputs1[3])
+			# print("Printing inputs for debugging purpose")
+			# print("Input set 1:")
+			# print(np.array(inputs1[0]).shape)
+			# print(np.array(inputs1[1]).shape)
+			# print(np.array(inputs1[2]).shape)
+			# print(np.array(inputs1[3]).shape)
 
-			# print(inputs2[0])
-			# print(inputs2[1])
-			# print(inputs2[2])
-			# print(inputs2[3])
+			# print("Printing inputs for debugging purpose")
+			# print("Input set 2:")
+			# print(np.array(inputs2[0]).shape)
+			# print(np.array(inputs2[1]).shape)
+			# print(np.array(inputs2[2]).shape)
+			# print(np.array(inputs2[3]).shape)
 
-			self.train(inputs1[0], inputs1[1], inputs1[2], inputs1[3], inputs2[0], inputs2[1], inputs2[2], inputs2[3], score[num])
+			self.train(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
 
 
 		print("Completed Epoch %d"%(epoch_val+1))
@@ -207,7 +216,7 @@ class DT_RNN_Train(object):
 
 
 def main():
-	SentEmbdTrainer=DT_RNN_Train("load fom file")
+	SentEmbdTrainer=DT_RNN_Train("load")
 
 
 if __name__ == '__main__':
