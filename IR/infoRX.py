@@ -70,12 +70,12 @@ def tf_idf(doc, query):
 			tf.append(term_count / wcount_total[i])
 			# print(term, term_count, doc_freq)
 
-		# print(term, term_count)
-		if doc_freq > 0:
-			idf = math.log(doc_count_total / doc_freq)
-		else:
-			idf = math.log(doc_count_total / 1)
+		doc_freq += 1e-7
+		doc_count_total += 1e-7
 
+		# print(term, term_count)
+		idf = math.log(doc_count_total / doc_freq)
+		
 		for i in range(0, doc_count_total):
 			tfidf[i] += tf[i] * idf
 
