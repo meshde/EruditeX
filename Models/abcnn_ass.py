@@ -39,7 +39,7 @@ class abcnn_model:
 		self.learning_rate = 0.05  # learning_rate
 		self.pad_len = self.filter_size - 1
 		self.save_state = 10 # will save state every 10 questions
-		self.predict_label = -1
+		self.predict_label = None
 
 		self.q = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'question')
 		self.a = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'answer')
@@ -269,6 +269,8 @@ class abcnn_model:
 		features = tf.stack([cos_sim, self.word_cnt, self.tfidf])
 
 		output_layer = tf.add(tf.tensordot(features, self.W_lr, 1), self.B_lr)
+
+		output_layer_test = tf.sigmoid(output_layer)
 		# output_layer += 1e-7
 
 		# cross entropy loss
@@ -281,7 +283,7 @@ class abcnn_model:
 
 		train_step = optimizer.minimize(loss)
 
-		return train_step, output_layer, loss
+		return train_step, output_layer, loss, output_layer_test
 
 
 
@@ -290,9 +292,9 @@ class abcnn_model:
 		mark_init = time.time()
 		score = 0
 		instances = 0
-		accuracy = []
-		one = tf.constant(1)
-		train_step, output_layer, loss = self.model()
+		pred_labl = -1
+		one = tf.constant(1, dtype=tf.float32)
+		train_step, output_layer, loss, output_layer_test = self.model()
 		glove = utils.load_glove(200)
 		saver = tf.train.Saver()
 		
@@ -335,6 +337,7 @@ class abcnn_model:
 					mark_start = time.time()
 					word_cnt = 0
 					instances += 1
+					label_ = a_list[i][a] # 0 if not answer and 1 if is answer
 
 					for x in imp_tokens:
 						if x in a:
@@ -349,31 +352,32 @@ class abcnn_model:
 					# print(q_vector.shape, a_vector.shape)
 					# print(" > Vectors Padded")
 
-					input_dict = {self.q: q_vector, self.a: a_vector, self.label: a_list[i][a],
+					input_dict = {self.q: q_vector, self.a: a_vector, self.label: label_,
 					              self.word_cnt: word_cnt, self.tfidf: tfidf[j]}
 
 					if mode == 'train':
-						_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
+						_, output, l, self.predict_label = sessn.run([train_step, output_layer, loss, output_layer_test], feed_dict=input_dict)
 					
-					else:
-						l = sessn.run(loss, feed_dict=input_dict)
-					
-					if tf.greater(l, one):
-						self.predict_label = 1
-					else:
-						self.predict_label = 0
+					# else:
+					# 	l = sessn.run(output_layer_test, feed_dict=input_dict)
 
-					if self.predict_label == self.label:
+					if self.predict_label[0] > 0.5:
+						pred_labl = 1
+					else:
+						pred_labl = 0
+
+					# print(score, self.predict_label, label_)
+					if pred_labl == int(label_):
+						# print(score, label_)
 						score += 1
 
 
-
 					with open('result_abcnn.txt', 'a') as f:
-						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(output) + ' | Score:' + str(l) + ' | Label: ' + str(a_list[i][a]) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
+						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(self.predict_label) + ' | Loss:' + str(l) + ' | Label: ' + str(label_) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
 						f.write(itr_res)
 					j += 1
 
-				if i % self.save_state == 0 
+				if i % self.save_state == 0:
 					if mode == 'train':
 						file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_temp.ckpt')
 						saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path))
@@ -383,7 +387,7 @@ class abcnn_model:
 					accuracy = (score / instances) * 100 
 					score, instances = 0, 0
 					with open('result_abcnn.txt', 'a') as f:
-						itr_res = str('> Accuracy:', str(accuracy))
+						itr_res = str('> Accuracy: {0:.2f}'.format(accuracy) + '\n')
 						f.write(itr_res)
 
 
