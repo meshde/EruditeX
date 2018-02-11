@@ -1,3 +1,6 @@
 [submodule "EruDocX"]
 	path = EruDocX
 	url = https://github.com/Anthrino/EruDocX
+[submodule "data"]
+	path = data
+	url = https://github.com/Anthrino/erudite-data.git
