@@ -320,13 +320,13 @@ class abcnn_model:
 
 		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
 		
+		if mode == 0: # Saving model state at training completion
+			timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+		else: # Saving model state at checkpoint
+			timestamp = 'temp'
+
 		with open(filename + 'r.txt', 'w') as fp:
-			if mode == 0: # Saving model state at training completion
-				timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
-			else: # Saving model state at checkpoint
-				timestamp = 'temp'
-
 			pickle.dump((timestamp, index), fp) 
 
 		file_path = filename + timestamp + '.ckpt'

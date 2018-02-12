@@ -361,7 +361,7 @@ def _process_wikiqa_dataset(mode, max_sent_len=50):
 def process_babi_for_abcnn(babi):
 	samples = []
 	for line in babi:
-		line_number, data = line.split(sep=' ', 1)
+		line_number, data = line.split(1, sep=' ')
 		if line_number == '1':
 			context = []
 		if '?' in data:
