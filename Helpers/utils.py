@@ -358,6 +358,41 @@ def _process_wikiqa_dataset(mode, max_sent_len=50):
 
 	return questions, answers
 
+def process_babi_for_abcnn(babi):
+	samples = []
+	for line in babi:
+		line_number, data = line.split(sep=' ', 1)
+		if line_number == '1':
+			context = []
+		if '?' in data:
+			question, ans_token, support = tuple(data.split(sep='\t'))
+			samples.append((context, question, ans_token, support))
+		else:
+			context.append((line_number, data))
+	return samples
+
+def get_question_answer_pairs_with_labels(babi):
+	babi_data = []
+	for sample in babi:
+		context, question, ans_token, support = sample
+		label = 0
+		for c in context:
+			line_number, data = c
+			if int(support) == int(line_number):
+				label = 1
+			babi_data.append((question, data, label, ans_token))
+
+def get_babi_for_abcnn(babi_id='1'):
+	babi_train_raw, babi_test_raw = get_babi_raw(babi_id)
+
+	babi_train = process_babi_for_abcnn(babi_train_raw)
+	babi_train = get_question_answer_pairs_with_labels(babi_train)
+	
+	babi_test = process_babi_for_abcnn(babi_test_raw)
+	babi_test = get_question_answer_pairs_with_labels(babi_test)
+	
+	return babi_train, babi_test
+
 
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"
