@@ -291,6 +291,8 @@ class abcnn_model:
 
 		mark_init = time.time()
 		score = 0
+		p_score = 0
+		p_instances = 0
 		instances = 0
 		pred_labl = -1
 		one = tf.constant(1, dtype=tf.float32)
@@ -366,11 +368,15 @@ class abcnn_model:
 					else:
 						pred_labl = 0
 
+					if label_ == 1:
+						p_instances += 1
+
 					# print(score, self.predict_label, label_)
 					if pred_labl == int(label_):
 						# print(score, label_)
 						score += 1
-
+						if label_ == 1:
+							p_score += 1
 
 					with open('result_abcnn.txt', 'a') as f:
 						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(self.predict_label) + ' | Loss:' + str(l) + ' | Label: ' + str(label_) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
@@ -385,9 +391,14 @@ class abcnn_model:
 							pickle.dump(('temp', i), fp)
 
 					accuracy = (score / instances) * 100 
+					p_accuracy = (p_score / p_instances) * 100 
+
 					score, instances = 0, 0
+					p_score, p_instances = 0, 0
+
 					with open('result_abcnn.txt', 'a') as f:
 						itr_res = str('> Accuracy: {0:.2f}'.format(accuracy) + '\n')
+						itr_res += str('> True_P accuracy: {0:.2f}'.format(p_accuracy) + '\n')
 						f.write(itr_res)
 
 
