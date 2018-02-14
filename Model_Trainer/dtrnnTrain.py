@@ -34,11 +34,11 @@ class DT_RNN_Train(object):
         print("Pre-Processing Data Set:")
 
         if(load_input==""):
-            training_dataset1,training_dataset2,relatedness_scores= self.process_input_datast()
+            training_dataset1,training_dataset2,self.relatedness_scores= self.process_input_datast()
         else:
             training_dataset1=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/training_set1.p','rb'))
             training_dataset2=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/training_set2.p','rb'))
-            relatedness_scores=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/scores.p','rb'))
+            self.relatedness_scores=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/scores.p','rb'))
         
         from Models import dt_rnn
         self.sent_embd=dt_rnn.DT_RNN()
@@ -66,19 +66,21 @@ class DT_RNN_Train(object):
 
         self.score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
         self.loss = T.sqrt(abs(T.square(self.score)-T.square(self.similarity_score)))
+        self.grad = theano.grad(self.loss, self.params)
         self.updates = lasagne.updates.sgd(self.loss, self.params,0.1) #BlackBox
-
+        
         inputs=[]
-
         inputs.extend(inputs1)
         inputs.extend(inputs2)
         inputs.append(self.similarity_score)
-
-        print(inputs)
+        # print(inputs)
 
         self.train = theano.function(inputs, [self.loss],updates=self.updates)
-
         self.get_similarity = theano.function(inputs,[self.score],on_unused_input='ignore')
+        self.get_grad = theano.function(inputs, self.grad)
+
+
+    def tp(self, load_input=""):
 
         sent_tree_set1=[]
         sent_tree_set2=[]
@@ -109,7 +111,7 @@ class DT_RNN_Train(object):
         BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         for epoch_val in range(self.epochs):
-            self.training(sent_tree_set1[:self.n],sent_tree_set2[:self.n],relatedness_scores[:self.n],epoch_val)
+            self.training(sent_tree_set1[:self.n],sent_tree_set2[:self.n],self.relatedness_scores[:self.n],epoch_val)
 
             z=str(datetime.datetime.now()).split(' ')
             file_name = SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
@@ -117,7 +119,7 @@ class DT_RNN_Train(object):
 
             print("Testing")
 
-            acc=self.testing(sent_tree_set1[self.n+1:],sent_tree_set2[self.n+1:],relatedness_scores[self.n+1:],logs_path)
+            acc=self.testing(sent_tree_set1[self.n+1:],sent_tree_set2[self.n+1:],self.relatedness_scores[self.n+1:],logs_path)
             acc="{0:.3}".format(acc)
             acc+="%"
             
@@ -126,7 +128,9 @@ class DT_RNN_Train(object):
                 
             self.sent_embd.save_params(save_path,self.epochs)
 
-
+    def toposort(self):
+    	ans =self.get_grad.maker.fgraph.toposort()
+    	return ans
 
     def process_input_datast(self):
 
@@ -215,8 +219,9 @@ class DT_RNN_Train(object):
             # print(np.array(inputs2[2]).shape)
             # print(np.array(inputs2[3]).shape)
 
-            self.train(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
+            #self.train(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
 
+            self.get_grad(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
 
         print("Completed Epoch %d"%(epoch_val+1))
         print("Time taken for training:\t"+str(time.time()-start))

@@ -1,6 +1,7 @@
 import theano
 import theano.tensor as T
 from theano.ifelse import ifelse
+from theano.scan_module import scan
 
 from Helpers import nn_utils
 
@@ -41,22 +42,39 @@ class DT_RNN(object):
 
 	@staticmethod
 	def inner_loop(idy, prev_val, idx, hidden_states, parent_indices, dep_tags, W):
-		temp = ifelse(T.eq(parent_indices[idy],idx),T.dot(hidden_states[idy],W[dep_tags[idy]]),T.zeros_like(prev_val))
+		cond = T.eq(parent_indices[idy], idx)
+		temp = ifelse(cond,
+					  T.dot(hidden_states[idy], W[dep_tags[idy]]),
+					  T.zeros_like(prev_val)
+					  )
 		val = prev_val + temp
 		return val
 
 	@staticmethod
-	def outer_loop(idx, hidden_states, vectors, parent_indices, is_leaf, dep_tags, W_x, W_dep, b):
-		x,_ = theano.scan(fn=DT_RNN.inner_loop, sequences=T.arange(idx), outputs_info=T.zeros_like(hidden_states[0]), non_sequences=[idx,hidden_states,parent_indices,dep_tags,W_dep])
+	def outer_loop(idx, hidden_states, vectors, parent_indices, is_leaf,
+				   dep_tags, W_x, W_dep, b):
+
+		x,_ = theano.scan(fn=DT_RNN.inner_loop,
+						  sequences=T.arange(vectors.shape[0]),
+						  outputs_info=T.zeros_like(hidden_states[0]),
+						  non_sequences=[idx, hidden_states, parent_indices, dep_tags, W_dep]
+						  )
+		
 		x = x[-1]
 		y = T.dot(vectors[idx],W_x) + b
 		hidden_state = ifelse(is_leaf[idx],y,x+y)
-		hidden_states = T.set_subtensor(hidden_states[idx],hidden_state)
-		return hidden_states
+		res = T.set_subtensor(hidden_states[idx],hidden_state)
+		return res
 
 	def get_theano_graph(self, inputs):
 		length_of_sentence = inputs[0].shape[0]
-		hidden_states,_ = theano.scan(fn=self.__class__.outer_loop, sequences=T.arange(length_of_sentence), outputs_info=T.zeros((length_of_sentence,self.dim)), non_sequences=inputs+self.params)
+		
+		hidden_states,_ = theano.scan(fn=self.__class__.outer_loop,
+									  sequences=T.arange(length_of_sentence),
+									  outputs_info=T.zeros((length_of_sentence,self.dim)),
+									  non_sequences=inputs+self.params
+									  )
+
 		hidden_states = hidden_states[-1]
 		sentence_embedding = hidden_states[-1]
 
