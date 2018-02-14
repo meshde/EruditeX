@@ -21,3 +21,5 @@ states/
 man/
 hope
 cache/
+*.swp
+
