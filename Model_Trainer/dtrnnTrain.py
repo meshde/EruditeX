@@ -41,15 +41,13 @@ class DT_RNN_Train(object):
 		inputs2 = self.sent_embd.get_graph_input()
 
 		assert(inputs1!=inputs2)
-		test_inputs=self.sent_embd.get_graph_input()
 
 		
 		print("Building loss layer")
 		sentence_embedding1, self.hid1=self.sent_embd.get_theano_graph(inputs1)
 		sentence_embedding2, self.hid2=self.sent_embd.get_theano_graph(inputs2)
 
-		sentence_embedding3, self.hid3=self.sent_embd.get_theano_graph(test_inputs)
-		self.get_sentence_embedding = theano.function(test_inputs, sentence_embedding3)
+		
 
 		self.similarity_score = T.dscalar('score')
 
@@ -91,11 +89,11 @@ class DT_RNN_Train(object):
 
 			print("Testing")
 
-			acc=self.testing(self.sent_tree_set1[self.n+1:],self.sent_tree_set2[self.n+1:],self.relatedness_scores[self.n+1:],logs_path)
-			acc="{0:.3}".format(acc)
-			acc+="%"
+			acc = self.testing(self.sent_tree_set1[self.n+1:],self.sent_tree_set2[self.n+1:],self.relatedness_scores[self.n+1:],logs_path)
+			acc = "{0:.3}".format(acc)
+			acc += "%"
 			
-			file_name=SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+			file_name = SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
 			save_path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)       
 				
 			self.sent_embd.save_params(save_path,self.epochs)
