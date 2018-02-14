@@ -4,8 +4,9 @@ def preprocessSick():
     return
 
 def train_dtrnn():
+
     from Model_Trainer.dtrnnTrain import DT_RNN_Train
-    model = DT_RNN_Train("load", n=3, epochs=5, hid_dim=50)
+    model = DT_RNN_Train(n=8000, epochs=5, hid_dim=50)
     model.tp("load")
 
 def train_dtrnn_debug():
@@ -27,11 +28,11 @@ def train_dtrnn_graph():
     from Model_Trainer.dtrnnTrain import DT_RNN_Train
     import theano
 
-    model = DT_RNN_Train("load", n=3, epochs=5, hid_dim=50)
+    model = DT_RNN_Train(n=8000, epochs=5, hid_dim=50)
     print(theano.printing.debugprint(model.grad))
     return
 
 if __name__ == '__main__':
-    trainSick()
+    train_dtrnn()
 
 

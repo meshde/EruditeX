@@ -358,6 +358,80 @@ def _process_wikiqa_dataset(mode, max_sent_len=50):
 
 	return questions, answers
 
+def process_babi_for_abcnn(babi):
+	samples = []
+	for line in babi:
+		line_number, data = tuple(line.split(' ', 1))
+		if line_number == '1':
+			context = []
+			line_numbers = []
+		if '?' in data:
+			question, ans_token, support = tuple(data.split(sep='\t'))
+			samples.append((line_numbers, context, question, ans_token, support))
+		else:
+			context.append(data)
+			line_numbers.append(line_number)
+
+	return samples
+
+def qa_vectorize(self, q, a, glove):
+	max_sent_len = 50
+	
+	q_vector = utils.get_vector_sequence(q, glove, 200)
+	a_vector = utils.get_vector_sequence(a, glove, 200)
+
+	q_vector = utils.pad_matrix_with_zeros(q_vector, max_sent_len - len(q.split()))
+	a_vector = utils.pad_matrix_with_zeros(a_vector, max_sent_len - len(a.split()))
+	# print(q_vector.shape, a_vector.shape)
+	# print(" > Vectors Padded")
+	return q_vector, a_vector
+
+def get_question_answer_pair(babi):
+	from IR import infoRX
+	glove = load_glove(200)
+
+	babi_data = []
+
+	for sample in babi:
+		line_numbers, context, question, _, support = sample
+
+		tfidf, imp_tokens = infoRX.tfidf(context, question)
+
+		for i, c in enumerate(context):
+			q_vector, a_vector = self.qa_vectorize(question, c, glove)
+
+			label = 0
+			line_number = line_numbers[i]
+			if int(support) == int(line_number):
+				label = 1
+
+			word_cnt = 0
+			for imp in imp_tokens:
+				if imp in c:
+					word_cnt += 1
+
+			babi_data.append((q_vector, a_vector, label, tfidf[i], word_cnt))
+	return babi_data
+
+def get_babi_for_abcnn(babi_id='1'):
+	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/babi_{}.pkl'.format(babi_id))
+	if os.path.isfile(cache_file):
+		with open(cache_file, 'rb') as f:
+			babi_train, babi_test = pickle.load(f)
+	else:
+		babi_train_raw, babi_test_raw = get_babi_raw(babi_id)
+
+		babi_train = process_babi_for_abcnn(babi_train_raw)
+		babi_train = get_question_answer_pair(babi_train)
+		
+		babi_test = process_babi_for_abcnn(babi_test_raw)
+		babi_test = get_question_answer_pair(babi_test)
+
+		with open(cache_file, 'wb') as f:
+			pickle.dump((babi_train, babi_test), f)
+	
+	return babi_train, babi_test
+
 
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"

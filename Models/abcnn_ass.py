@@ -7,6 +7,7 @@ import tensorflow as tf
 import numpy as np
 import pickle
 import sys
+import operator
 import time
 import datetime
 from tqdm import tqdm
@@ -39,7 +40,7 @@ class abcnn_model:
 		self.learning_rate = 0.05  # learning_rate
 		self.pad_len = self.filter_size - 1
 		self.save_state = 10 # will save state every 10 questions
-		self.predict_label = -1
+		self.predict_label = None
 
 		self.q = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'question')
 		self.a = tf.placeholder(tf.float32, [self.max_sent_len, self.vector_dim], 'answer')
@@ -56,9 +57,6 @@ class abcnn_model:
 
 		self.W_lr = tf.Variable(tf.random_normal([3]))
 		self.B_lr = tf.Variable(tf.random_normal([1]))
-
-	def get_pool_size(self):
-		return self.max_sent_len
 
 
 	def pairwise_euclidean_dist(self, m0, m1):
@@ -96,7 +94,7 @@ class abcnn_model:
 		attn = tf.reduce_sum(attn_, axis=axis)
 		# print(feature_map.get_shape(), attn.get_shape())
 
-		ta = tf.TensorArray(dtype=tf.float32, size=self.get_pool_size())
+		ta = tf.TensorArray(dtype=tf.float32, size=self.max_sent_len)
 
 		def body(i, w, a, attn, ta):
 			def c1(j, jw, a, attn, sumi):
@@ -181,10 +179,11 @@ class abcnn_model:
 
 
 		# Attention-based Pooling
-		# q_vector = self.attention_pooling(q_vector, attn_)
-		# a_vector = self.attention_pooling(a_vector, tf.transpose(attn_))
 		q_vector = self.attention_pooling(q_vector, attn_, 0)
 		a_vector = self.attention_pooling(a_vector, attn_, 1)
+		# q_vector = self.attention_pooling(q_vector, attn_)
+		# a_vector = self.attention_pooling(a_vector, tf.transpose(attn_))
+
 
 		print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
 
@@ -205,18 +204,6 @@ class abcnn_model:
 		a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 51])
 
 		# Convolutional Layer2
-
-		# q_conv = tf.nn.conv2d(
-		# 	input=q_vector,
-		# 	filter=filter_4d,
-		# 	strides=strides_2d,
-		# 	padding="SAME")
-		# a_conv = tf.nn.conv2d(
-		# 	input=a_vector,
-		# 	filter=filter_4d,
-		# 	strides=strides_2d,
-		# 	padding="SAME")
-
 		q_conv = tf.layers.conv2d(
 			inputs=q_vector,
 			filters=self.n_filters,
@@ -231,12 +218,23 @@ class abcnn_model:
 			padding="valid",
 			activation=tf.nn.relu)
 
-		# Padding before pooling
-		# q_vector = tf.pad(tf.reduce_sum(tf.squeeze(q_conv), 2), padding)
-		# a_vector = tf.pad(tf.reduce_sum(tf.squeeze(a_conv), 2), padding)
+		# q_conv = tf.nn.conv2d(
+		# 	input=q_vector,
+		# 	filter=filter_4d,
+		# 	strides=strides_2d,
+		# 	padding="SAME")
+		# a_conv = tf.nn.conv2d(
+		# 	input=a_vector,
+		# 	filter=filter_4d,
+		# 	strides=strides_2d,
+		# 	padding="SAME")
 
+
+		# Padding before pooling
 		q_vector = tf.pad(tf.squeeze(q_conv), padding)
 		a_vector = tf.pad(tf.squeeze(a_conv), padding)
+		# q_vector = tf.pad(tf.reduce_sum(tf.squeeze(q_conv), 2), padding)
+		# a_vector = tf.pad(tf.reduce_sum(tf.squeeze(a_conv), 2), padding)
 
 		print(" > Conv2 Output:", q_vector.get_shape(), a_vector.get_shape())
 
@@ -271,6 +269,8 @@ class abcnn_model:
 		output_layer = tf.add(tf.tensordot(features, self.W_lr, 1), self.B_lr)
 		# output_layer += 1e-7
 
+		output_layer_test = tf.sigmoid(output_layer)
+
 		# cross entropy loss
 		loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.label, logits=output_layer)
 		# loss = -((self.label * tf.log(output_layer)) + ((1 - self.label) *
@@ -281,22 +281,84 @@ class abcnn_model:
 
 		train_step = optimizer.minimize(loss)
 
-		return train_step, output_layer, loss
+		return train_step, output_layer, loss, output_layer_test
 
 
+	def qa_vectorize(self, q, a):
+		
+		glove = utils.load_glove(200)
 
-	def get_score(self, mode):
+		q_vector = utils.get_vector_sequence(q, glove, 200)
+		a_vector = utils.get_vector_sequence(a, glove, 200)
+		q_vector = utils.pad_matrix_with_zeros(q_vector,
+		                                       self.max_sent_len - len(q.split()))
+		a_vector = utils.pad_matrix_with_zeros(a_vector,
+		                                       self.max_sent_len - len(a.split()))
+		# print(q_vector.shape, a_vector.shape)
+		# print(" > Vectors Padded")
+		return q_vector, a_vector
+
+
+	def extract_features(self, q, a_list):
+
+		a_list = [str(a) for a in a_list]
+
+		tfidf, imp_tokens = infoRX.tf_idf(a_list, q)
+		word_cnt = []
+
+		for a in a_list:
+			w_cnt = 0
+			for imp in imp_tokens:
+				if imp in a:
+					w_cnt += 1
+			word_cnt.append(w_cnt)
+
+		return tfidf, word_cnt
+
+
+	def model_state_saver(self, index, mode):
+
+		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
+		
+		if mode == 0: # Saving model state at training completion
+			timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+		else: # Saving model state at checkpoint
+			timestamp = 'temp'
+
+		with open(filename + 'r.txt', 'w') as fp:
+			pickle.dump((timestamp, index), fp) 
+
+		file_path = filename + timestamp + '.ckpt'
+		print('\n> Model state saved @ ', timestamp)
+
+		return file_path
+
+
+	def model_state_loader(self):
+
+		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
+
+		with open(filename + 'r.txt', 'r') as fp:
+
+			timestamp, q_number = pickle.load(fp)
+			file_path = filename + timestamp + '.ckpt'
+			print('> Model restored from @ ', timestamp)
+			return file_path, q_number
+
+
+	def run_model(self, mode):
 
 		mark_init = time.time()
 		score = 0
+		p_score = 0
+		p_instances = 0
 		instances = 0
-		accuracy = []
-		one = tf.constant(1)
-		train_step, output_layer, loss = self.model()
-		glove = utils.load_glove(200)
+		pred_labl = -1
+		one = tf.constant(1, dtype=tf.float32)
+		train_step, output_layer, loss, output_layer_test = self.model()
 		saver = tf.train.Saver()
 		
-		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
 
 		q_list, a_list = utils._process_wikiqa_dataset(mode, self.max_sent_len)
 
@@ -305,97 +367,110 @@ class abcnn_model:
 		# a_list = a_list[:20]
 
 		with tf.Session() as sessn:
+
 			sessn.run(tf.global_variables_initializer())
 
-			if mode == 'test':
-				with open(filename + 'r.txt', 'rb') as fp:
-					now, _ = pickle.load(fp)
-					file_path = filename + now + '.ckpt'
-					saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
-					print('> Model restored from @ ', now)
-
 			try:
-				if mode == 'train':
-					with open(filename + 'r.txt', 'rb') as fp:
-						name, q_number = pickle.load(fp)
-						if name == 'temp':
-							saver.restore(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_temp.ckpt'))
-							q_list = q_list[q_number:]
-							a_list = a_list[q_number:]
+				file_path, q_number = self.model_state_loader()
+				saver.restore(sessn, file_path) 
+				q_list = q_list[q_number:]
+				a_list = a_list[q_number:]
+
 			except:
 				pass
 
 			for i in tqdm(range(len(q_list)), total=len(q_list), ncols=75, unit='Question'):
 				q = q_list[i]
-				tfidf, imp_tokens = infoRX.tf_idf([str(a) for a in a_list[i].keys()], q)
+				ans_list = a_list[i].keys()
+				tfidf, word_cnt = self.extract_features(q, ans_list)
 				j = 0
 
-				for a in tqdm(a_list[i].keys(), total=len(a_list[i].keys()), ncols=75, unit='Answer'):
+				for a in tqdm(ans_list, total=len(ans_list), ncols=75, unit='Answer'):
 
 					mark_start = time.time()
-					word_cnt = 0
 					instances += 1
+					label_ = a_list[i][a] # 0 if not answer and 1 if is answer
 
-					for x in imp_tokens:
-						if x in a:
-							word_cnt += 1
+					q_vector, a_vector = self.qa_vectorize(q, a)
 
-					q_vector = utils.get_vector_sequence(q, glove, 200)
-					a_vector = utils.get_vector_sequence(a, glove, 200)
-					q_vector = utils.pad_matrix_with_zeros(q_vector,
-					                                       self.max_sent_len - len(q.split()))
-					a_vector = utils.pad_matrix_with_zeros(a_vector,
-					                                       self.max_sent_len - len(a.split()))
-					# print(q_vector.shape, a_vector.shape)
-					# print(" > Vectors Padded")
-
-					input_dict = {self.q: q_vector, self.a: a_vector, self.label: a_list[i][a],
-					              self.word_cnt: word_cnt, self.tfidf: tfidf[j]}
+					input_dict = {self.q: q_vector, self.a: a_vector, self.label: label_,
+					              self.word_cnt: word_cnt[j], self.tfidf: tfidf[j]}
 
 					if mode == 'train':
-						_, output, l = sessn.run([train_step, output_layer, loss], feed_dict=input_dict)
-					
-					else:
-						l = sessn.run(loss, feed_dict=input_dict)
-					
-					if tf.greater(l, one):
-						self.predict_label = 1
-					else:
-						self.predict_label = 0
+						_, output, l, self.predict_label = sessn.run([train_step, output_layer, loss, output_layer_test], feed_dict=input_dict)
 
-					if self.predict_label == self.label:
+					if self.predict_label[0] > 0.5:
+						pred_labl = 1
+					else:
+						pred_labl = 0
+
+					if label_ == 1:
+						p_instances += 1
+
+					# print(score, self.predict_label, label_)
+					if pred_labl == int(label_):
+						# print(score, label_)
 						score += 1
-
-
+						if label_ == 1:
+							p_score += 1
 
 					with open('result_abcnn.txt', 'a') as f:
-						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(output) + ' | Score:' + str(l) + ' | Label: ' + str(a_list[i][a]) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
+						itr_res = str('> QA_Iteration' + str(i) + '-' + str(j) + '| Output Layer: ' + str(self.predict_label) + ' | Loss:' + str(l) + ' | Label: ' + str(label_) + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
 						f.write(itr_res)
 					j += 1
 
-				if i % self.save_state == 0 
+				if i % self.save_state == 0:
 					if mode == 'train':
-						file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_temp.ckpt')
-						saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path))
-						with open(filename + 'r.txt', 'wb') as fp:
-							pickle.dump(('temp', i), fp)
+						file_path = self.model_state_saver(i, 1)
+						saver.save(sessn, file_path)
 
 					accuracy = (score / instances) * 100 
+					if p_instances > 0:
+						p_accuracy = (p_score / p_instances) * 100 
+
 					score, instances = 0, 0
+					p_score, p_instances = 0, 0
+
 					with open('result_abcnn.txt', 'a') as f:
-						itr_res = str('> Accuracy:', str(accuracy))
+						itr_res = str('> Accuracy: {0:.2f}'.format(accuracy) + '\n')
+						if p_instances > 0:
+							itr_res += str('> True_P accuracy: {0:.2f}'.format(p_accuracy) + '\n')
 						f.write(itr_res)
 
 
 			if mode == 'train':
-				now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-				file_path = filename + now + '.ckpt'
-				saver.save(sessn, path.join(path.dirname(path.dirname(path.realpath(__file__))), file_path)) 
-				print('\n> Model state saved @ ', now)
-				with open(filename + 'r.txt', 'wb') as fp:
-					pickle.dump(now, fp)
+				file_path = self.model_state_saver(0, 0)
+				saver.save(sessn, file_path)
+				
+		
+	def ans_select(question, ans_list):
+
+		scores = {}
+		j = 0
+
+		tfidf, word_cnt = self.extract_features(q, ans_list)
+		_, _, _, output_layer_test = self.model()
+
+		with tf.Session() as sessn:
+			sessn.run(tf.global_variables_initializer())
+
+			for ans in ans_list:
+			
+				q_vector, a_vector = self.qa_vectorize(question, ans)
+
+				input_dict = {self.q: q_vector, self.a: a_vector, self.label: label_, self.word_cnt: word_cnt[j], self.tfidf: tfidf[j]}
+
+				pred = sessn.run(output_layer_test, feed_dict=input_dict)
+
+				scores[ans] = pred
+
+			j += 1
+
+		ans_sents = sorted(scores.items(), key=operator.itemgetter(1))
+		return ans_sents
+
 
 # model verification
 if __name__ == '__main__':
 	selector = abcnn_model()
-	selector.get_score('train')
+	selector.run_model('train')

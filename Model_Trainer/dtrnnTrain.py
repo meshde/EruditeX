@@ -15,8 +15,9 @@ import lasagne
 import numpy as np
 
 class DT_RNN_Train(object):
-    def __init__(self,load_input="", n=None, epochs=None, hid_dim=None):
-        SentEmbd_type="DT_RNN_"
+
+	def __init__(self, n=None, epochs=None, hid_dim=None):
+		SentEmbd_type="DT_RNN_"
 
         if not n:
             self.n=int(sys.argv[1])
@@ -31,18 +32,16 @@ class DT_RNN_Train(object):
         else:
             self.hid_dim = hid_dim
 
-        print("Pre-Processing Data Set:")
+		print("Loading Pre-processed SICK dataset")
 
-        if(load_input==""):
-            training_dataset1,training_dataset2,self.relatedness_scores= self.process_input_datast()
-        else:
-            training_dataset1=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/training_set1.p','rb'))
-            training_dataset2=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/training_set2.p','rb'))
-            self.relatedness_scores=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/scores.p','rb'))
-        
-        from Models import dt_rnn
-        self.sent_embd=dt_rnn.DT_RNN()
-        self.params=self.sent_embd.params
+		sick_path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"data"),"SICK_cache.pkl")
+		sent_tree_set1,sent_tree_set2,relatedness_scores,sick_text=self.load_dataset(sick_path)
+
+		print("Load Complete")
+		
+		from Models import dt_rnn
+		self.sent_embd=dt_rnn.DT_RNN()
+		self.params=self.sent_embd.params
 
         inputs1=self.sent_embd.get_graph_input()
         inputs2=self.sent_embd.get_graph_input()
@@ -52,14 +51,13 @@ class DT_RNN_Train(object):
 
         
 
-        print("Building loss layer")
 
-        sentence_embedding1, self.hid1=self.sent_embd.get_theano_graph(inputs1)
-        sentence_embedding2, self.hid2=self.sent_embd.get_theano_graph(inputs2)
+		print("Building loss layer")
+		sentence_embedding1, self.hid1=self.sent_embd.get_theano_graph(inputs1)
+		sentence_embedding2, self.hid2=self.sent_embd.get_theano_graph(inputs2)
 
-        sentence_embedding3, self.hid3=self.sent_embd.get_theano_graph(test_inputs)
-        self.get_sentence_embedding = theano.function(test_inputs, sentence_embedding3)
-        # self.get_hidden_states = theano.function(inputs, hidden_states)
+		sentence_embedding3, self.hid3=self.sent_embd.get_theano_graph(test_inputs)
+		self.get_sentence_embedding = theano.function(test_inputs, sentence_embedding3)
 
         self.similarity_score = T.dscalar('score')
 
@@ -80,6 +78,7 @@ class DT_RNN_Train(object):
         self.get_grad = theano.function(inputs, self.grad)
 
 
+
     def tp(self, load_input=""):
 
         sent_tree_set1=[]
@@ -90,23 +89,6 @@ class DT_RNN_Train(object):
                 sent_tree1=training_dataset1[num]
                 sent_tree2=training_dataset2[num]
 
-                sent_tree1_inputs=sent_tree1.get_rnn_input()
-                sent_tree2_inputs=sent_tree2.get_rnn_input()
-
-
-                sent_tree_set1.append(sent_tree1_inputs)
-                sent_tree_set2.append(sent_tree2_inputs)
-
-            pickle.dump(sent_tree_set1, open("/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set1.p", "wb" ) )
-            pickle.dump(sent_tree_set2, open("/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set2.p", "wb" ) )
-
-        else:
-            sent_tree_set1=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set1.p','rb'))
-            sent_tree_set2=pickle.load(open('/Users/meshde/Mehmood/EruditeX/Model_Trainer/sent_tree_set2.p','rb'))
-
-
-
-        # print(sent_tree_set1[0])
 
         BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -116,6 +98,7 @@ class DT_RNN_Train(object):
             z=str(datetime.datetime.now()).split(' ')
             file_name = SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
             logs_path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)
+
 
             print("Testing")
 
@@ -131,55 +114,6 @@ class DT_RNN_Train(object):
     def toposort(self):
     	ans =self.get_grad.maker.fgraph.toposort()
     	return ans
-
-    def process_input_datast(self):
-
-        nlp = spacy.load('en')
-
-        BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-        dataset=[]
-        training_dataset1=[]
-        training_dataset2=[]
-        relatedness_scores=[]
-
-        training_set=os.path.join(os.path.join(BASE,'data'),"SICK.txt")
-        with open(training_set,'r') as file1:
-            raw_dataset=file1.read().split('\n')
-        file1.close()
-
-        raw_dataset=raw_dataset[1:-1]
-
-        val=0
-
-        for item in raw_dataset:
-            if item is "":
-                continue
-            temp=item.split('\t')
-            temp2=temp[4]
-            temp=temp[1:3]
-            temp.append(temp2.strip())
-            dataset.append(temp)
-
-
-        for item in dataset:
-            # print(item[0])
-            # print(item[1])
-            # print(item[2])
-            training_dataset1.append(utils.get_dtree(item[0].strip(),nlp))
-            training_dataset2.append(utils.get_dtree(item[1].strip(),nlp))
-            relatedness_scores.append(float(item[2]))
-
-            print("Pre-processed pair %d"%(val+1))
-            val+=1
-
-        pickle.dump(training_dataset1, open( "training_set1.p", "wb" ) )
-        pickle.dump(training_dataset2, open( "training_set2.p", "wb" ) )
-        pickle.dump(relatedness_scores, open( "scores.p", "wb" ) )  
-        
-
-
-        return training_dataset1,training_dataset2,relatedness_scores
 
     def testing(self,sent_tree1_inputs,sent_tree2_inputs,relatedness_scores,log_file):
         avg_acc=0.0
@@ -197,6 +131,41 @@ class DT_RNN_Train(object):
             avg_acc =(avg_acc/len(sent_tree1_inputs) * 100)
             f.write("Average Accuracy: "+str(avg_acc)+"\n")
             return avg_acc
+
+	def load_dataset(self,sick_path):
+
+		try:
+			SICK_dataset_dtree,_=pickle.load(open(sick_path,"rb"))
+		except:
+			print("Invalid CACHED SICK FILE PATH")
+			sys.exit()
+
+		sent_tree_set1=[]
+		sent_tree_set2=[]
+		relatedness_scores=[]
+		sick_text=[]
+
+		for entry in SICK_dataset_dtree:
+			entryA=entry['A']
+			entryB=entry['B']
+
+			combined_entryA=[]
+			combined_entryA.extend([entryA['word_vectors'], entryA['parent_indices'], entryA['is_leaf'], entryA['dep_tags']])
+
+			combined_entryB=[]
+			combined_entryB.extend([entryB['word_vectors'], entryB['parent_indices'], entryB['is_leaf'], entryB['dep_tags']])
+
+			sent_tree_set1.append(combined_entryA)
+			sent_tree_set2.append(combined_entryB)
+			relatedness_scores.append(entry['score'])
+
+			sick_text.extend([entryA['text'],entryB['text'],entry['score']])		
+
+		self.sent_tree_set1 = sent_tree_set1
+    self.sent_tree_set2 = sent_tree_set2
+    self.relatedness_scores = relatedness_scores
+    self.sick_text = sick_text
+    return
 
     def training(self,sent_tree_set1,sent_tree_set2,score,epoch_val):
         print("Training")
@@ -223,17 +192,45 @@ class DT_RNN_Train(object):
 
             self.get_grad(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
 
+
         print("Completed Epoch %d"%(epoch_val+1))
         print("Time taken for training:\t"+str(time.time()-start))
         return
 
 
-def main():
-    SentEmbdTrainer=DT_RNN_Train("load")
+# def main():
+#     SentEmbdTrainer=DT_RNN_Train("load")
+
+# 			# for debugging purpose
+# 			print("Printing input shapes")
+
+# 			print("Input set 1:")
+# 			print(np.array(inputs1[0]).shape)
+# 			print(np.array(inputs1[1]).shape)
+# 			print(np.array(inputs1[2]).shape)
+# 			print(np.array(inputs1[3]).shape)
+
+# 			print("Input set 2:")
+# 			print(np.array(inputs2[0]).shape)
+# 			print(np.array(inputs2[1]).shape)
+# 			print(np.array(inputs2[2]).shape)
+# 			print(np.array(inputs2[3]).shape)
+
+# 			self.train(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
 
 
-if __name__ == '__main__':
-    main()
+# 		print("Completed Epoch %d"%(epoch_val+1))
+# 		print("Time taken for training:\t"+str(time.time()-start))
+# 		return
+
+
+# def main():
+# 	SentEmbdTrainer=DT_RNN_Train()
+
+
+
+# if __name__ == '__main__':
+#     main()
 
 
 
