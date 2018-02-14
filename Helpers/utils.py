@@ -358,47 +358,32 @@ def _process_wikiqa_dataset(mode, max_sent_len=50):
 
 	return questions, answers
 
-def process_babi_for_abcnn(babi):
-	samples = []
-	for line in babi:
-		line_number, data = tuple(line.split(' ', 1))
-		if line_number == '1':
-			context = []
-			line_numbers = []
-		if '?' in data:
-			question, ans_token, support = tuple(data.split(sep='\t'))
-			samples.append((line_numbers, context, question, ans_token, support))
-		else:
-			context.append(data)
-			line_numbers.append(line_number)
-
-	return samples
-
-def qa_vectorize(self, q, a, glove):
+def qa_vectorize(q, a, glove):
 	max_sent_len = 50
 	
-	q_vector = utils.get_vector_sequence(q, glove, 200)
-	a_vector = utils.get_vector_sequence(a, glove, 200)
+	q_vector = get_vector_sequence(q, glove, 200)
+	a_vector = get_vector_sequence(a, glove, 200)
 
-	q_vector = utils.pad_matrix_with_zeros(q_vector, max_sent_len - len(q.split()))
-	a_vector = utils.pad_matrix_with_zeros(a_vector, max_sent_len - len(a.split()))
+	q_vector = pad_matrix_with_zeros(q_vector, max_sent_len - len(q.split()))
+	a_vector = pad_matrix_with_zeros(a_vector, max_sent_len - len(a.split()))
 	# print(q_vector.shape, a_vector.shape)
 	# print(" > Vectors Padded")
 	return q_vector, a_vector
 
-def get_question_answer_pair(babi):
+def get_question_answer_pair_babi(babi):
+	from tqdm import tqdm
 	from IR import infoRX
-	glove = load_glove(200)
+	# glove = load_glove(200)
 
 	babi_data = []
 
-	for sample in babi:
+	for sample in tqdm(babi, total=len(babi), ncols=75, unit='Sample'):
 		line_numbers, context, question, _, support = sample
 
-		tfidf, imp_tokens = infoRX.tfidf(context, question)
+		tfidf, imp_tokens = infoRX.tf_idf(context, question)
 
 		for i, c in enumerate(context):
-			q_vector, a_vector = self.qa_vectorize(question, c, glove)
+			# q_vector, a_vector = qa_vectorize(question, c, glove)
 
 			label = 0
 			line_number = line_numbers[i]
@@ -410,28 +395,179 @@ def get_question_answer_pair(babi):
 				if imp in c:
 					word_cnt += 1
 
-			babi_data.append((q_vector, a_vector, label, tfidf[i], word_cnt))
+			babi_data.append((question, c, label, tfidf[i], word_cnt))
 	return babi_data
 
-def get_babi_for_abcnn(babi_id='1'):
-	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/babi_{}.pkl'.format(babi_id))
-	if os.path.isfile(cache_file):
-		with open(cache_file, 'rb') as f:
-			babi_train, babi_test = pickle.load(f)
-	else:
-		babi_train_raw, babi_test_raw = get_babi_raw(babi_id)
+def process_babi_for_abcnn(babi):
+	from tqdm import tqdm
 
-		babi_train = process_babi_for_abcnn(babi_train_raw)
-		babi_train = get_question_answer_pair(babi_train)
-		
-		babi_test = process_babi_for_abcnn(babi_test_raw)
-		babi_test = get_question_answer_pair(babi_test)
-
-		with open(cache_file, 'wb') as f:
-			pickle.dump((babi_train, babi_test), f)
+	samples = []
 	
-	return babi_train, babi_test
+	for line in tqdm(babi, total=len(babi), ncols=75, unit='Line'):
+		line_number, data = tuple(line.split(' ', 1))
+		if line_number == '1':
+			context = []
+			line_numbers = []
+		
+		if '?' in data:
+			question, ans_token, support = tuple(data.split(sep='\t'))
+			samples.append((line_numbers, context, question, ans_token, support))
+		else:
+			context.append(data)
+			line_numbers.append(line_number)
 
+	return samples
+
+def get_babi_raw_for_abcnn(babi_id, mode):
+	babi_raw = []
+
+	babi_map = {
+	'1': 'qa1_single-supporting-fact_',
+	'2': 'qa2_two-supporting-facts_',
+	'3': 'qa3_three-supporting-facts_',
+	'4': 'qa4_two-arg-relations_',
+	'5': 'qa5_three-arg-relations_',
+	'6': 'qa6_yes-no-questions_',
+	'7': 'qa7_counting_',
+	'8': 'qa8_lists-sets_',
+	'9': 'qa9_simple-negation_',
+	'10': 'qa10_indefinite-knowledge_',
+	'11': 'qa11_basic-coreference_',
+	'12': 'qa12_conjunction_',
+	'13': 'qa13_compound-coreference_',
+	'14': 'qa14_time-reasoning_',
+	'15': 'qa15_basic-deduction_',
+	'16': 'qa16_basic-induction_',
+	'17': 'qa17_positional-reasoning_',
+	'18': 'qa18_size-reasoning_',
+	'19': 'qa19_path-finding_',
+	'20': 'qa20_agents-motivations_'
+	}
+	babi_name = babi_map[babi_id]
+	babi_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/{}{}.txt'.format(babi_name, mode))
+	
+	with open(babi_file, 'r') as f:
+		print(' > Getting raw bAbI {} {}'.format(babi_id, mode))
+		for line in f:
+			babi_raw.append(line.replace('\n', ''))
+	
+	return babi_raw
+
+def get_babi_for_abcnn(babi_id='1', mode='train'):
+	babi = []
+
+	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/babi_{}_{}.pkl'.format(babi_id, mode))
+	if os.path.isfile(cache_file):
+		print('> Using cached bAbI {} {} for abcnn'.format(babi_id, mode))
+		with open(cache_file, 'rb') as f:
+			babi = pickle.load(f)
+	
+	else:
+		print('> Preparing bAbI {} {} for abcnn'.format(babi_id, mode))
+		babi_raw = get_babi_raw_for_abcnn(babi_id, mode)
+
+		print(' > Processing bAbI {} {}'.format(babi_id, mode))
+		babi = process_babi_for_abcnn(babi_raw)
+
+		print(' > Getting QA pairs for bAbI {} {}'.format(babi_id, mode))
+		babi = get_question_answer_pair_babi(babi)
+
+		print('> Caching the final babi {} {} for abcnn'.format(babi_id, mode))
+		with open(cache_file, 'wb') as f:
+			pickle.dump(babi, f)
+
+	return babi
+
+def get_question_answer_pair_wikiqa(wikiqa):
+	from tqdm import tqdm
+	from IR import infoRX
+	# glove = load_glove(200)
+
+	wikiqa_data = []
+
+	for sample in tqdm(wikiqa, total=len(wikiqa), ncols=75, unit='Sample'):
+		q, context, label_list = sample
+		
+		try:
+			tfidf, imp_tokens = infoRX.tf_idf(context, q)
+		except:
+			# print(context, q)
+			continue
+		
+		for i, c in enumerate(context):
+			# q_vector, a_vector = qa_vectorize(q, c, glove)
+
+			word_cnt = 0
+			for imp in imp_tokens:
+				if imp in c:
+					word_cnt += 1
+
+			wikiqa_data.append((q, c, label_list[i], tfidf[i], word_cnt))
+	
+	return wikiqa_data
+
+def process_wikiqa_for_abcnn(wikiqa, mode, max_sent_len=50):
+	from tqdm import tqdm
+	
+	samples = []
+
+	d_id = 'D1'
+	if mode == 'test':
+		d_id = 'D0'
+	context, label_list = [], []
+	q_ = ''
+	
+	for line in tqdm(wikiqa, total=len(wikiqa), ncols=75, unit='Line'):
+		_, q, doc_id, _, _, sent, label = tuple(line.split(sep='\t'))
+		
+		if doc_id != d_id:
+			# if len(context) > 0:
+			samples.append((q_, context, label_list))
+			context = []
+			d_id = doc_id
+		
+		q_ = q
+		if len(sent.split(sep=' ')) <= max_sent_len:
+			context.append(sent)
+			label_list.append(label)
+	
+	return samples
+
+def get_wikiqa_raw(mode):
+	wikiqa_raw = []
+
+	wikiqa_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
+	with open(wikiqa_path, 'r') as f:
+		for line in f:
+			wikiqa_raw.append(line)
+		wikiqa_raw = wikiqa_raw[1: ]
+	
+	return wikiqa_raw
+
+def get_wikiqa_for_abcnn(mode='train'):
+	wikiqa = []
+
+	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/WikiQA_{}.pkl'.format(mode))
+	if os.path.isfile(cache_file):
+		print('Using cached WikiQA {}'.format(mode))
+		with open(cache_file, 'rb') as f:
+			wikiqa = pickle.load(f)
+	
+	else:
+		print('> Preparing WikiQA {} for abcnn'.format(mode))
+		wikiqa_raw = get_wikiqa_raw(mode)
+
+		print(' > Processing WikiQA {}'.format(mode))
+		wikiqa = process_wikiqa_for_abcnn(wikiqa_raw, mode, 50)
+
+		print(' > Getting QA pairs for WikiQA {}'.format(mode))
+		wikiqa = get_question_answer_pair_wikiqa(wikiqa)
+
+		print(' > Caching WikiQA {}'.format(mode))
+		with open(cache_file, 'wb') as f:
+			pickle.dump(wikiqa, f)
+
+	return wikiqa
 
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"
