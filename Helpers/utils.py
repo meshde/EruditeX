@@ -405,6 +405,7 @@ def process_babi_for_abcnn(babi):
 	
 	for line in tqdm(babi, total=len(babi), ncols=75, unit='Line'):
 		line_number, data = tuple(line.split(' ', 1))
+		data = data.lower()
 		if line_number == '1':
 			context = []
 			line_numbers = []
@@ -481,29 +482,30 @@ def get_babi_for_abcnn(babi_id='1', mode='train'):
 def get_question_answer_pair_wikiqa(wikiqa):
 	from tqdm import tqdm
 	from IR import infoRX
+
+	from nltk.stem.wordnet import WordNetLemmatizer
+	lmtzr = WordNetLemmatizer()
 	# glove = load_glove(200)
 
 	wikiqa_data = []
 
+	# print('here\n', wikiqa[0])
 	for sample in tqdm(wikiqa, total=len(wikiqa), ncols=75, unit='Sample'):
 		q, context, label_list = sample
 		
-		try:
-			tfidf, imp_tokens = infoRX.tf_idf(context, q)
-		except:
-			# print(context, q)
-			continue
+		tfidf, imp_tokens = infoRX.tf_idf(context, q)
 		
 		for i, c in enumerate(context):
 			# q_vector, a_vector = qa_vectorize(q, c, glove)
 
 			word_cnt = 0
 			for imp in imp_tokens:
-				if imp in c:
+
+				if lmtzr.lemmatize(imp) in [lmtzr.lemmatize(w) for w in c.split()]:
 					word_cnt += 1
 
 			wikiqa_data.append((q, c, label_list[i], tfidf[i], word_cnt))
-	
+	# print(wikiqa_data[0])
 	return wikiqa_data
 
 def process_wikiqa_for_abcnn(wikiqa, mode, max_sent_len=50):
@@ -524,12 +526,13 @@ def process_wikiqa_for_abcnn(wikiqa, mode, max_sent_len=50):
 			# if len(context) > 0:
 			samples.append((q_, context, label_list))
 			context = []
+			label_list = []
 			d_id = doc_id
 		
-		q_ = q
-		if len(sent.split(sep=' ')) <= max_sent_len:
-			context.append(sent)
-			label_list.append(label)
+		q_ = q.lower()
+		if len(sent.split()) <= max_sent_len:
+			context.append(sent.lower())
+			label_list.append(int(label))
 	
 	return samples
 
@@ -549,7 +552,7 @@ def get_wikiqa_for_abcnn(mode='train'):
 
 	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/WikiQA_{}.pkl'.format(mode))
 	if os.path.isfile(cache_file):
-		print('Using cached WikiQA {}'.format(mode))
+		print(' > Using cached WikiQA {}'.format(mode))
 		with open(cache_file, 'rb') as f:
 			wikiqa = pickle.load(f)
 	
@@ -557,12 +560,13 @@ def get_wikiqa_for_abcnn(mode='train'):
 		print('> Preparing WikiQA {} for abcnn'.format(mode))
 		wikiqa_raw = get_wikiqa_raw(mode)
 
+		# print(wikiqa_raw[0])
 		print(' > Processing WikiQA {}'.format(mode))
 		wikiqa = process_wikiqa_for_abcnn(wikiqa_raw, mode, 50)
-
+		# print(wikiqa[0])
 		print(' > Getting QA pairs for WikiQA {}'.format(mode))
 		wikiqa = get_question_answer_pair_wikiqa(wikiqa)
-
+		# print(wikiqa[0])
 		print(' > Caching WikiQA {}'.format(mode))
 		with open(cache_file, 'wb') as f:
 			pickle.dump(wikiqa, f)

@@ -281,12 +281,12 @@ class abcnn_model:
 
 		train_step = optimizer.minimize(loss)
 
-		return train_step, output_layer, loss, output_layer_test
+		return train_step, loss, output_layer_test
 
 
-	def qa_vectorize(self, q, a):
+	def qa_vectorize(self, q, a, glove):
 		
-		glove = utils.load_glove(200)
+		# glove = utils.load_glove(200)
 
 		q_vector = utils.get_vector_sequence(q, glove, 200)
 		a_vector = utils.get_vector_sequence(a, glove, 200)
@@ -327,7 +327,9 @@ class abcnn_model:
 			timestamp = 'temp'
 
 		with open(filename + 'r.txt', 'w') as fp:
-			pickle.dump((timestamp, index), fp) 
+			s = timestamp + '\t' + str(index)
+			# pickle.dump(s, fp) 
+			fp.write(s)
 
 		file_path = filename + timestamp + '.ckpt'
 		print('\n> Model state saved @ ', timestamp)
@@ -341,7 +343,8 @@ class abcnn_model:
 
 		with open(filename + 'r.txt', 'r') as fp:
 
-			timestamp, q_number = pickle.load(fp)
+			timestamp, q_number = (fp.read().split(sep='\t'))
+			q_number = int(q_number)
 			file_path = filename + timestamp + '.ckpt'
 			print('> Model restored from @ ', timestamp)
 			return file_path, q_number
@@ -356,7 +359,7 @@ class abcnn_model:
 		instances = 0
 		pred_labl = -1
 		one = tf.constant(1, dtype=tf.float32)
-		train_step, output_layer, loss, output_layer_test = self.model()
+		train_step, loss, output_layer_test = self.model()
 		saver = tf.train.Saver()
 		
 
@@ -397,7 +400,7 @@ class abcnn_model:
 					              self.word_cnt: word_cnt[j], self.tfidf: tfidf[j]}
 
 					if mode == 'train':
-						_, output, l, self.predict_label = sessn.run([train_step, output_layer, loss, output_layer_test], feed_dict=input_dict)
+						_, l, self.predict_label = sessn.run([train_step, loss, output_layer_test], feed_dict=input_dict)
 
 					if self.predict_label[0] > 0.5:
 						pred_labl = 1
@@ -442,7 +445,109 @@ class abcnn_model:
 				file_path = self.model_state_saver(0, 0)
 				saver.save(sessn, file_path)
 				
+	def finalize_data(self, mode, u_dataset, babi_id):
+		final_data = []
+		# score = 0
+		# instances = 0
+
+		# p_score = 0
+		# p_instances = 0
 		
+		# pred_labl = -1
+		
+		# mark_init = time.time()
+
+		# saver = tf.train.Saver()
+		# train_step, output_layer, loss, output_layer_test = self.model()
+
+		dataset = []
+		if u_dataset == 'wikiqa':
+			print('> Getting dataset: {} {}'.format(u_dataset, mode))
+			dataset = utils.get_wikiqa_for_abcnn(mode)
+		else:
+			print('> Getting dataset: {} {} {}'.format(u_dataset, mode, babi_id))
+			dataset = utils.get_babi_for_abcnn(babi_id, mode)
+
+		glove = utils.load_glove(200)
+		print('> Vectorizing the questions and answers')
+		for data in tqdm(dataset, total=len(dataset), ncols=75, unit='Pairs'):
+			q, a, label, tfidf, word_cnt = data
+			q_vector, a_vector = self.qa_vectorize(q, a, glove)
+			final_data.append((q_vector, a_vector, label, tfidf, word_cnt))
+
+		return final_data
+
+	def run_model_v2(self, mode='train', u_dataset='wikiqa', babi_id='1'):
+		dataset = self.finalize_data(mode, u_dataset, babi_id)
+		# print(dataset[0])
+		mark_init = time.time()
+		
+		score = 0
+		p_score = 0
+		
+		instances = 0
+		p_instances = 0
+
+		# result_file, accuracy_file = '', ''
+		
+		pred_labl = -1
+		
+		train_step, loss, output_layer_test = self.model()
+		saver = tf.train.Saver()
+
+		with tf.Session() as sess:
+			sess.run(tf.global_variables_initializer())
+
+			for data in tqdm(dataset, total=len(dataset), ncols=75, unit=' QA Pairs'):
+				mark_start = time.time()
+				q_vector, a_vector, label, tfidf, word_cnt = data
+				input_dict = {self.q: q_vector, self.a: a_vector, self.label: label, self.word_cnt: word_cnt, self.tfidf: tfidf}
+
+				if mode == 'train':
+					_, l, self.predict_label = sess.run([train_step, loss, output_layer_test], feed_dict=input_dict)
+				else:
+					self.predict_label = sess.run(output_layer_test, feed_dict=input_dict)
+
+				if self.predict_label[0] > 0.5:
+					pred_labl = 1
+				else:
+					pred_labl = 0
+
+				if label == 1:
+					p_instances += 1
+				instances += 1
+
+				if pred_labl == label:
+					score += 1
+					if label == 1:
+						p_score += 1
+
+				with open('result_abcnn.txt', 'a') as f:
+					itr_res = str('> QA' + str(instances) + '| Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
+					f.write(itr_res)
+
+				if (instances + 1) % 100 == 0:
+					accuracy = (score / instances) * 100 
+					if p_instances > 0:
+						p_accuracy = (p_score / p_instances) * 100 
+
+					with open('accuracy_abcnn.txt', 'a') as f:
+						itr_res = str('> Accuracy: {0:.2f}'.format(accuracy) + '\n')
+						if p_instances > 0:
+							itr_res += str('> True_P accuracy: {0:.2f}'.format(p_accuracy) + '\n')
+						f.write(itr_res)
+
+					score, instances = 0, 0
+					p_score, p_instances = 0, 0
+
+
+
+
+
+
+
+
+
 	def ans_select(question, ans_list):
 
 		scores = {}
@@ -473,4 +578,4 @@ class abcnn_model:
 # model verification
 if __name__ == '__main__':
 	selector = abcnn_model()
-	selector.run_model('train')
+	selector.run_model_v2(u_dataset='babi')
