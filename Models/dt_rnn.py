@@ -15,7 +15,7 @@ class DT_RNN(object):
 		# self.theano_build()
 
 	def set_params(self):
-		self.W_x =  nn_utils.normal_param(std=0.1, shape=(self.dim, self.word_vector_size))
+		self.W_x =  nn_utils.normal_param(std=0.1, shape=(self.word_vector_size, self.dim))
 		self.W_dep = nn_utils.normal_param(std=0.1, shape=(self.dep_len, self.dim, self.dim))
 		self.b = nn_utils.constant_param(value=0.0, shape=(self.dim,))
 
