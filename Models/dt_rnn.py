@@ -2,6 +2,7 @@ import theano
 import theano.tensor as T
 from theano.ifelse import ifelse
 from theano.scan_module import scan
+import pickle
 
 from Helpers import nn_utils
 
