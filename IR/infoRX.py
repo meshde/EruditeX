@@ -5,6 +5,7 @@ import os
 import string
 from nltk import word_tokenize
 from nltk.corpus import stopwords
+
 sys.path.append('../')
 
 from Helpers import utils
@@ -63,7 +64,7 @@ def tf_idf(doc, query):
 	for term in imp_tokens:
 		doc_freq = 0
 		tf = []
-		for i in range(0, doc_count_total):
+		for i in range(0, int(doc_count_total)):
 			term_count = doc[i].lower().count(term)
 			if term_count > 0:
 				doc_freq += 1
@@ -80,7 +81,7 @@ def tf_idf(doc, query):
 			tfidf[i] += tf[i] * idf
 
 		# print(tfidf)
-		return tfidf, imp_tokens
+	return tfidf, imp_tokens
 
 
 def main():
