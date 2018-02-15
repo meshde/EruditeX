@@ -69,7 +69,7 @@ class DT_RNN_Train(object):
 
 
 
-	def tp(self):
+	def train_dtRNN(self):
 		print("Loading Pre-processed SICK dataset")
 
 		sick_path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"data"),"cache/SICK_cache.pkl")
@@ -89,7 +89,7 @@ class DT_RNN_Train(object):
 
 			print("Testing")
 
-			acc = self.testing(self.sent_tree_set1[self.n+1:],self.sent_tree_set2[self.n+1:],self.relatedness_scores[self.n+1:],logs_path)
+			acc = self.testing(self.sent_tree_set1[self.n:],self.sent_tree_set2[self.n:],self.relatedness_scores[self.n:],logs_path)
 			acc = "{0:.3}".format(acc)
 			acc += "%"
 			
@@ -137,14 +137,14 @@ class DT_RNN_Train(object):
 			entryA=entry['A']
 			entryB=entry['B']
 
-			combined_entryA=[]
-			combined_entryA.extend([entryA['word_vectors'], entryA['parent_indices'], entryA['is_leaf'], entryA['dep_tags']])
+			# combined_entryA=[]
+			# combined_entryA.extend([entryA['word_vectors'], entryA['parent_indices'], entryA['is_leaf'], entryA['dep_tags']])
 
-			combined_entryB=[]
-			combined_entryB.extend([entryB['word_vectors'], entryB['parent_indices'], entryB['is_leaf'], entryB['dep_tags']])
+			# combined_entryB=[]
+			# combined_entryB.extend([entryB['word_vectors'], entryB['parent_indices'], entryB['is_leaf'], entryB['dep_tags']])
 
-			sent_tree_set1.append(combined_entryA)
-			sent_tree_set2.append(combined_entryB)
+			sent_tree_set1.append(entryA)
+			sent_tree_set2.append(entryB)
 			relatedness_scores.append(entry['score'])
 
 			sick_text.extend([entryA['text'],entryB['text'],entry['score']])		
@@ -159,26 +159,26 @@ class DT_RNN_Train(object):
 		print("Training")
 		start = time.time()
 		for num in range(self.n):
-			inputs1 = sent_tree_set1[num]
-			inputs2 = sent_tree_set2[num]
+			sent1 = sent_tree_set1[num]
+			sent2 = sent_tree_set2[num]
 
 			# print("Printing inputs for debugging purpose")
 			# print("Input set 1:")
-			# print(np.array(inputs1[0]).shape)
-			# print(np.array(inputs1[1]).shape)
-			# print(np.array(inputs1[2]).shape)
-			# print(np.array(inputs1[3]).shape)
+			# print(np.array(sent1['word_vectors']).shape)
+			# print(np.array(sent1['parent_indices']).shape)
+			# print(np.array(sent1['is_leaf']).shape)
+			# print(np.array(sent1['dep_tags']).shape)
 
 			# print("Printing inputs for debugging purpose")
 			# print("Input set 2:")
-			# print(np.array(inputs2[0]).shape)
-			# print(np.array(inputs2[1]).shape)
-			# print(np.array(inputs2[2]).shape)
-			# print(np.array(inputs2[3]).shape)
+			# print(np.array(sent2['word_vectors']).shape)
+			# print(np.array(sent2['parent_indices']).shape)
+			# print(np.array(sent2['is_leaf']).shape)
+			# print(np.array(sent2['dep_tags']).shape)
 
-			self.train(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
+			self.train(np.array(sent1['word_vectors']), np.array(sent1['parent_indices']), np.array(sent1['is_leaf']), np.array(sent1['dep_tags']), np.array(sent2['word_vectors']), np.array(sent2['parent_indices']), np.array(sent2['is_leaf']), np.array(sent2['dep_tags']), score[num])
 
-			# self.get_grad(np.array(inputs1[0]), np.array(inputs1[1]), np.array(inputs1[2]), np.array(inputs1[3]), np.array(inputs2[0]), np.array(inputs2[1]), np.array(inputs2[2]), np.array(inputs2[3]), score[num])
+			# self.get_grad(np.array(sent1['word_vectors']), np.array(sent1['parent_indices']), np.array(sent1['is_leaf']), np.array(sent1['dep_tags']), np.array(sent2['word_vectors']), np.array(sent2['parent_indices']), np.array(sent2['is_leaf']), np.array(sent2['dep_tags']), score[num])
 
 
 		print("Completed Epoch %d"%(epoch_val+1))

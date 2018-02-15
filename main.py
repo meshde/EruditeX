@@ -7,7 +7,7 @@ def train_dtrnn():
 
     from Model_Trainer.dtrnnTrain import DT_RNN_Train
     model = DT_RNN_Train(n=8000, epochs=5, hid_dim=50)
-    model.tp()
+    model.train_dtRNN()
 
 def train_dtrnn_debug():
     from Model_Trainer.dtrnnTrain import DT_RNN_Train
