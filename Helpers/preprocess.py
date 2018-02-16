@@ -78,12 +78,14 @@ class SICK:
                 pkl.dump((dataset_dtree, dataset_dtne), f)
             return dataset_dtree, dataset_dtne
     
-
-def get_single_sentence_input_dtree(doc, glove):
-    dtree_entry = dict()
+def get_single_sentence_dtree(doc, glove):
     sent = utils.get_sentence_from_doc(doc)
-
     dtree = utils.get_tree_node(sent.root, glove, dim=200)
+    
+    return dtree
+
+def get_input_from_dtree(dtree):
+    dtree_entry = dict()
     word_vectors, parent_indices, is_leaf, dep_tags = dtree.get_rnn_input()
 
     dtree_entry['word_vectors'] = word_vectors
@@ -94,15 +96,22 @@ def get_single_sentence_input_dtree(doc, glove):
 
     return dtree_entry
 
-def get_single_sentence_input_dtne(doc, glove):
-    dtne_entry = dict()
+def get_single_sentence_input_dtree(doc, glove):
+    dtree = get_single_sentence_dtree(doc, glove)
+    dtree_entry = get_input_from_dtree(dtree)
+    return dtree_entry
 
+def get_single_sentence_dtne(doc, glove):
     for ent in doc.ents:
         ent.merge()
 
     sent = utils.get_sentence_from_doc(doc)
-
     dtne = utils.get_dtne_node(sent.root, glove, dim=200)
+    
+    return dtne
+
+def get_input_from_dtne(dtne):
+    dtne_entry = dict()
     word_vectors, parent_indices, is_leaf, dep_tags, ent_type  = dtne.get_rnn_input()
 
     dtne_entry['word_vectors'] = word_vectors
@@ -112,6 +121,11 @@ def get_single_sentence_input_dtne(doc, glove):
     dtne_entry['ent_type'] = ent_type
     dtne_entry['text'] = dtne.get_tree_traversal('text')
 
+    return dtne_entry
+
+def get_single_sentence_input_dtne(doc, glove):
+    dtne = get_single_sentence_dtne(doc, glove)
+    dtne_entry = get_input_from_dtne(dtne)
     return dtne_entry 
 
 
@@ -137,14 +151,19 @@ class AnswerExtract(object):
 
 
         doc1 = nlp(data['qstn'])
-        doc2 = nlp(data['ans'])
+        doc2 = nlp(data['ans_sent'])
 
         dtree_entry['qstn'] = get_single_sentence_input_dtree(doc1, glove)
-        dtree_entry['ans'] = get_single_sentence_input_dtree(doc2, glove)
+        ans_tree = get_single_sentence_dtree(doc2, glove)
+        dtree_entry['ans'] = ans_tree.get_node(data['ans'])
+        dtree_entry['ans_sent'] = get_input_from_dtree(ans_tree)
 
-        dtree_entry['qstn'] = get_single_sentence_input_dtree(doc1, glove)
-        dtree_entry['ans'] = get_single_sentence_input_dtree(doc2, glove)
+        dtne_entry['qstn'] = get_single_sentence_input_dtne(doc1, glove)
+        ans_tree = get_single_sentence_dtne(doc2, glove)
+        dtne_entry['ans'] = ans_tree.get_node(data['ans'])
+        dtne_entry['ans_sent'] = get_input_from_dtne(ans_tree)
 
+        return dtree_entry, dtne_entry
 
 if __name__ == '__main__':
     SICK.get_final_input()
