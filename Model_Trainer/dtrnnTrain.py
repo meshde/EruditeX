@@ -17,7 +17,7 @@ import numpy as np
 class DT_RNN_Train(object):
 
 	def __init__(self, n=None, epochs=None, hid_dim=None):
-		SentEmbd_type="DT_RNN_"
+		self.SentEmbd_type="DT_RNN_"
 
 		if not n:
 			self.n=int(sys.argv[1])
@@ -83,7 +83,7 @@ class DT_RNN_Train(object):
 			self.training(self.sent_tree_set1[:self.n],self.sent_tree_set2[:self.n],self.relatedness_scores[:self.n],epoch_val)
 
 			z=str(datetime.datetime.now()).split(' ')
-			file_name = SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
+			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
 			logs_path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)
 
 
@@ -92,8 +92,10 @@ class DT_RNN_Train(object):
 			acc = self.testing(self.sent_tree_set1[self.n:],self.sent_tree_set2[self.n:],self.relatedness_scores[self.n:],logs_path)
 			acc = "{0:.3}".format(acc)
 			acc += "%"
+
+			print("Accuracy after epoch %d is %s"%(epoch_val+1,acc))
 			
-			file_name = SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
 			save_path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)       
 				
 			self.sent_embd.save_params(save_path,self.epochs)
@@ -103,20 +105,20 @@ class DT_RNN_Train(object):
 		ans =self.get_grad.maker.fgraph.toposort()
 		return ans
 
-	def testing(self, sent_tree1_inputs, sent_tree2_inputs, relatedness_scores, log_file):
+	def testing(self, sent_tree_set1, sent_tree_set2, relatedness_scores, log_file):
 		avg_acc=0.0
 		with open(log_file,'w') as f:
 			inputs=[]
-			for num in np.arange(len(sent_tree1_inputs)):
-				inputs.extend(sent_tree1_inputs[num])
-				inputs.extend(sent_tree2_inputs[num])
+			for num in np.arange(len(sent_tree_set1)):
+				sent1 = sent_tree_set1[num]
+				sent2 = sent_tree_set2[num]
 
-				score = self.get_similarity(inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6],inputs[7],relatedness_scores[num])
+				score = self.get_similarity(np.array(sent1['word_vectors']), np.array(sent1['parent_indices']), np.array(sent1['is_leaf']), np.array(sent1['dep_tags']), np.array(sent2['word_vectors']), np.array(sent2['parent_indices']), np.array(sent2['is_leaf']), np.array(sent2['dep_tags']),relatedness_scores[num])
 
 				f.write("Actual Similarity: "+str(score)+"\n")
 				f.write("Expected Similarity(From SICK.txt): "+str(relatedness_scores[num])+"\n")
 				avg_acc += (abs(score[0]-relatedness_scores[num])/relatedness_scores[num])
-			avg_acc =(avg_acc/len(sent_tree1_inputs) * 100)
+			avg_acc =(avg_acc/len(sent_tree_set1) * 100)
 			f.write("Average Accuracy: "+str(avg_acc)+"\n")
 			return avg_acc
 
