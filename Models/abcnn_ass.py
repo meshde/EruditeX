@@ -316,38 +316,40 @@ class abcnn_model:
 		return tfidf, word_cnt
 
 
-	def model_state_saver(self, index, mode):
-
+	def model_state_saver(self, index, mode, u_dataset):
 		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
+		timestamp = ''
 		
-		if mode == 0: # Saving model state at training completion
-			timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+		if mode == 'train': # Saving model state at training completion
+			timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
 		else: # Saving model state at checkpoint
 			timestamp = 'temp'
-
+		
 		with open(filename + 'r.txt', 'w') as fp:
-			s = timestamp + '\t' + str(index)
-			# pickle.dump(s, fp) 
+			s = timestamp + '\t' + str(index) + '\t' + u_dataset
 			fp.write(s)
 
 		file_path = filename + timestamp + '.ckpt'
 		print('\n> Model state saved @ ', timestamp)
 
-		return file_path
+		return file_path # file_path is the path where the most recent training state will be saved.
 
 
 	def model_state_loader(self):
 
 		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
+		index, u_dataset = None, None
+		try:
+			with open(filename + 'r.txt', 'r') as fp:
+				timestamp, index, u_dataset = tuple(fp.read().split(sep='\t'))
+				index = int(index)
+				filename = filename + timestamp + '.ckpt'
+				print('> Model restored from @ ', timestamp)
+		except:
+			pass
 
-		with open(filename + 'r.txt', 'r') as fp:
-
-			timestamp, q_number = (fp.read().split(sep='\t'))
-			q_number = int(q_number)
-			file_path = filename + timestamp + '.ckpt'
-			print('> Model restored from @ ', timestamp)
-			return file_path, q_number
+		return filename, index, u_dataset
 
 
 	def run_model(self, mode):
@@ -496,7 +498,25 @@ class abcnn_model:
 		saver = tf.train.Saver()
 
 		with tf.Session() as sess:
-			sess.run(tf.global_variables_initializer())
+
+			if mode == 'train':
+				filename, index, _u_dataset = self.model_state_loader()
+				if path.isfile(filename):
+					saver.restore(sess, filename)
+					if _u_dataset == u_dataset:
+						dataset = dataset[index: ]
+				else:
+					sess.run(tf.global_variables_initializer())
+
+			else:
+				filename, _, _ = self.model_state_loader()
+				if path.isfile(filename):
+					saver.restore(sess, filename)
+				else:
+					print('> No saved state found. Exiting...')
+					sess.close()
+					import sys
+					sys.exit()
 
 			for data in tqdm(dataset, total=len(dataset), ncols=75, unit=' QA Pairs'):
 				mark_start = time.time()
@@ -523,10 +543,10 @@ class abcnn_model:
 						p_score += 1
 
 				with open('result_abcnn.txt', 'a') as f:
-					itr_res = str('> QA' + str(instances) + '| Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
+					itr_res = str('> QA' + str(instances) + ' | Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
 					f.write(itr_res)
 
-				if (instances + 1) % 100 == 0:
+				if instances % 100 == 0:
 					accuracy = (score / instances) * 100 
 					if p_instances > 0:
 						p_accuracy = (p_score / p_instances) * 100 
@@ -539,6 +559,12 @@ class abcnn_model:
 
 					score, instances = 0, 0
 					p_score, p_instances = 0, 0
+
+					file_path = self.model_state_saver(instances, 'temp')
+					saver.save(sess, file_path)
+
+			file_path = self.model_state_saver(0, mode, u_dataset)
+			saver.save(sess, file_path)
 
 
 
