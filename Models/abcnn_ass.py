@@ -560,19 +560,13 @@ class abcnn_model:
 					score, instances = 0, 0
 					p_score, p_instances = 0, 0
 
-					file_path = self.model_state_saver(instances, 'temp')
-					saver.save(sess, file_path)
+					if mode == 'train':
+						file_path = self.model_state_saver(instances, 'temp')
+						saver.save(sess, file_path)
 
-			file_path = self.model_state_saver(0, mode, u_dataset)
-			saver.save(sess, file_path)
-
-
-
-
-
-
-
-
+			if mode == 'train':
+				file_path = self.model_state_saver(0, mode, u_dataset)
+				saver.save(sess, file_path)
 
 	def ans_select(question, ans_list):
 
