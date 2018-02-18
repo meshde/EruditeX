@@ -331,7 +331,7 @@ class abcnn_model:
 			fp.write(s)
 
 		file_path = filename + timestamp + '.ckpt'
-		print('\n> Model state saved @ ', timestamp)
+		print('\n> Model state will be saved @ ', timestamp)
 
 		return file_path # file_path is the path where the most recent training state will be saved.
 
@@ -345,7 +345,7 @@ class abcnn_model:
 				timestamp, index, u_dataset = tuple(fp.read().split(sep='\t'))
 				index = int(index)
 				filename = filename + timestamp + '.ckpt'
-				print('> Model restored from @ ', timestamp)
+				print('> Model will be restored from @ ', timestamp)
 		except:
 			pass
 
@@ -503,15 +503,21 @@ class abcnn_model:
 				filename, index, _u_dataset = self.model_state_loader()
 				if path.isfile(filename):
 					saver.restore(sess, filename)
+					print(' > Model state restored from @ ' + filename)
 					if _u_dataset == u_dataset:
 						dataset = dataset[index: ]
+						print('> Resuming training from instance {}'.format(index))
 				else:
 					sess.run(tf.global_variables_initializer())
 
 			else:
-				filename, _, _ = self.model_state_loader()
+				filename, index, _u_dataset = self.model_state_loader()
 				if path.isfile(filename):
 					saver.restore(sess, filename)
+					print(' > Model state restored from @ ' + filename)
+					if _u_dataset == u_dataset:
+						dataset = dataset[index: ]
+						print('> Resuming testing from instance {}'.format(index))
 				else:
 					print('> No saved state found. Exiting...')
 					sess.close()
@@ -526,7 +532,7 @@ class abcnn_model:
 				if mode == 'train':
 					_, l, self.predict_label = sess.run([train_step, loss, output_layer_test], feed_dict=input_dict)
 				else:
-					self.predict_label = sess.run(output_layer_test, feed_dict=input_dict)
+					l, self.predict_label = sess.run([loss, output_layer_test], feed_dict=input_dict)
 
 				if self.predict_label[0] > 0.5:
 					pred_labl = 1
@@ -561,12 +567,14 @@ class abcnn_model:
 					p_score, p_instances = 0, 0
 
 					if mode == 'train':
-						file_path = self.model_state_saver(instances, 'temp')
+						file_path = self.model_state_saver(instances, 'temp', u_dataset)
 						saver.save(sess, file_path)
+						print(' > Model state saved @ ' + file_path)
 
 			if mode == 'train':
 				file_path = self.model_state_saver(0, mode, u_dataset)
 				saver.save(sess, file_path)
+				print(' > Model state saved @ ' + file_path)
 
 	def ans_select(question, ans_list):
 
