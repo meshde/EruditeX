@@ -66,22 +66,14 @@ class SICK:
     def get_final_input():
         from os import path as path
         import pickle as pkl
-        dataset_dtree, dataset_dtne = [], []
         file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/cache/SICK_cache.pkl')
-        if path.isfile(file_path):
-            with open(file_path, 'rb') as f:
-                dataset_dtree, dataset_dtne = pkl.load(f)
-            return dataset_dtree, dataset_dtne
-        else:
-            dataset_dtree, dataset_dtne = SICK.get_input_tree()
-            with open(file_path, 'wb') as f:
-                pkl.dump((dataset_dtree, dataset_dtne), f)
-            return dataset_dtree, dataset_dtne
-    
+        dataset_dtree, dataset_dtne = get_final_input_from_path(file_path,
+                                                                SICK.get_input_tree)
+        return dataset_dtree, dataset_dtne
+
 def get_single_sentence_dtree(doc, glove):
     sent = utils.get_sentence_from_doc(doc)
     dtree = utils.get_tree_node(sent.root, glove, dim=200)
-    
     return dtree
 
 def get_input_from_dtree(dtree):
@@ -128,9 +120,19 @@ def get_single_sentence_input_dtne(doc, glove):
     dtne_entry = get_input_from_dtne(dtne)
     return dtne_entry 
 
+def get_final_input_from_path(file_path, get_input_tree):
+    if path.isfile(file_path):
+        with open(file_path, 'rb') as f:
+            dataset_dtree, dataset_dtne = pkl.load(f)
+        return dataset_dtree, dataset_dtne
+    else:
+        dataset_dtree, dataset_dtne = get_input_tree()
+        with open(file_path, 'wb') as f:
+            pkl.dump((dataset_dtree, dataset_dtne), f)
+        return dataset_dtree, dataset_dtne
 
 class AnswerExtract(object):
-    def random():
+    def get_input_tree():
         import spacy
         nlp = spacy.load('en')
         glove = utils.load_glove(200)
@@ -164,6 +166,12 @@ class AnswerExtract(object):
         dtne_entry['ans_sent'] = get_input_from_dtne(ans_tree)
 
         return dtree_entry, dtne_entry
+
+    def get_final_input_babi():
+        file_path = path_utils.get_babi_ans_extract_input_path()
+        dataset_dtree, dataset_dtne = get_final_input_from_path(file_path,
+                                                                AnswerExtract.get_input_tree)
+        return dataset_dtree, dataset_dtne
 
 if __name__ == '__main__':
     SICK.get_final_input()
