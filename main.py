@@ -36,9 +36,7 @@ def preprocess_babi_ans_extract():
     from Helpers import create_dataset 
     sources = ['qa1_single-supporting-fact_train',
              'qa4_two-arg-relations_test', 'qa5_three-arg-relations_test',
-             'qa6_yes-no-questions_test', 'qa9_simple-negation_test',
-             'qa10_indefinite-knowledge_test', 'qa12_conjunction_test',
-             'qa20_agents-motivations_test']
+             'qa12_conjunction_test']
 
     for source in sources:
         create_dataset(source)
