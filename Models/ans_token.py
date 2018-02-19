@@ -30,8 +30,12 @@ class AnsSelect(object):
 
         self.b_inp = nn_utils.constant_param(value=0.0, shape=(self.dim))
 
+        self.W_hid = nn_utils.normal_param(
+            std=0.1, shape=(self.dim, 1))
+        self.b_hid = nn_utils.constant_param(value=0.0, shape=(1))
+
         self.params = [self.W_q, self.W_ans_sent, self.W_ans_node,
-                       self.W_ans_parent, self.answer]
+                       self.W_ans_parent, self.b_inp, self.W_hid, self.b_hid]
 
         # Forming the output layer
         prediction = self.compute(
