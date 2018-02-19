@@ -3,6 +3,7 @@ from . import utils
 from tqdm import *
 import os
 import json
+import pickle as pkl
 
 class SICK:
     def get_data():
@@ -137,7 +138,7 @@ class AnswerExtract(object):
         if data == 'babi':
             qa_pairs = []
             dir_path = path_utils.get_babi_ans_extract_path()
-            for item in os.listdir(dir_path):
+            for item in sorted(os.listdir(dir_path)):
                 file_path = os.path.join(dir_path, item)
                 with open(file_path, 'r') as f:
                     pairs = json.load(f)
@@ -154,7 +155,7 @@ class AnswerExtract(object):
         qa_pairs = AnswerExtract.get_qa_pairs(data)
         dataset_dtree, dataset_dtne = [], []
         
-        for pair in qa_pairs:
+        for i,pair in tqdm(enumerate(qa_pairs), total=len(qa_pairs), unit='qa_pairs'):
             dtree_entry, dtne_entry = AnswerExtract.get_input_tree_single(pair, nlp, glove)
             dataset_dtree.append(dtree_entry)
             dataset_dtne.append(dtne_entry)

@@ -96,9 +96,10 @@ class dt_node(object):
 
     def get_node(self, node_text):
         for i,node in enumerate(self.postorder()):
-            if node.get_text() == node_text:
+            if node_text in node.get_text():
                 return i
-        raise Exception("{} does not exist in the tree".format(node_text))
+        raise Exception("{} does not exist in the tree {}".format(node_text,
+                                                                  str(self.get_tree_traversal('text'))))
 
 
 class dtne_node(dt_node):
