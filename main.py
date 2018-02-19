@@ -43,6 +43,12 @@ def preprocess_babi_ans_extract():
     for source in sources:
         create_dataset(source)
     return
+
+def get_babi_tree():
+    from Helpers import preprocess
+    preprocess.AnswerExtract.get_final_input_babi()
+    return
+
 if __name__ == '__main__':
     train_dtrnn()
 
