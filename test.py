@@ -52,4 +52,20 @@ def test_sick_preprocess():
 	assert('ent_type' in dtne_entry['B'])
 	return
 
+def test_ans_select():
+    from Models import AnsSelect
+    import numpy as np
 
+    for inp_dim in [30, 50, 100, 200, 300]:
+	    q = np.random.rand(inp_dim)
+	    ans_sent = np.random.rand(inp_dim)
+	    ans_node = np.random.rand(inp_dim)
+	    ans_parent = np.random.rand(inp_dim)
+	    answer = 1
+
+	    model = AnsSelect(inp_dim)
+	    model.train(q, ans_sent, ans_node, ans_parent, answer)
+	    # x = model.predict(q, ans_sent, ans_node, ans_parent)
+	    # x = model.get_loss(q, ans_sent, ans_node, ans_parent, answer)
+	    # raise AssertionError(x)
+    return
