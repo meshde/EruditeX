@@ -446,6 +446,7 @@ class abcnn_model:
 			if mode == 'train':
 				file_path = self.model_state_saver(0, 0)
 				saver.save(sessn, file_path)
+
 				
 	def finalize_data(self, mode, u_dataset, babi_id):
 		final_data = []
@@ -478,6 +479,7 @@ class abcnn_model:
 			final_data.append((q_vector, a_vector, label, tfidf, word_cnt))
 
 		return final_data
+
 
 	def run_model_v2(self, mode='train', u_dataset='wikiqa', babi_id='1'):
 		dataset = self.finalize_data(mode, u_dataset, babi_id)
@@ -580,28 +582,36 @@ class abcnn_model:
 				saver.save(sess, file_path)
 				print(' > Model state saved @ ' + file_path)
 
+
 	def ans_select(question, ans_list):
 
 		scores = {}
-		j = 0
 
 		tfidf, word_cnt = self.extract_features(q, ans_list)
-		_, _, _, output_layer_test = self.model()
+		_, _, output_layer_test = self.model()
 
 		with tf.Session() as sessn:
-			sessn.run(tf.global_variables_initializer())
-
-			for ans in ans_list:
 			
-				q_vector, a_vector = self.qa_vectorize(question, ans)
+			filename, _, _ = self.model_state_loader()
+			try:
+				saver.restore(sess, filename)
+				print(' > Model state restored from @ ' + filename)
+			except:
+				print(' > No saved state found. Exiting')
+				sessn.close()
+				import sys
+				sys.exit()
 
-				input_dict = {self.q: q_vector, self.a: a_vector, self.label: label_, self.word_cnt: word_cnt[j], self.tfidf: tfidf[j]}
+			glove = utils.load_glove(200)
 
+			for i, ans in enumerate(ans_list):
+			
+				q_vector, a_vector = self.qa_vectorize(question, ans, glove)
+
+				input_dict = {self.q: q_vector, self.a: a_vector, self.label: None, self.word_cnt: word_cnt[i], self.tfidf: tfidf[i]}
 				pred = sessn.run(output_layer_test, feed_dict=input_dict)
 
 				scores[ans] = pred
-
-			j += 1
 
 		ans_sents = sorted(scores.items(), key=operator.itemgetter(1))
 		return ans_sents
