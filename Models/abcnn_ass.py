@@ -571,7 +571,7 @@ class abcnn_model:
 					p_score, p_instances = 0, 0
 
 					if mode == 'train':
-						file_path = self.model_state_saver(instances, 'temp', u_dataset)
+						file_path = self.model_state_saver(iteration, 'temp', u_dataset)
 						saver.save(sess, file_path)
 						print(' > Model state saved @ ' + file_path)
 
