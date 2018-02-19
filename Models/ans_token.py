@@ -31,8 +31,8 @@ class AnsSelect(object):
         self.b_inp = nn_utils.constant_param(value=0.0, shape=(self.dim))
 
         self.W_hid = nn_utils.normal_param(
-            std=0.1, shape=(self.dim, 1))
-        self.b_hid = nn_utils.constant_param(value=0.0, shape=(1))
+            std=0.1, shape=(self.dim))
+        self.b_hid = nn_utils.constant_param(value=0.0, shape=())
 
         self.params = [self.W_q, self.W_ans_sent, self.W_ans_node,
                        self.W_ans_parent, self.b_inp, self.W_hid, self.b_hid]
@@ -42,16 +42,20 @@ class AnsSelect(object):
             q_sent_hid, ans_sent_hid, ans_node_hid, ans_parent_hid)
 
         # Forming the updates and loss layer
-        loss = T.sqrt(T.square(prediction) - T.square(answer))
+        loss = T.nnet.binary_crossentropy(prediction, answer)
         self.updates = lasagne.updates.adadelta(loss, self.params)
 
         self.train = theano.function([q_sent_hid, ans_sent_hid, ans_node_hid,
-                                      ans_parent_hid, answer], [], updates=self.updates)
+                                     ans_parent_hid, answer], [], updates=self.updates)
+
         self.predict = theano.function(
             [q_sent_hid, ans_sent_hid, ans_node_hid, ans_parent_hid], prediction)
 
+        self.get_loss = theano.function([q_sent_hid, ans_sent_hid, ans_node_hid,
+                                        ans_parent_hid, answer], loss)
+
     def compute(self, q_sent_hid, ans_sent_hid, ans_node_hid, ans_parent_hid):
-        x = T.dot(q_sent_hid, self.W_q) + T.dot(ans_sent_hid, self.W_ans_sent)
+        x = T.dot(q_sent_hid, self.W_q) + T.dot(ans_sent_hid, self.W_ans_sent) \
         + T.dot(ans_node_hid, self.W_ans_node) + \
             T.dot(ans_parent_hid, self.W_ans_parent)
         temp = T.nnet.sigmoid(x + self.b_inp)
