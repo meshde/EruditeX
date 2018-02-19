@@ -6,10 +6,10 @@ from Helpers import nn_utils
 
 
 class AnsSelect(object):
-    def __init__(self, inp_hidden_states_dim, hid_dim=50):
+    def __init__(self, inp_dim, hid_dim=50):
 
         self.dim = hid_dim
-        self.inp_hidden_states_dim = inp_hidden_states_dim
+        self.inp_dim = inp_dim
 
         # Forming the input layer of the answer module
         q_sent_hid = T.vector("Question root node hidden State")
@@ -20,13 +20,13 @@ class AnsSelect(object):
 
         # Forming the processing layer
         self.W_q = nn_utils.normal_param(
-            std=0.1, shape=(self.dim, self.inp_hidden_states_dim))
+            std=0.1, shape=(self.inp_dim, self.dim))
         self.W_ans_sent = nn_utils.normal_param(
-            std=0.1, shape=(self.dim, self.inp_hidden_states_dim))
+            std=0.1, shape=(self.inp_dim, self.dim))
         self.W_ans_node = nn_utils.normal_param(
-            std=0.1, shape=(self.dim, self.inp_hidden_states_dim))
+            std=0.1, shape=(self.inp_dim, self.dim))
         self.W_ans_parent = nn_utils.normal_param(
-            std=0.1, shape=(self.dim, self.inp_hidden_states_dim))
+            std=0.1, shape=(self.inp_dim, self.dim))
 
         self.b_inp = nn_utils.constant_param(value=0.0, shape=(self.dim))
 
@@ -47,11 +47,14 @@ class AnsSelect(object):
             [q_sent_hid, ans_sent_hid, ans_node_hid, ans_parent_hid], prediction)
 
     def compute(self, q_sent_hid, ans_sent_hid, ans_node_hid, ans_parent_hid):
-        x = T.dot(self.W_q, q_sent_hid) + T.dot(self.W_ans_sent, ans_sent_hid)
-            + T.dot(self.W_ans_node, ans_node_hid)
-            + T.dot(self.W_ans_parent, ans_parent_hid)
+        x = T.dot(q_sent_hid, self.W_q) + T.dot(ans_sent_hid, self.W_ans_sent)
+        + T.dot(ans_node_hid, self.W_ans_node) + \
+            T.dot(ans_parent_hid, self.W_ans_parent)
+        temp = T.nnet.sigmoid(x + self.b_inp)
 
-        out = T.nnet.sigmoid(x + self.b_inp)
+        x = T.dot(temp, self.W_hid)
+        out = T.nnet.sigmoid(x + self.b_hid)
+
         return out
 
     def save_params(self, file_name, epochs):
