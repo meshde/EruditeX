@@ -331,7 +331,7 @@ class abcnn_model:
 			fp.write(s)
 
 		file_path = filename + timestamp + '.ckpt'
-		print('\n> Model state will be saved @ ', timestamp)
+		print('\n> Model state will be saved @', file_path)
 
 		return file_path # file_path is the path where the most recent training state will be saved.
 
@@ -345,7 +345,7 @@ class abcnn_model:
 				timestamp, index, u_dataset = tuple(fp.read().split(sep='\t'))
 				index = int(index)
 				filename = filename + timestamp + '.ckpt'
-				print('> Model will be restored from @ ', timestamp)
+				print('> Model will be restored from @', filename, index, u_dataset)
 		except:
 			pass
 
@@ -490,6 +490,7 @@ class abcnn_model:
 		instances = 0
 		p_instances = 0
 
+		iteration = 0
 		# result_file, accuracy_file = '', ''
 		
 		pred_labl = -1
@@ -501,24 +502,24 @@ class abcnn_model:
 
 			if mode == 'train':
 				filename, index, _u_dataset = self.model_state_loader()
-				if path.isfile(filename):
+				try:
 					saver.restore(sess, filename)
 					print(' > Model state restored from @ ' + filename)
 					if _u_dataset == u_dataset:
 						dataset = dataset[index: ]
 						print('> Resuming training from instance {}'.format(index))
-				else:
+				except:
 					sess.run(tf.global_variables_initializer())
 
 			else:
 				filename, index, _u_dataset = self.model_state_loader()
-				if path.isfile(filename):
+				try:
 					saver.restore(sess, filename)
 					print(' > Model state restored from @ ' + filename)
 					if _u_dataset == u_dataset:
 						dataset = dataset[index: ]
 						print('> Resuming testing from instance {}'.format(index))
-				else:
+				except:
 					print('> No saved state found. Exiting...')
 					sess.close()
 					import sys
@@ -543,13 +544,15 @@ class abcnn_model:
 					p_instances += 1
 				instances += 1
 
+				iteration += 1
+
 				if pred_labl == label:
 					score += 1
 					if label == 1:
 						p_score += 1
 
 				with open('result_abcnn.txt', 'a') as f:
-					itr_res = str('> QA' + str(instances) + ' | Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
+					itr_res = str('> QA' + str(iteration) + ' | Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
 					f.write(itr_res)
 
 				if instances % 100 == 0:
@@ -558,9 +561,10 @@ class abcnn_model:
 						p_accuracy = (p_score / p_instances) * 100 
 
 					with open('accuracy_abcnn.txt', 'a') as f:
-						itr_res = str('> Accuracy: {0:.2f}'.format(accuracy) + '\n')
+						itr_res = 'Iteration: {}\n'.format(iteration)
+						itr_res += ' > Accuracy: {0:.2f}\n'.format(accuracy)
 						if p_instances > 0:
-							itr_res += str('> True_P accuracy: {0:.2f}'.format(p_accuracy) + '\n')
+							itr_res += '  > True_P accuracy: {0:.2f}\n'.format(p_accuracy)
 						f.write(itr_res)
 
 					score, instances = 0, 0
