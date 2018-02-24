@@ -448,7 +448,7 @@ def get_babi_raw_for_abcnn(babi_id, mode):
 	babi_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/{}{}.txt'.format(babi_name, mode))
 	
 	with open(babi_file, 'r') as f:
-		print(' > Getting raw bAbI {} {}'.format(babi_id, mode))
+		print('  > Getting raw bAbI {} {}'.format(babi_id, mode))
 		for line in f:
 			babi_raw.append(line.replace('\n', ''))
 	
@@ -464,7 +464,7 @@ def get_babi_for_abcnn(babi_id='1', mode='train'):
 			babi = pickle.load(f)
 	
 	else:
-		print('> Preparing bAbI {} {} for abcnn'.format(babi_id, mode))
+		print(' > Preparing bAbI {} {} for abcnn'.format(babi_id, mode))
 		babi_raw = get_babi_raw_for_abcnn(babi_id, mode)
 
 		print(' > Processing bAbI {} {}'.format(babi_id, mode))
@@ -541,6 +541,7 @@ def get_wikiqa_raw(mode):
 
 	wikiqa_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
 	with open(wikiqa_path, 'r') as f:
+		print('  > Getting WikiQA {} raw from \'{}\''.format(mode, wikiqa_path))
 		for line in f:
 			wikiqa_raw.append(line)
 		wikiqa_raw = wikiqa_raw[1: ]
@@ -557,7 +558,7 @@ def get_wikiqa_for_abcnn(mode='train'):
 			wikiqa = pickle.load(f)
 	
 	else:
-		print('> Preparing WikiQA {} for abcnn'.format(mode))
+		print(' > Preparing WikiQA {} for abcnn'.format(mode))
 		wikiqa_raw = get_wikiqa_raw(mode)
 
 		# print(wikiqa_raw[0])
@@ -567,7 +568,7 @@ def get_wikiqa_for_abcnn(mode='train'):
 		print(' > Getting QA pairs for WikiQA {}'.format(mode))
 		wikiqa = get_question_answer_pair_wikiqa(wikiqa)
 		# print(wikiqa[0])
-		print(' > Caching WikiQA {}'.format(mode))
+		print('> Caching WikiQA {}'.format(mode))
 		with open(cache_file, 'wb') as f:
 			pickle.dump(wikiqa, f)
 
