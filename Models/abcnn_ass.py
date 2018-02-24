@@ -11,6 +11,7 @@ import operator
 import time
 import datetime
 from tqdm import tqdm
+import argparse
 
 sys.path.append('../')
 from os import path as path
@@ -481,7 +482,7 @@ class abcnn_model:
 		return final_data
 
 
-	def run_model_v2(self, mode='train', u_dataset='wikiqa', babi_id='1'):
+	def run_model_v2(self, mode, u_dataset, babi_id):
 		dataset = self.finalize_data(mode, u_dataset, babi_id)
 		# print(dataset[0])
 		mark_init = time.time()
@@ -619,5 +620,14 @@ class abcnn_model:
 
 # model verification
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--mode', type=str, metavar='mode', default='train', help='What mode to run the model in: train(default), test')
+	parser.add_argument('--dataset', type=str, metavar='u_dataset', default='babi', help='Select the dataset to use: babi(default), wikiqa')
+	parser.add_argument('--babi_id', type=str, metavar='babi_id', default='1', help='Select which babi set to use: 1(default) - 20')
+	parser.set_defaults(shuffle=True)
+
+	args = parser.parse_args()
+	mode, u_dataset, babi_id = args.mode, args.dataset, args.babi_id
+
 	selector = abcnn_model()
-	selector.run_model_v2(u_dataset='babi')
+	selector.run_model_v2(mode=mode, u_dataset=u_dataset, babi_id=babi_id)
