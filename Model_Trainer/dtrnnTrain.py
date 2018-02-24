@@ -2,6 +2,7 @@ import sys
 # sys.path.append("../")
 from Helpers import utils
 from Helpers import nn_utils
+from Helpers import path_utils
 import spacy
 import sys
 import os
@@ -13,6 +14,7 @@ import time
 import pickle
 import lasagne
 import numpy as np
+from sklearn.utils import shuffle
 
 class DT_RNN_Train(object):
 
@@ -72,7 +74,7 @@ class DT_RNN_Train(object):
 	def train_dtRNN(self):
 		print("Loading Pre-processed SICK dataset")
 
-		sick_path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"data"),"cache/SICK_cache.pkl")
+		sick_path = path_utils.get_sick_path()
 		self.load_dataset(sick_path)
 
 		print("Load Complete")
@@ -80,11 +82,12 @@ class DT_RNN_Train(object):
 		BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 		for epoch_val in range(self.epochs):
-			self.training(self.sent_tree_set1[:self.n],self.sent_tree_set2[:self.n],self.relatedness_scores[:self.n],epoch_val)
+			sent_tree_set1, sent_tree_set2, relatedness_scores, sick_text = shuffle(self.sent_tree_set1, self.sent_tree_set2, self.relatedness_scores, self.sick_text)
+			self.training(sent_tree_set1[:self.n], sent_tree_set2[:self.n], relatedness_scores[:self.n], epoch_val)
 
 			z=str(datetime.datetime.now()).split(' ')
 			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
-			logs_path = os.path.join(os.path.join(os.path.join(BASE,'logs'),'SentEmbd'),file_name)
+			logs_path = path_utils.get_logs_path('SentEmbd/'+file_name)
 
 
 			print("Testing")
@@ -96,7 +99,7 @@ class DT_RNN_Train(object):
 			print("Accuracy after epoch %d is %s"%(epoch_val+1,acc))
 			
 			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
-			save_path = os.path.join(os.path.join(os.path.join(BASE,'states'),'SentEmbd'),file_name)       
+			save_path = path_utils.get_save_states_path('SentEmbd/'+file_name)       
 				
 			self.sent_embd.save_params(save_path,self.epochs)
 		return
@@ -139,6 +142,8 @@ class DT_RNN_Train(object):
 			entryA=entry['A']
 			entryB=entry['B']
 
+			temp=[]
+
 			# combined_entryA=[]
 			# combined_entryA.extend([entryA['word_vectors'], entryA['parent_indices'], entryA['is_leaf'], entryA['dep_tags']])
 
@@ -149,7 +154,7 @@ class DT_RNN_Train(object):
 			sent_tree_set2.append(entryB)
 			relatedness_scores.append(entry['score'])
 
-			sick_text.extend([entryA['text'],entryB['text'],entry['score']])		
+			sick_text.append(temp.extend([entryA['text'],entryB['text'],entry['score']]))		
 
 		self.sent_tree_set1 = sent_tree_set1
 		self.sent_tree_set2 = sent_tree_set2

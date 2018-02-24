@@ -2,6 +2,8 @@ from . import path_utils
 from . import utils
 from tqdm import *
 import os
+import json
+import pickle as pkl
 
 class SICK:
     def get_data():
@@ -121,7 +123,7 @@ def get_single_sentence_input_dtne(doc, glove):
     return dtne_entry 
 
 def get_final_input_from_path(file_path, get_input_tree):
-    if path.isfile(file_path):
+    if os.path.isfile(file_path):
         with open(file_path, 'rb') as f:
             dataset_dtree, dataset_dtne = pkl.load(f)
         return dataset_dtree, dataset_dtne
@@ -132,19 +134,31 @@ def get_final_input_from_path(file_path, get_input_tree):
         return dataset_dtree, dataset_dtne
 
 class AnswerExtract(object):
-    def get_input_tree():
+    def get_qa_pairs(data):
+        if data == 'babi':
+            qa_pairs = []
+            dir_path = path_utils.get_babi_ans_extract_path()
+            for item in sorted(os.listdir(dir_path)):
+                file_path = os.path.join(dir_path, item)
+                with open(file_path, 'r') as f:
+                    pairs = json.load(f)
+                    qa_pairs.extend(pairs)
+            return qa_pairs
+        raise NotImplementedError("AnswerExtract.get_qa_pairs has not been \
+                                  implemented for data value as {}".format(data))
+
+    def get_input_tree(data):
         import spacy
         nlp = spacy.load('en')
         glove = utils.load_glove(200)
 
-        qa_pairs = get_ans_ext_list()
+        qa_pairs = AnswerExtract.get_qa_pairs(data)
         dataset_dtree, dataset_dtne = [], []
         
-        for pair in qa_pairs:
+        for i,pair in tqdm(enumerate(qa_pairs), total=len(qa_pairs), unit='qa_pairs'):
             dtree_entry, dtne_entry = AnswerExtract.get_input_tree_single(pair, nlp, glove)
             dataset_dtree.append(dtree_entry)
             dataset_dtne.append(dtne_entry)
-
         return dataset_dtree, dataset_dtne
 
     def get_input_tree_single(data, nlp, glove):
@@ -164,13 +178,13 @@ class AnswerExtract(object):
         ans_tree = get_single_sentence_dtne(doc2, glove)
         dtne_entry['ans'] = ans_tree.get_node(data['ans'])
         dtne_entry['ans_sent'] = get_input_from_dtne(ans_tree)
-
         return dtree_entry, dtne_entry
 
     def get_final_input_babi():
         file_path = path_utils.get_babi_ans_extract_input_path()
         dataset_dtree, dataset_dtne = get_final_input_from_path(file_path,
-                                                                AnswerExtract.get_input_tree)
+                                                                lambda: \
+                                                                AnswerExtract.get_input_tree(data='babi'))
         return dataset_dtree, dataset_dtne
 
 if __name__ == '__main__':

@@ -32,6 +32,21 @@ def train_dtrnn_graph():
     print(theano.printing.debugprint(model.grad))
     return
 
+def preprocess_babi_ans_extract():
+    from Helpers import create_dataset 
+    sources = ['qa1_single-supporting-fact_train',
+             'qa4_two-arg-relations_test', 'qa5_three-arg-relations_test',
+             'qa12_conjunction_test']
+
+    for source in sources:
+        create_dataset(source)
+    return
+
+def get_babi_tree():
+    from Helpers import preprocess
+    preprocess.AnswerExtract.get_final_input_babi()
+    return
+
 if __name__ == '__main__':
     train_dtrnn()
 
