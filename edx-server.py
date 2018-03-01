@@ -5,7 +5,7 @@ from flask import Flask
 from flask import Response
 from flask import request
 
-# from Helpers import file_extraction as filer
+from Helpers import file_extraction as filer
 
 class EdXServer():
 
@@ -20,7 +20,7 @@ class EdXServer():
 
 		self.file = os.path.join('.\data-og\corpus\\'+filename)
 
-		# self.context = filer.extract_file_contents(self.file)	
+		self.context = filer.extract_file_contents(self.file)	
 
 	def get_query(self):
 		
