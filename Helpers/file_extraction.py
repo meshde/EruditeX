@@ -1,7 +1,4 @@
-# Λnדhгιnכ™
- 
 import textract
-
 
 def extract_file_contents(file):
 
@@ -10,7 +7,8 @@ def extract_file_contents(file):
 
 	text = [t for t in text.split('\\n') if t != '']
 
-	print(text)
+	# print(text)
+	return text
 
 if __name__ == '__main__':
-	extract_file_contents('..\data-og\corpus\sample.docx')
+	extract_file_contents('..\data-og\corpus\cricket.docx')
