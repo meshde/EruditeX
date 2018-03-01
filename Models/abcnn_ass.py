@@ -327,6 +327,10 @@ class abcnn_model:
 		else: # Saving model state at checkpoint
 			timestamp = 'temp'
 		
+		with open(filename + 'r.txt', 'r') as fp:
+			_, i, _ = tuple(fp.read().split(sep='\t'))
+			index += i
+
 		with open(filename + 'r.txt', 'w') as fp:
 			s = timestamp + '\t' + str(index) + '\t' + u_dataset
 			fp.write(s)
