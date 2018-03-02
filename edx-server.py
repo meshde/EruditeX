@@ -1,12 +1,14 @@
 import subprocess
 import os
+import nltk.data-
 
 from flask import Flask
 from flask import Response
 from flask import request
 
-from Helpers import file_extraction as filer
+# from Helpers import file_extraction as filer
 from IR import infoRX
+from Models import abcnn_model
 
 class EdXServer():
 
@@ -20,35 +22,45 @@ class EdXServer():
 		# print(filename)
 		self.file = os.path.join('.\data-og\corpus\\'+filename)
 
-		self.context = filer.extract_file_contents(self.file)
+		# self.context = filer.extract_file_contents(self.file)
 		if len(self.context) > 0:
 			return True
 
+		return True	#TODO: remove before deploy
 
 	def get_query(self, query):
 		
 		self.query = query
 		print(self.query)
 
+		# Filter top 5 paras using Info Retrieval
 		para_select = infoRX.retrieve_info(self.context, self.query)
+		para_sents = []
+		tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-		proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
-		
-		resp = Response(proc.communicate()[0].decode())
-		resp.headers['Access-Control-Allow-Origin'] = '*'
-		return resp
+		for para in para_select:
+			para_sents.extend(tokenizer.tokenize(para))
 
+		# Select Ans Sents - ABCNN
+		ans_select = abcnn_model.ans_select(query, para_sents)
+
+		# TODO: Phase 2-3: Input Module and Answer Module
+
+		# proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
+
+		return answer
 
 app = Flask(__name__)
 server = EdXServer()
 
 @app.route('/filed',methods=['POST'])
 def filer():
-	filename = request.get_json(force=True)["filename"]
+	filename = request.get_json(force=True)['filename']
 	if server.get_file(filename):
 		resp = Response('Context Ready')
 		resp.headers['Access-Control-Allow-Origin'] = '*'
 		return resp
+
 
 @app.route('/query',methods=['POST'])
 def queried():
