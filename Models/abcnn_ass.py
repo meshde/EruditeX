@@ -329,7 +329,7 @@ class abcnn_model:
 		
 		with open(filename + 'r.txt', 'r') as fp:
 			_, i, _ = tuple(fp.read().split(sep='\t'))
-			index += i
+			index += int(i)
 
 		with open(filename + 'r.txt', 'w') as fp:
 			s = timestamp + '\t' + str(index) + '\t' + u_dataset
