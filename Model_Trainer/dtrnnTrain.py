@@ -18,7 +18,8 @@ from sklearn.utils import shuffle
 
 class DT_RNN_Train(object):
 
-	def __init__(self, n=None, epochs=None, hid_dim=None, optimizer='adadelta'):
+	def __init__(self, n=None, epochs=None, hid_dim=None,
+                 initialization='glorot_normal', optimization='adadelta'):
 		self.SentEmbd_type="DT_RNN_"
 
 		if not n:
@@ -34,10 +35,11 @@ class DT_RNN_Train(object):
 		else:
 			self.hid_dim = hid_dim
 
-		optimization_function = nn_utils.get_optimization_function(optimizer)
+		optimizer = nn_utils.get_optimization_function(optimization)
 
 		from Models import dt_rnn
-		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim)
+		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim,
+                                       initialization=initialization)
 		self.params = self.sent_embd.params
 
 		inputs1 = self.sent_embd.get_graph_input()
@@ -56,7 +58,7 @@ class DT_RNN_Train(object):
 		self.score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
 		self.loss = T.sqrt(abs(T.square(self.score)-T.square(self.similarity_score)))
 		self.grad = theano.grad(self.loss, self.params)
-		self.updates = optimization_function(self.loss, self.params) #BlackBox
+		self.updates = optimizer(self.loss, self.params) #BlackBox
 		
 		inputs=[]
 		inputs.extend(inputs1)
