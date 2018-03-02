@@ -79,3 +79,38 @@ def test_ans_select():
         # x = model.get_loss(q, ans_sent, ans_node, ans_parent, answer)
         # raise AssertionError(x)
     return
+
+def test_dtrnn_train():
+    from Model_Trainer import DT_RNN_Train as dttrain
+    from Helpers import utils
+    
+    initializations = [
+        'glorot_normal','glorot_uniform',
+        'he_uniform','he_normal'
+    ]
+
+    for optimization in ['adadelta', 'adam']:
+        for initialization in initializations:
+            sent1 = "this is my house"
+            sent2 = "this is my home"
+            score = 5
+
+            inputs1 = utils.get_dtree(sent1).get_rnn_input()
+            inputs2 = utils.get_dtree(sent2).get_rnn_input()
+
+            model = dttrain(
+                n=1, epochs=2, hid_dim=50,
+                optimization=optimization,
+                initialization=initialization)
+            model.train(
+                inputs1[0],
+                inputs1[1],
+                inputs1[2],
+                inputs1[3],
+                inputs2[0],
+                inputs2[1],
+                inputs2[2],
+                inputs2[3],
+                score
+            )
+    return
