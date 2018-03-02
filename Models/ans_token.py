@@ -6,10 +6,13 @@ from Helpers import nn_utils
 
 
 class AnsSelect(object):
-    def __init__(self, inp_dim, hid_dim=50):
+    def __init__(self, inp_dim, hid_dim=50, initialization='glorot_normal',
+                 optimization='adadelta'):
 
         self.dim = hid_dim
         self.inp_dim = inp_dim
+        initializer = nn_utils.get_initialization_function(initialization)
+        optimizer = nn_utils.get_optimization_function(optimization)
 
         # Forming the input layer of the answer module
         q_sent_hid = T.vector("Question root node hidden State")
@@ -19,19 +22,13 @@ class AnsSelect(object):
         answer = T.scalar("Answer Probability")
 
         # Forming the processing layer
-        self.W_q = nn_utils.normal_param(
-            std=0.1, shape=(self.inp_dim, self.dim))
-        self.W_ans_sent = nn_utils.normal_param(
-            std=0.1, shape=(self.inp_dim, self.dim))
-        self.W_ans_node = nn_utils.normal_param(
-            std=0.1, shape=(self.inp_dim, self.dim))
-        self.W_ans_parent = nn_utils.normal_param(
-            std=0.1, shape=(self.inp_dim, self.dim))
-
+        self.W_q = initializer(shape=(self.inp_dim, self.dim))
+        self.W_ans_sent = initializer(shape=(self.inp_dim, self.dim))
+        self.W_ans_node = initializer(shape=(self.inp_dim, self.dim))
+        self.W_ans_parent = initializer(shape=(self.inp_dim, self.dim))
         self.b_inp = nn_utils.constant_param(value=0.0, shape=(self.dim))
 
-        self.W_hid = nn_utils.normal_param(
-            std=0.1, shape=(self.dim))
+        self.W_hid = nn_utils.normal_param(std=0.1,shape=(self.dim,))
         self.b_hid = nn_utils.constant_param(value=0.0, shape=())
 
         self.params = [self.W_q, self.W_ans_sent, self.W_ans_node,
@@ -43,7 +40,7 @@ class AnsSelect(object):
 
         # Forming the updates and loss layer
         loss = T.nnet.binary_crossentropy(prediction, answer)
-        self.updates = lasagne.updates.adadelta(loss, self.params)
+        self.updates = optimizer(loss, self.params)
 
         self.train = theano.function([q_sent_hid, ans_sent_hid, ans_node_hid,
                                      ans_parent_hid, answer], [], updates=self.updates)
