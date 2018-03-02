@@ -53,7 +53,15 @@ def install_packages():
     with open('requirements.txt','r') as f:
         requirements = [line.strip() for line in f.readlines()]
         for requirement in requirements:
-            call("pip install " + requirement, shell=True)
+            if call("pip install " + requirement, shell=True):
+                if 'tensorflow-gpu' in requirement:
+                    print("There was an error installing tensorflow-gpu!")
+                    print("It is assumed that it was a MemoryError!")
+                    print("The developers need to think of a better way to \
+                          detect MemoryError")
+                    print("Trying to solve MemoryError")
+                    call("pip install --no-cache-dir " + requirement,
+                         shell=True)
 
     call("python -m spacy download en", shell=True)
     
