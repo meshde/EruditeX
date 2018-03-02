@@ -53,7 +53,9 @@ def install_packages():
     with open('requirements.txt','r') as f:
         requirements = [line.strip() for line in f.readlines()]
         for requirement in requirements:
-            if call("pip install " + requirement, shell=True):
+            call("pip install " + requirement, shell=True)
+
+            if return_code:
                 if 'tensorflow-gpu' in requirement:
                     print("There was an error installing tensorflow-gpu!")
                     print("It is assumed that it was a MemoryError!")
@@ -62,6 +64,23 @@ def install_packages():
                     print("Trying to solve MemoryError")
                     call("pip install --no-cache-dir " + requirement,
                          shell=True)
+
+                if 'Lasagne' in requirement:
+                    print("Lasagne 0.2.dev1 could not be found on PyPI")
+                    print("Installing from the GitHub repository...")
+
+                    lasagne_req_link = "https://raw.githubusercontent.com/\
+                        Lasagne/Lasagne/master/requirements.txt"
+                    lasagne_link = \
+                        "https://github.com/Lasagne/Lasagne/archive/master.zip"
+
+                    call(
+                        "pip install -r {0};pip install {1}".format(
+                            lasagne_req_link,
+                            lasagne_link
+                        ),
+                        shell=True
+                    )
 
     call("python -m spacy download en", shell=True)
     
