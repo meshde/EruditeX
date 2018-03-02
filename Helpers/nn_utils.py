@@ -54,3 +54,31 @@ def print_shape(A):
 	f = function([A],printed)
 	return f(A)
 
+
+def get_initialiser_function(name='glorot_normal'):
+    mapper = {
+        'normal': normal_param,
+        'glorot_uniform': glorot_uniform_param,
+        'glorot_normal': glorot_normal_param,
+        'he_uniform': he_uniform_param,
+        'he_normal': he_normal_param
+    }
+    try:
+        return mapper[name]
+    except KeyError:
+        raise NotImplementedError("{} initialization has not been implemented \
+                                  yet!".format(name))
+    return
+
+def get_optimizer_function(name='adam'):
+    mapper = {
+        'adam': lasagne.updates.adam,
+        'adadelta': lasagne.updates.adadelta
+    }
+    try:
+        return mapper[name]
+    except KeyError:
+        raise NotImplementedError("{} optimization has not been implmented \
+                                  yet!".format(name))
+    return
+
