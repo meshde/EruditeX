@@ -47,6 +47,20 @@ def get_babi_tree():
     preprocess.AnswerExtract.get_final_input_babi()
     return
 
+def install_packages():
+    from subprocess import call
+
+    with open('requirements.txt','r') as f:
+        requirements = [line.strip() for line in f.readlines()]
+        for requirement in requirements:
+            call("pip install " + requirement, shell=True)
+
+    call("python -m spacy download en", shell=True)
+    
+    print("The following packages could not be installed:")
+    call("pip freeze | diff requirements.txt -", shell=True)
+    return
+
 if __name__ == '__main__':
     train_dtrnn()
 
