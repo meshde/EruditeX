@@ -58,7 +58,7 @@ def install_packages():
     call("python -m spacy download en", shell=True)
     
     print("The following packages could not be installed:")
-    call("pip freeze | diff requirements.txt -", shell=True)
+    call("pip freeze | diff requirements.txt - | grep '^<' | sed 's/^<\ //'", shell=True)
     return
 
 if __name__ == '__main__':
