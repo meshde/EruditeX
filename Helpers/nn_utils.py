@@ -55,7 +55,7 @@ def print_shape(A):
 	return f(A)
 
 
-def get_initialiser_function(name='glorot_normal'):
+def get_initialization_function(name='glorot_normal'):
     mapper = {
         'normal': normal_param,
         'glorot_uniform': glorot_uniform_param,
@@ -70,7 +70,7 @@ def get_initialiser_function(name='glorot_normal'):
                                   yet!".format(name))
     return
 
-def get_optimizer_function(name='adam'):
+def get_optimization_function(name='adam'):
     mapper = {
         'adam': lasagne.updates.adam,
         'adadelta': lasagne.updates.adadelta

@@ -28,7 +28,7 @@ class AnsSelect(object):
         self.W_ans_parent = initializer(shape=(self.inp_dim, self.dim))
         self.b_inp = nn_utils.constant_param(value=0.0, shape=(self.dim))
 
-        self.W_hid = initializer(shape=(self.dim))
+        self.W_hid = nn_utils.normal_param(std=0.1,shape=(self.dim,))
         self.b_hid = nn_utils.constant_param(value=0.0, shape=())
 
         self.params = [self.W_q, self.W_ans_sent, self.W_ans_node,

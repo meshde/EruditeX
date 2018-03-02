@@ -18,7 +18,7 @@ from sklearn.utils import shuffle
 
 class DT_RNN_Train(object):
 
-	def __init__(self, n=None, epochs=None, hid_dim=None):
+	def __init__(self, n=None, epochs=None, hid_dim=None, optimizer='adadelta'):
 		self.SentEmbd_type="DT_RNN_"
 
 		if not n:
@@ -34,7 +34,8 @@ class DT_RNN_Train(object):
 		else:
 			self.hid_dim = hid_dim
 
-		
+		optimization_function = nn_utils.get_optimization_function(optimizer)
+
 		from Models import dt_rnn
 		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim)
 		self.params = self.sent_embd.params
@@ -49,15 +50,13 @@ class DT_RNN_Train(object):
 		sentence_embedding1, self.hid1=self.sent_embd.get_theano_graph(inputs1)
 		sentence_embedding2, self.hid2=self.sent_embd.get_theano_graph(inputs2)
 
-		
-
 		self.similarity_score = T.dscalar('score')
 
 
 		self.score = (((nn_utils.cosine_similarity(self.hid1,self.hid2) + 1)/2) * 4) + 1
 		self.loss = T.sqrt(abs(T.square(self.score)-T.square(self.similarity_score)))
 		self.grad = theano.grad(self.loss, self.params)
-		self.updates = lasagne.updates.adadelta(self.loss, self.params) #BlackBox
+		self.updates = optimization_function(self.loss, self.params) #BlackBox
 		
 		inputs=[]
 		inputs.extend(inputs1)
