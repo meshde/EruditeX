@@ -588,7 +588,7 @@ class abcnn_model:
 				print(' > Model state saved @ ' + file_path)
 
 
-	def ans_select(question, ans_list):
+	def ans_select(self, question, ans_list):
 
 		scores = {}
 
@@ -604,7 +604,6 @@ class abcnn_model:
 			except:
 				print(' > No saved state found. Exiting')
 				sessn.close()
-				import sys
 				sys.exit()
 
 			glove = utils.load_glove(200)

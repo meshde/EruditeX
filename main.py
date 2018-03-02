@@ -47,6 +47,47 @@ def get_babi_tree():
     preprocess.AnswerExtract.get_final_input_babi()
     return
 
+def install_packages():
+    from subprocess import call
+
+    with open('requirements.txt','r') as f:
+        requirements = [line.strip() for line in f.readlines()]
+        for requirement in requirements:
+            return_code = call("pip install " + requirement, shell=True)
+
+            if return_code:
+                if 'tensorflow-gpu' in requirement:
+                    print("There was an error installing tensorflow-gpu!")
+                    print("It is assumed that it was a MemoryError!")
+                    print("The developers need to think of a better way to \
+                          detect MemoryError")
+                    print("Trying to solve MemoryError")
+                    call("pip install --no-cache-dir " + requirement,
+                         shell=True)
+
+                if 'Lasagne' in requirement:
+                    print("Lasagne 0.2.dev1 could not be found on PyPI")
+                    print("Installing from the GitHub repository...")
+
+                    lasagne_req_link = "https://raw.githubusercontent.com/\
+                        Lasagne/Lasagne/master/requirements.txt"
+                    lasagne_link = \
+                        "https://github.com/Lasagne/Lasagne/archive/master.zip"
+
+                    call(
+                        "pip install -r {0};pip install {1}".format(
+                            lasagne_req_link,
+                            lasagne_link
+                        ),
+                        shell=True
+                    )
+
+    call("python -m spacy download en", shell=True)
+    
+    print("The following packages could not be installed:")
+    call("pip freeze | diff requirements.txt - | grep '^<' | sed 's/^<\ //'", shell=True)
+    return
+
 if __name__ == '__main__':
     train_dtrnn()
 

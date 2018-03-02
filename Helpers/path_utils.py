@@ -6,7 +6,7 @@ def get_base_path():
 
 def get_sick_path():
 	BASE = get_base_path()
-	PATH = os.path.join(os.path.join(BASE,'data'),'SICK.txt')
+	PATH = os.path.join(BASE,'data/cache/SICK_cache.pkl')
 	return PATH
 
 def get_babi_ans_extract_path(extension="json"):

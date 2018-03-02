@@ -32,19 +32,20 @@ def cosine_similarity(A, B):
 
 
 def get_most_relevant(paras, query_measure):
-	res = paras[0]
-	mini = cosine_similarity(query_measure, paras[0][1])
-	print("Para", 0, " Measure:", mini)
-	index = 0
-	for i in range(1, len(paras)):
-		similarity = cosine_similarity(query_measure, paras[i][1])
-		print("Para", i, " Measure:", similarity)
-		if similarity > mini:
-			mini = similarity
-			index = i
-			res = paras[i]
-	print("Para", index, " Measure:", mini)
-	return res[0]
+
+	top_paras = []
+	cosine_sim = []
+
+	for i in range(0, len(paras)):
+		cosine_sim.append(cosine_similarity(query_measure, paras[i][1]))
+		# print("Para", i, " Measure:", similarity)
+		
+	top_indices = np.array(cosine_sim).argsort()[-5:][::-1]
+
+	for index in top_indices:
+		top_paras.append(paras[index])
+	
+	return top_paras
 
 
 # TF-IDF Algorithm
@@ -84,30 +85,38 @@ def tf_idf(doc, query):
 	return tfidf, imp_tokens
 
 
-def main():
+def retrieve_info(doc, query):
 	glove = utils.load_glove()
 	vector = []
 
 	# query = sys.argv[1]
 	# file_name = sys.argv[2]
 
-	file_name = "../data/corpus/cricket.txt"
-	query = "what is the role of bat in cricket"
+	
+		# print(tf_idf(doc, query))
 
-	with open(file_name, 'r') as f:
-		doc = list(filter(('\n').__ne__, f.readlines()))
-		tidf_measure = np.array(tf_idf(doc, query))
-		top_indices = tidf_measure.argsort()[-5:][::-1]
+	tidf_measure = np.array(tf_idf(doc, query)[0])
+	top_indices = tidf_measure.argsort()[-10:][::-1]
+	# print(top_indices)
 
 	for index in top_indices:
-		para = doc[i]
+		para = doc[index]
 		para_word_vec = get_word_vecs(para, glove)
 		measure = centroid(para_word_vec)
 		vector.append((para, measure))
 
+	# print(vector)
 	query_measure = centroid(get_word_vecs(query, glove))
-	print(get_most_relevant(vector, query_measure))
+
+	# print(get_most_relevant(vector, query_measure))
+	return get_most_relevant(vector, query_measure)
 
 
 if __name__ == '__main__':
-	main()
+	file_name = "../data-og/corpus/cricket.txt"
+	query = "what is the role of bat in cricket"
+
+	with open(file_name, 'r') as f:
+		doc = list(filter(('\n').__ne__, f.readlines()))
+
+	print(retrieve_info(doc, query))

@@ -163,7 +163,7 @@ class DT_RNN_Train(object):
 		return
 
 	def training(self,sent_tree_set1,sent_tree_set2,score,epoch_val):
-		print("Training")
+		print("Training: Epoch ",epoch_val+1)
 		start = time.time()
 		for num in range(self.n):
 			sent1 = sent_tree_set1[num]
