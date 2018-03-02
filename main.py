@@ -53,7 +53,7 @@ def install_packages():
     with open('requirements.txt','r') as f:
         requirements = [line.strip() for line in f.readlines()]
         for requirement in requirements:
-            call("pip install " + requirement, shell=True)
+            return_code = call("pip install " + requirement, shell=True)
 
             if return_code:
                 if 'tensorflow-gpu' in requirement:
