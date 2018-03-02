@@ -85,23 +85,20 @@ def tf_idf(doc, query):
 	return tfidf, imp_tokens
 
 
-def retrieve_info():
+def retrieve_info(doc, query):
 	glove = utils.load_glove()
 	vector = []
 
 	# query = sys.argv[1]
 	# file_name = sys.argv[2]
 
-	file_name = "../data-og/corpus/cricket.txt"
-	query = "what is the role of bat in cricket"
-
-	with open(file_name, 'r') as f:
-		doc = list(filter(('\n').__ne__, f.readlines()))
+	
 		# print(tf_idf(doc, query))
-		tidf_measure = np.array(tf_idf(doc, query)[0])
-		top_indices = tidf_measure.argsort()[-10:][::-1]
 
-	print(top_indices)
+	tidf_measure = np.array(tf_idf(doc, query)[0])
+	top_indices = tidf_measure.argsort()[-10:][::-1]
+	# print(top_indices)
+
 	for index in top_indices:
 		para = doc[index]
 		para_word_vec = get_word_vecs(para, glove)
@@ -116,4 +113,10 @@ def retrieve_info():
 
 
 if __name__ == '__main__':
-	main()
+	file_name = "../data-og/corpus/cricket.txt"
+	query = "what is the role of bat in cricket"
+
+	with open(file_name, 'r') as f:
+		doc = list(filter(('\n').__ne__, f.readlines()))
+
+	print(retrieve_info(doc, query))
