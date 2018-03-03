@@ -533,7 +533,7 @@ class abcnn_model:
 					import sys
 					sys.exit()
 
-			huffle(dataset)
+			shuffle(dataset)
 
 			for data in tqdm(dataset, total=len(dataset), ncols=75, unit=' QA Pairs'):
 				mark_start = time.time()
