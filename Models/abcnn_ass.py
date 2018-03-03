@@ -327,6 +327,10 @@ class abcnn_model:
 		else: # Saving model state at checkpoint
 			timestamp = 'temp'
 		
+		with open(filename + 'r.txt', 'r') as fp:
+			_, i, _ = tuple(fp.read().split(sep='\t'))
+			index += int(i)
+
 		with open(filename + 'r.txt', 'w') as fp:
 			s = timestamp + '\t' + str(index) + '\t' + u_dataset
 			fp.write(s)
@@ -584,7 +588,7 @@ class abcnn_model:
 				print(' > Model state saved @ ' + file_path)
 
 
-	def ans_select(question, ans_list):
+	def ans_select(self, question, ans_list):
 
 		scores = {}
 
@@ -600,7 +604,6 @@ class abcnn_model:
 			except:
 				print(' > No saved state found. Exiting')
 				sessn.close()
-				import sys
 				sys.exit()
 
 			glove = utils.load_glove(200)

@@ -1,28 +1,27 @@
 import tensorflow as tf
 
 class ans_node(object):
-	def __init__(self):
+	def __init__(self, dim):
 		# Hyperparameters
-		self.vector_dim = 200
-		self.n_features = 3 # or 4
+		self.dim = dim
+		self.n_features = 4
 		self.learning_rate = 0.0005
 
 		# Placeholders
-		self.a = tf.placeholder(tf.float32, [self.vector_dim], 'answer_node')
-		self.a_p = tf.placeholder(tf.float32, [self.vector_dim], 'parent_node')
-		self.q = tf.placeholder(tf.float32, [self.vector_dim], 'question_root')
-		# self.corr_a = tf.placeholder(tf.float32, [self.vector_dim], 'correct_answer') # i dont think passing the correct answer will be a good idea
-		# self.corr_threshold = tf.constant(tf.float32, [0.5], 'threshold')
-		self.corr = tf.constant(tf.int32, [1], 'correct_ans_bool')
+		self.a = tf.placeholder(tf.float32, [self.dim], 'answer_node')
+		self.a_p = tf.placeholder(tf.float32, [self.dim], 'parent_node')
+		self.a_root = tf.placeholder(tf.float32, [self.dim], 'answer_root')
+		self.q = tf.placeholder(tf.float32, [self.dim], 'question_root')
+		self.label = tf.placeholder(tf.float32, 'correct_ans_label')
 
 		# Weights and biases
-		self.W_1 = tf.variable(tf.random_normal([self.vector_dim, 1]))
-		self.b_1 = tf.variable(tf.random_normal([self.vector_dim, 1]))
+		self.W_1 = tf.variable(tf.random_normal([self.dim]))
+		self.b_1 = tf.variable(tf.random_normal([self.dim, 1]))
 
 		self.W_2 = tf.variable(tf.random_normal([self.n_features, 1]))
 		self.b_2 = tf.variable(tf.random_normal([self.n_features, 1]))
 
-	def nn_model(self):
+	def model(self):
 		inp = tf.stack([self.a, self.a_p, self.q])
 		_res = tf.add(tf.matmul(inp, self.W_1), self.b_1)
 		# _res = tf.transpose(_res)
@@ -37,7 +36,7 @@ class ans_node(object):
 
 		return step
 
-	def train(self):
+	def run_model(self):
 		train_step = self.nn_model()
 		dataset = self.get_dataset()
 

@@ -44,7 +44,7 @@ class DT_RNN(object):
         hidden_states, sentence_embedding = self.get_theano_graph(inputs)
 
         self.get_sentence_embedding = theano.function(inputs, sentence_embedding)
-        self.get_hidden_states = theano.function(inputs, hidden_zastates)
+        self.get_hidden_states = theano.function(inputs, hidden_states)
 
     @staticmethod
     def inner_loop(idy, prev_val, idx, hidden_states, parent_indices, dep_tags, W):

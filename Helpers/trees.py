@@ -8,7 +8,7 @@ class dt_node(object):
         self.dep_tag = node.dep_
         self.head = node.head.text
         self.word_vector = utils.get_vector(node.text, glove, dim)
-        self.hid_state = None
+        self.hidden_state = None
         self.children = children
         self.word_vector_size = dim
         self.count = None
@@ -16,6 +16,12 @@ class dt_node(object):
 
     def get_text(self):
         return self.text
+    
+    def get_hidden_state(self):
+        return self.hidden_state
+
+    def get_root_hidden_state(self):
+        return self.get_hidden_state()
 
     def get_children(self):
         return self.children
@@ -100,6 +106,11 @@ class dt_node(object):
                 return i
         raise Exception("{} does not exist in the tree {}".format(node_text,
                                                                   str(self.get_tree_traversal('text'))))
+
+    def update_hidden_states(self, hidden_states):
+        for i,node in enumerate(self.postorder()):
+            node.hidden_state = hidden_states[i]
+        return
 
 
 class dtne_node(dt_node):
