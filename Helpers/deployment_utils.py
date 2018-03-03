@@ -8,7 +8,7 @@ def get_config(filename):
     filepath = os.path.join(CONFIG_PATH, filename)
 
     config = {}
-    with open(fielpath, 'r') as f:
+    with open(filepath, 'r') as f:
         for line in f:
             key,value = line.split('=')
             key = key.strip()
