@@ -11,6 +11,7 @@ import operator
 import time
 import datetime
 from tqdm import tqdm
+from random import shuffle
 import argparse
 
 sys.path.append('../')
@@ -531,6 +532,8 @@ class abcnn_model:
 					sess.close()
 					import sys
 					sys.exit()
+
+			shuffle(dataset)
 
 			for data in tqdm(dataset, total=len(dataset), ncols=75, unit=' QA Pairs'):
 				mark_start = time.time()

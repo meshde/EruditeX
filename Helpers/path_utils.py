@@ -29,5 +29,17 @@ def get_save_states_path(file_path):
     PATH = os.path.join(BASE, 'states/'+file_path)
     return PATH
 
+def get_cache_path():
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/cache/')
+    return PATH
 
+def get_wikiqa_raw_path(mode):
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
+    return PATH
 
+def get_babi_raw_path(babi_name, mode):
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/{}{}.txt'.format(babi_name, mode))
+    return PATH
