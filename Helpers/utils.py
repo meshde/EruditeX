@@ -574,6 +574,15 @@ def get_wikiqa_for_abcnn(mode='train'):
 
 	return wikiqa
 
+def get_state_file_name(**kwargs):
+    file_name = ""
+    for key,value in sorted(kwargs.items()):
+        file_name += "__{0}.{1}".format(key, value)
+    file_name += ".pkl"
+    file_name = file_name.replace(" ", "_")
+    file_name = file_name.lstrip("__")
+    return file_name
+
 def main():
 	url = "https://en.wikipedia.org/wiki/Stanford_University"
 	fetch_wiki(url)

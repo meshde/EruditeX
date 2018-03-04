@@ -114,3 +114,16 @@ def test_dtrnn_train():
                 score
             )
     return
+
+def test_get_state_file_name():
+    from Helpers import utils
+
+    filename = utils.get_state_file_name(
+        first_name = 'mehmood shakeel deshmukh',
+        username = 'meshde',
+        age = 22
+    )
+
+    required = 'age.22__first_name.mehmood_shakeel_deshmukh__username.meshde.pkl'
+    assert(filename == required)
+    return
