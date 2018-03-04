@@ -93,7 +93,7 @@ class DT_RNN_Train(object):
 
 			print("Testing")
 
-			acc = self.testing(self.sent_tree_set1[self.n:],self.sent_tree_set2[self.n:],self.relatedness_scores[self.n:],logs_path)
+			acc = self.testing(sent_tree_set1[self.n:],sent_tree_set2[self.n:],relatedness_scores[self.n:],logs_path)
 			acc = "{0:.3}".format(acc)
 			acc += "%"
 
