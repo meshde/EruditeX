@@ -125,7 +125,8 @@ class DT_RNN_Train(object):
 				avg_acc += (abs(score[0]-relatedness_scores[num])/relatedness_scores[num])
 			avg_acc =(avg_acc/len(sent_tree_set1) * 100)
 			f.write("Average Accuracy: "+str(avg_acc)+"\n")
-			return avg_acc
+			f.write("No. of test pairs: "+str(num+1))
+		return avg_acc
 
 	def load_dataset(self, sick_path):
 
