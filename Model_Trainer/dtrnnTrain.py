@@ -38,7 +38,7 @@ class DT_RNN_Train(object):
 		optimizer = nn_utils.get_optimization_function(optimization)
 
 		from Models import dt_rnn
-		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim,
+		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim, word_vector_size = 200, 
                                        initialization=initialization)
 		self.params = self.sent_embd.params
 
