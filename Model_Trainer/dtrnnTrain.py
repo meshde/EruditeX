@@ -86,8 +86,8 @@ class DT_RNN_Train(object):
 			sent_tree_set1, sent_tree_set2, relatedness_scores, sick_text = shuffle(self.sent_tree_set1, self.sent_tree_set2, self.relatedness_scores, self.sick_text)
 			self.training(sent_tree_set1[:self.n], sent_tree_set2[:self.n], relatedness_scores[:self.n], epoch_val)
 
-			z=str(datetime.datetime.now()).split(' ')
-			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
+			z=str(datetime.datetime.now())
+			file_name = utils.get_file_name("txt", SentEmbd_type=self.SentEmbd_type, epoch_num = epoch_val+1, ntp = self.n, hidden_dims = self.hid_dim, timestamp = z)
 			logs_path = path_utils.get_logs_path('SentEmbd/'+file_name)
 
 
@@ -99,7 +99,8 @@ class DT_RNN_Train(object):
 
 			print("Accuracy after epoch %d is %s"%(epoch_val+1,acc))
 			
-			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+			file_name = file_name = utils.get_file_name("pkl", SentEmbd_type=self.SentEmbd_type, epoch_num = epoch_val+1, ntp = self.n, hidden_dims = self.hid_dim, accuracy = acc, timestamp = z)
+			# self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
 			save_path = path_utils.get_save_states_path('SentEmbd/'+file_name)       
 				
 			self.sent_embd.save_params(save_path,self.epochs)
