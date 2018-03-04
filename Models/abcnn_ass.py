@@ -494,6 +494,7 @@ class abcnn_model:
 		
 		score = 0
 		p_score = 0
+		pred_pos = 0
 		
 		instances = 0
 		p_instances = 0
@@ -547,6 +548,7 @@ class abcnn_model:
 
 				if self.predict_label[0] > 0.5:
 					pred_labl = 1
+					pred_pos += 1
 				else:
 					pred_labl = 0
 
@@ -568,13 +570,23 @@ class abcnn_model:
 				if instances % 100 == 0:
 					accuracy = (score / instances) * 100 
 					if p_instances > 0:
-						p_accuracy = (p_score / p_instances) * 100 
+						recall = (p_score / p_instances) * 100 
+					if pred_pos > 0:
+						precision = (p_score / pred_pos) * 100 
+
+					f1 = 2*precision*recall/(precision + recall) 
+
 
 					with open('accuracy_abcnn.txt', 'a') as f:
 						itr_res = 'Iteration: {}\n'.format(iteration)
 						itr_res += ' > Accuracy: {0:.2f}\n'.format(accuracy)
 						if p_instances > 0:
-							itr_res += '  > True_P accuracy: {0:.2f}\n'.format(p_accuracy)
+							itr_res += '  > True_P accuracy (recall): {0:.2f}\n'.format(recall)
+						if pred_pos > 0:
+							itr_res += '  > Pred_P accuracy (precision): {0:.2f}\n'.format(precision)
+				
+						itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
+
 						f.write(itr_res)
 
 					score, instances = 0, 0
