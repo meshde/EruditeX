@@ -134,6 +134,17 @@ def get_final_input_from_path(file_path, get_input_tree):
             pkl.dump((dataset_dtree, dataset_dtne), f)
         return dataset_dtree, dataset_dtne
 
+def get_ans_model_input_from_path(file_path, create_babi_dataset):
+    if os.path.isfile(file_path):
+        with open(file_path, 'rb') as f:
+            dataset_ = pkl.load(f)
+        return dataset_
+    else:
+        dataset_ = create_babi_dataset()
+        with open(file_path, 'wb') as f:
+            pkl.dump(dataset_, f)
+        return dataset_
+
 class AnswerExtract(object):
     def get_qa_pairs(data):
         if data == 'babi':
@@ -188,9 +199,14 @@ class AnswerExtract(object):
         return dataset_dtree, dataset_dtne
 
 
+    def get_ans_model_input_babi():
+        file_path = path_utils.get_babi_ans_mod_path()
+        dataset_ = get_ans_model_input_from_path(file_path, lambda: AnswerExtract.create_ans_mod_babi_dataset())
+        return dataset_
+
     def create_ans_mod_babi_dataset():
 
-        dataset_dtree = AnswerExtract.get_final_input_babi()[0]
+        dataset_ = AnswerExtract.get_final_input_babi()[0]
         ans_mod_dataset = []
 
         for x in dataset_dtree:
