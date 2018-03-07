@@ -75,8 +75,8 @@ def extract_answer_from_sentences(sentences, question):
             final_list.append((node, f_score))
 
     ans_node, score = max(final_list, key=operator.itemgetter(1))
-    # final_list = sorted(final_list, key=operator.itemgetter(1), reverse=True) # Uncomment this if want list of all nodes with scores
-    return ans_node, score
+    final_list = sorted(final_list, key=operator.itemgetter(1), reverse=True) # Uncomment this if want list of all nodes with scores
+    return ans_node, score, final_list
 
 
 def get_dtrnn_model(config):
