@@ -1,5 +1,7 @@
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
+
+from Helpers.preprocess import AnswerExtract
 from Models import AnsSelect
 from Helpers import utils
 
@@ -71,9 +73,10 @@ def test_compressed_dataset(model, testing_data):
             index += 1
     return y_true, y_pred
 
-def train_extraction_module(inp_dim, hid_dim, epochs, initialization='glorot_normal',
-                            optimization='adam', threshold=0.5, compressed_dataset=False,
-                            train_size=0.75):
+def train_extraction_module(inp_dim, hid_dim, epochs,
+    initialization='glorot_normal', optimization='adam', threshold=0.5,
+    compressed_dataset=False, train_size=0.75):
+
     model = AnsSelect(
         inp_dim = inp_dim,
         hid_dim = hid_dim,

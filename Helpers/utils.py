@@ -578,7 +578,7 @@ def get_file_name(extension, **kwargs):
     file_name = ""
     for key,value in sorted(kwargs.items()):
         file_name += "__{0}:{1}".format(key, value)
-    file_name += "." + extension
+    file_name += ".{}".format(extension)
     file_name = file_name.replace(" ", "_")
     file_name = file_name.lstrip("__")
     return file_name
