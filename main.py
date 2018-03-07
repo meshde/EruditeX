@@ -47,6 +47,11 @@ def get_babi_tree():
     preprocess.AnswerExtract.get_final_input_babi()
     return
 
+def create_config(state_file_name, config_file_name):
+    from Helpers.delpoyment_utils import create_config
+    create_config(state_file_name, config_file_name)
+    return
+
 def install_packages():
     from subprocess import call
 
