@@ -120,7 +120,7 @@ def test_configurations():
     from Helpers.deployment_utils import get_config
     from Helpers.utils import get_file_name
 
-    filename = 'name:mehmood__username:meshde__age:22__time:10:12:30.pkl'
+    filename = 'age:22__name:mehmood__time:10:12:30__username:meshde.pkl'
     create_config(filename, 'test.cfg')
 
     config = get_config('test.cfg')
