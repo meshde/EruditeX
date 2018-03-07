@@ -128,3 +128,9 @@ def test_get_state_file_name():
     required = 'age.22__first_name.mehmood_shakeel_deshmukh__username.meshde.pkl'
     assert(filename == required)
     return
+
+def test_imports():
+    import Helpers
+    import Models
+    import Model_Trainer
+    return
