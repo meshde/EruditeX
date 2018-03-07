@@ -605,7 +605,7 @@ class abcnn_model:
 
 	def ans_select(self, question, ans_list):
 
-		scores = {}
+		ans_sents = []
 
 		tfidf, word_cnt = self.extract_features(q, ans_list)
 		_, _, output_layer_test = self.model()
@@ -630,9 +630,10 @@ class abcnn_model:
 				input_dict = {self.q: q_vector, self.a: a_vector, self.label: None, self.word_cnt: word_cnt[i], self.tfidf: tfidf[i]}
 				pred = sessn.run(output_layer_test, feed_dict=input_dict)
 
-				scores[ans] = pred
+				ans_sents.append((ans, pred))
 
-		ans_sents = sorted(scores.items(), key=operator.itemgetter(1))
+		ans_sents = sorted(ans_sents, key=operator.itemgetter(1), reverse=True) # Sorts by scores in desc order
+		
 		return ans_sents
 
 
