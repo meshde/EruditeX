@@ -47,21 +47,20 @@ class EdXServer():
 		# Select Ans Sents - ABCNN
 		ans_sents = abcnn.ans_select(query, para_sents)
 
-		answers = []
+		best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
 
-		# TODO: Phase 2-3: Input Module and Answer Module
-		for ans, a_score in ans_sents.iteritems():
-			words = deploy.extract_answer_from_sentence(ans, self.query)
-
-			words = sorted(words, key=operator.itemgetter(1))
-			
-			for word, w_score in words.iteritems()[:5]:
-				answers.append((word, w_score * a_score))
-
-		answers = sorted(answers, key=operator.itemgetter(1))
-
+		# Ignore: Phase 2-3: Input Module and Answer Module
+		# answers = []
+		# for ans, a_score in ans_sents.iteritems():
+		# 	words = deploy.extract_answer_from_sentence(ans, self.query)
+		# 	words = sorted(words, key=operator.itemgetter(1))
+		# 	for word, w_score in words.iteritems()[:5]:
+		# 		answers.append((word, w_score * a_score))
+		# answers = sorted(answers, key=operator.itemgetter(1))
 		# proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
-		return answers
+		
+		return answers[:5]
+
 
 app = Flask(__name__)
 server = EdXServer()

@@ -63,24 +63,20 @@ def extract_answer_from_sentences(sentences, question):
     check_configurations()
     config = get_config('dtrnn.cfg')
 
-    ans_list = abcnn_ass.ans_select()
-
     nlp = spacy.load('en')
     ans_sent_list = []
-    for sentence in sentences:
-        node_scores = _extract_answer_from_sentence(sentence, question, nlp, config)
-        ans_sent_list.append((sentence, ans_list[sentence], node_scores))
-
     final_list = []
-    for item in ans_sent_list:
-        _, sent_score, node_scores = item
+    for sent_score_tuple in sentences:
+        sentence, score = sent_score_tuple
+        node_scores = _extract_answer_from_sentence(sentence, question, nlp, config)
         for ns in node_scores:
-            node, score = ns
-            f_score = sent_score * score
+            node, n_score = ns
+            f_score = score * n_score
             final_list.append((node, f_score))
 
     ans_node, score = max(final_list, key=operator.itemgetter(1))
-    return ans_node, score
+    final_list = sorted(final_list, key=operator.itemgetter(1), reverse=True) # Uncomment this if want list of all nodes with scores
+    return ans_node, score, final_list
 
 
 def get_dtrnn_model(config):
