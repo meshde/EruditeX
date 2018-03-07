@@ -494,6 +494,7 @@ class abcnn_model:
 		
 		score = 0
 		p_score = 0
+		pred_pos = 0
 		
 		instances = 0
 		p_instances = 0
@@ -545,16 +546,17 @@ class abcnn_model:
 				else:
 					l, self.predict_label = sess.run([loss, output_layer_test], feed_dict=input_dict)
 
+				iteration += 1
+				
 				if self.predict_label[0] > 0.5:
 					pred_labl = 1
+					pred_pos += 1
 				else:
 					pred_labl = 0
 
 				if label == 1:
 					p_instances += 1
 				instances += 1
-
-				iteration += 1
 
 				if pred_labl == label:
 					score += 1
@@ -566,19 +568,29 @@ class abcnn_model:
 					f.write(itr_res)
 
 				if instances % 100 == 0:
-					accuracy = (score / instances) * 100 
-					if p_instances > 0:
-						p_accuracy = (p_score / p_instances) * 100 
-
+					
 					with open('accuracy_abcnn.txt', 'a') as f:
+						
 						itr_res = 'Iteration: {}\n'.format(iteration)
+
+						accuracy = (score / instances) * 100
 						itr_res += ' > Accuracy: {0:.2f}\n'.format(accuracy)
+
 						if p_instances > 0:
-							itr_res += '  > True_P accuracy: {0:.2f}\n'.format(p_accuracy)
+							recall = (p_score / p_instances) * 100 
+							itr_res += '  > True_+ve accuracy (recall): {0:.2f}\n'.format(recall)
+
+						if pred_pos > 0:
+							precision = (p_score / pred_pos) * 100 
+							itr_res += '  > Pred_+ve accuracy (precision): {0:.2f}\n'.format(precision)
+
+						f1 = 2 * precision * recall / (precision + recall) 
+						itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
+
 						f.write(itr_res)
 
 					score, instances = 0, 0
-					p_score, p_instances = 0, 0
+					p_score, p_instances, pred_pos = 0, 0, 0
 
 					if mode == 'train':
 						file_path = self.model_state_saver(iteration, 'temp', u_dataset)

@@ -38,7 +38,7 @@ class DT_RNN_Train(object):
 		optimizer = nn_utils.get_optimization_function(optimization)
 
 		from Models import dt_rnn
-		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim,
+		self.sent_embd = dt_rnn.DT_RNN(dim=self.hid_dim, word_vector_size = 200, 
                                        initialization=initialization)
 		self.params = self.sent_embd.params
 
@@ -86,20 +86,21 @@ class DT_RNN_Train(object):
 			sent_tree_set1, sent_tree_set2, relatedness_scores, sick_text = shuffle(self.sent_tree_set1, self.sent_tree_set2, self.relatedness_scores, self.sick_text)
 			self.training(sent_tree_set1[:self.n], sent_tree_set2[:self.n], relatedness_scores[:self.n], epoch_val)
 
-			z=str(datetime.datetime.now()).split(' ')
-			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+z[0]+"_"+z[1].split('.')[0]+".txt"
+			z=str(datetime.datetime.now())
+			file_name = utils.get_file_name("txt", sentEmbdType=self.SentEmbd_type, epochNum = epoch_val+1, ntp = self.n, hiddenDims = self.hid_dim, timestamp = z)
 			logs_path = path_utils.get_logs_path('SentEmbd/'+file_name)
 
 
 			print("Testing")
 
-			acc = self.testing(self.sent_tree_set1[self.n:],self.sent_tree_set2[self.n:],self.relatedness_scores[self.n:],logs_path)
+			acc = self.testing(sent_tree_set1[self.n:],sent_tree_set2[self.n:],relatedness_scores[self.n:],logs_path)
 			acc = "{0:.3}".format(acc)
 			acc += "%"
 
 			print("Accuracy after epoch %d is %s"%(epoch_val+1,acc))
 			
-			file_name = self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
+			file_name = file_name = utils.get_file_name("pkl", sentEmbdType=self.SentEmbd_type, epochNum = epoch_val+1, ntp = self.n, hiddenDims = self.hid_dim, accuracy = acc, timestamp = z)
+			# self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
 			save_path = path_utils.get_save_states_path('SentEmbd/'+file_name)       
 				
 			self.sent_embd.save_params(save_path,self.epochs)
@@ -124,7 +125,8 @@ class DT_RNN_Train(object):
 				avg_acc += (abs(score[0]-relatedness_scores[num])/relatedness_scores[num])
 			avg_acc =(avg_acc/len(sent_tree_set1) * 100)
 			f.write("Average Accuracy: "+str(avg_acc)+"\n")
-			return avg_acc
+			f.write("No. of test pairs: "+str(num+1))
+		return avg_acc
 
 	def load_dataset(self, sick_path):
 

@@ -6,7 +6,7 @@ def preprocessSick():
 def train_dtrnn():
 
     from Model_Trainer.dtrnnTrain import DT_RNN_Train
-    model = DT_RNN_Train(n=8000, epochs=5, hid_dim=50)
+    model = DT_RNN_Train(n=8000, epochs=10, hid_dim=50)
     model.train_dtRNN()
 
 def train_dtrnn_debug():

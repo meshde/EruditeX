@@ -19,6 +19,11 @@ def get_babi_ans_extract_input_path():
     PATH = os.path.join(BASE, 'data/cache/babi_ans_extraction.pkl')
     return PATH
 
+def get_babi_ans_mod_path():
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/cache/babi_ans_model.pkl')
+    return PATH
+
 def get_logs_path(file_path):
     BASE = get_base_path()
     PATH = os.path.join(BASE, 'logs/'+file_path)

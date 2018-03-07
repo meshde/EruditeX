@@ -1,5 +1,5 @@
-from . import path_utils
-from . import utils
+import path_utils
+import utils
 from tqdm import *
 import os
 import json
@@ -92,19 +92,6 @@ def get_input_from_dtree(dtree):
 
     return dtree_entry
 
-def get_single_sentence_input_dtree(doc, glove):
-    dtree = get_single_sentence_dtree(doc, glove)
-    dtree_entry = get_input_from_dtree(dtree)
-    return dtree_entry
-
-def get_single_sentence_dtne(doc, glove):
-    for ent in doc.ents:
-        ent.merge()
-
-    sent = utils.get_sentence_from_doc(doc)
-    dtne = utils.get_dtne_node(sent.root, glove, dim=200)
-    
-    return dtne
 
 def get_input_from_dtne(dtne):
     dtne_entry = dict()
@@ -119,10 +106,24 @@ def get_input_from_dtne(dtne):
 
     return dtne_entry
 
+def get_single_sentence_input_dtree(doc, glove):
+    dtree = get_single_sentence_dtree(doc, glove)
+    dtree_entry = get_input_from_dtree(dtree)
+    return dtree_entry
+
 def get_single_sentence_input_dtne(doc, glove):
     dtne = get_single_sentence_dtne(doc, glove)
     dtne_entry = get_input_from_dtne(dtne)
     return dtne_entry 
+
+def get_single_sentence_dtne(doc, glove):
+    for ent in doc.ents:
+        ent.merge()
+
+    sent = utils.get_sentence_from_doc(doc)
+    dtne = utils.get_dtne_node(sent.root, glove, dim=200)
+    
+    return dtne
 
 def get_final_input_from_path(file_path, get_input_tree):
     if os.path.isfile(file_path):
@@ -134,6 +135,17 @@ def get_final_input_from_path(file_path, get_input_tree):
         with open(file_path, 'wb') as f:
             pkl.dump((dataset_dtree, dataset_dtne), f)
         return dataset_dtree, dataset_dtne
+
+def get_ans_model_input_from_path(file_path, create_babi_dataset):
+    if os.path.isfile(file_path):
+        with open(file_path, 'rb') as f:
+            dataset_ = pkl.load(f)
+        return dataset_
+    else:
+        dataset_ = create_babi_dataset()
+        with open(file_path, 'wb') as f:
+            pkl.dump(dataset_, f)
+        return dataset_
 
 class AnswerExtract(object):
     def get_qa_pairs(data):
@@ -167,7 +179,6 @@ class AnswerExtract(object):
         dtree_entry = dict()
         dtne_entry = dict()
 
-
         doc1 = nlp(data['qstn'])
         doc2 = nlp(data['ans_sent'])
 
@@ -190,5 +201,33 @@ class AnswerExtract(object):
         )
         return dataset_dtree, dataset_dtne
 
+
+    def get_ans_model_input_babi():
+        file_path = path_utils.get_babi_ans_mod_path()
+        dataset_ = get_ans_model_input_from_path(file_path, lambda: AnswerExtract.create_ans_mod_babi_dataset())
+        return dataset_
+
+    def create_ans_mod_babi_dataset():
+
+        dataset_ = AnswerExtract.get_final_input_babi()[0]
+        ans_mod_dataset = []
+
+        for x in dataset_dtree:
+            amd_entry = {}
+            parent_index = x['ans_sent']['parent_indices'][x['ans']]
+
+            hid_states = replace_actual_method(x['qstn'], x['ans_sent'])
+
+            amd_entry['qstn_root'] = hid_states['qstn'][-1] 
+            amd_entry['ans_root'] = hid_states['ans_sent'][-1]
+            amd_entry['ans_node'] = hid_states['ans_sent'][x['ans']]
+            amd_entry['ans_parent'] = hid_states['ans_sent'][parent_index]
+            
+            ans_mod_dataset.append(amd_entry)
+            # print(x['ans'], parent_index)
+
+        return ans_mod_dataset
+
 if __name__ == '__main__':
-    SICK.get_final_input()
+    # SICK.get_final_input()
+    AnswerExtract.create_ans_mod_babi_dataset()
