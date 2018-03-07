@@ -69,8 +69,10 @@ class SICK:
         from os import path as path
         import pickle as pkl
         file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/cache/SICK_cache.pkl')
-        dataset_dtree, dataset_dtne = get_final_input_from_path(file_path,
-                                                                SICK.get_input_tree)
+        dataset_dtree, dataset_dtne = get_final_input_from_path(
+            file_path,
+            SICK.get_input_tree
+        )
         return dataset_dtree, dataset_dtne
 
 def get_single_sentence_dtree(doc, glove):
@@ -182,9 +184,10 @@ class AnswerExtract(object):
 
     def get_final_input_babi():
         file_path = path_utils.get_babi_ans_extract_input_path()
-        dataset_dtree, dataset_dtne = get_final_input_from_path(file_path,
-                                                                lambda: \
-                                                                AnswerExtract.get_input_tree(data='babi'))
+        dataset_dtree, dataset_dtne = get_final_input_from_path(
+            file_path,
+            lambda:AnswerExtract.get_input_tree(data='babi')
+        )
         return dataset_dtree, dataset_dtne
 
 if __name__ == '__main__':
