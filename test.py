@@ -99,7 +99,7 @@ def test_dtrnn_train():
             inputs2 = utils.get_dtree(sent2).get_rnn_input()
 
             model = dttrain(
-                n=1, epochs=2, hid_dim=50,
+                n=1, epochs=2, hid_dim=2000,
                 optimization=optimization,
                 initialization=initialization)
             model.train(
@@ -119,6 +119,7 @@ def test_get_state_file_name():
     from Helpers import utils
 
     filename = utils.get_state_file_name(
+        extension = 'pkl',
         first_name = 'mehmood shakeel deshmukh',
         username = 'meshde',
         age = 22
