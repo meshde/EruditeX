@@ -22,4 +22,7 @@ man/
 hope
 cache/
 *.swp
+lib64/
+local/
+
 
