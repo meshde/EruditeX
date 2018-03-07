@@ -114,3 +114,18 @@ def test_dtrnn_train():
                 score
             )
     return
+
+def test_configurations():
+    from Helpers.deployment_utils import create_config
+    from Helpers.deployment_utils import get_config
+    from Helpers.utils import get_file_name
+
+    filename = 'name:mehmood__username:meshde__age:22__time:10:12:30.pkl'
+    create_config(filename, 'test.cfg')
+
+    config = get_config('test.cfg')
+
+    output_filename = get_file_name(extension='pkl', **config)
+
+    assert(filename == output_filename)
+    return
