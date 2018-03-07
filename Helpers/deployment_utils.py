@@ -4,8 +4,7 @@ from Models import DT_RNN
 import os
 
 def get_config(filename):
-    CONFIG_PATH = path_utils.get_config_path()
-    filepath = os.path.join(CONFIG_PATH, filename)
+    filepath = path_utils.get_config_file_path(filename)
 
     config = {}
     with open(fielpath, 'r') as f:

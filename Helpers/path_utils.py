@@ -29,5 +29,14 @@ def get_save_states_path(file_path):
     PATH = os.path.join(BASE, 'states/'+file_path)
     return PATH
 
+def get_config_path():
+    BASE = get_base_path()
+    CONFIG_PATH = os.path.join(BASE, 'Configurations')
+    return CONFIG_PATH
+
+def get_config_file_path(filename):
+    CONFIG_PATH = get_config_path()
+    config_file_path = os.path.join(CONFIG_PATH, filename)
+    return config_file_path
 
 
