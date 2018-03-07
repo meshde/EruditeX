@@ -99,7 +99,7 @@ def test_dtrnn_train():
             inputs2 = utils.get_dtree(sent2).get_rnn_input()
 
             model = dttrain(
-                n=1, epochs=2, hid_dim=50,
+                n=1, epochs=2, hid_dim=200,
                 optimization=optimization,
                 initialization=initialization)
             model.train(
@@ -115,6 +115,7 @@ def test_dtrnn_train():
             )
     return
 
+
 def test_configurations():
     from Helpers.deployment_utils import create_config
     from Helpers.deployment_utils import get_config
@@ -128,4 +129,24 @@ def test_configurations():
     output_filename = get_file_name(extension='pkl', **config)
 
     assert(filename == output_filename)
+    return
+
+def test_get_state_file_name():
+    from Helpers import utils
+
+    filename = utils.get_file_name(
+        extension = 'pkl',
+        first_name = 'mehmood shakeel deshmukh',
+        username = 'meshde',
+        age = 22
+    )
+
+    required = 'age:22__first_name:mehmood_shakeel_deshmukh__username:meshde.pkl'
+    assert(filename == required)
+    return
+
+def test_imports():
+    import Helpers
+    import Models
+    import Model_Trainer
     return

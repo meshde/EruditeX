@@ -4,6 +4,7 @@ import os
 import csv
 import pickle
 import spacy
+from . import path_utils as pu
 from . import trees
 
 def fetch_wikis():
@@ -164,13 +165,15 @@ def load_glove(dim=50):
 		return _load_glove(dim)
 	else:
 		glove = {}
-		file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/')
-		if os.path.isfile(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim)))):
-			with open(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim))), 'rb') as f:
+		# file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/')
+		file_path = pu.get_cache_path()
+		filename = os.path.join(file_path, 'glove_{}.pkl'.format(dim))
+		if os.path.isfile(filename):
+			with open(filename, 'rb') as f:
 				glove = pickle.load(f)
 		else:
 			glove = _load_glove(dim)
-			with open(os.path.join(file_path, 'glove_{}.pkl'.format(str(dim))), 'wb') as f:
+			with open(filename, 'wb') as f:
 				pickle.dump(glove, f)
 		return glove
 
@@ -366,8 +369,7 @@ def qa_vectorize(q, a, glove):
 
 	q_vector = pad_matrix_with_zeros(q_vector, max_sent_len - len(q.split()))
 	a_vector = pad_matrix_with_zeros(a_vector, max_sent_len - len(a.split()))
-	# print(q_vector.shape, a_vector.shape)
-	# print(" > Vectors Padded")
+	
 	return q_vector, a_vector
 
 def get_question_answer_pair_babi(babi):
@@ -383,7 +385,7 @@ def get_question_answer_pair_babi(babi):
 		tfidf, imp_tokens = infoRX.tf_idf(context, question)
 
 		for i, c in enumerate(context):
-			# q_vector, a_vector = qa_vectorize(question, c, glove)
+			# q_vector, a_vector = qa_vectorize(question, c, glove) # WARNING: THIS WILL INCERASE THE FILE SIZE IN ORDER OF GB
 
 			label = 0
 			line_number = line_numbers[i]
@@ -396,6 +398,7 @@ def get_question_answer_pair_babi(babi):
 					word_cnt += 1
 
 			babi_data.append((question, c, label, tfidf[i], word_cnt))
+	
 	return babi_data
 
 def process_babi_for_abcnn(babi):
@@ -445,7 +448,7 @@ def get_babi_raw_for_abcnn(babi_id, mode):
 	'20': 'qa20_agents-motivations_'
 	}
 	babi_name = babi_map[babi_id]
-	babi_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/en/{}{}.txt'.format(babi_name, mode))
+	babi_file = pu.get_babi_raw_path(babi_name, mode)
 	
 	with open(babi_file, 'r') as f:
 		print('  > Getting raw bAbI {} {}'.format(babi_id, mode))
@@ -457,9 +460,9 @@ def get_babi_raw_for_abcnn(babi_id, mode):
 def get_babi_for_abcnn(babi_id='1', mode='train'):
 	babi = []
 
-	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/babi_{}_{}.pkl'.format(babi_id, mode))
+	cache_file = os.path.join(pu.get_cache_path(), 'babi_{}_{}.pkl'.format(babi_id, mode))
 	if os.path.isfile(cache_file):
-		print('> Using cached bAbI {} {} for abcnn'.format(babi_id, mode))
+		print(' > Using cached bAbI {} {} for abcnn'.format(babi_id, mode))
 		with open(cache_file, 'rb') as f:
 			babi = pickle.load(f)
 	
@@ -482,21 +485,20 @@ def get_babi_for_abcnn(babi_id='1', mode='train'):
 def get_question_answer_pair_wikiqa(wikiqa):
 	from tqdm import tqdm
 	from IR import infoRX
+	# glove = load_glove(200)
 
 	from nltk.stem.wordnet import WordNetLemmatizer
 	lmtzr = WordNetLemmatizer()
-	# glove = load_glove(200)
 
 	wikiqa_data = []
 
-	# print('here\n', wikiqa[0])
 	for sample in tqdm(wikiqa, total=len(wikiqa), ncols=75, unit='Sample'):
 		q, context, label_list = sample
 		
 		tfidf, imp_tokens = infoRX.tf_idf(context, q)
 		
 		for i, c in enumerate(context):
-			# q_vector, a_vector = qa_vectorize(q, c, glove)
+			# q_vector, a_vector = qa_vectorize(q, c, glove) # WARNING: THIS WILL INCERASE THE FILE SIZE IN ORDER OF GB
 
 			word_cnt = 0
 			for imp in imp_tokens:
@@ -505,7 +507,7 @@ def get_question_answer_pair_wikiqa(wikiqa):
 					word_cnt += 1
 
 			wikiqa_data.append((q, c, label_list[i], tfidf[i], word_cnt))
-	# print(wikiqa_data[0])
+
 	return wikiqa_data
 
 def process_wikiqa_for_abcnn(wikiqa, mode, max_sent_len=50):
@@ -523,7 +525,6 @@ def process_wikiqa_for_abcnn(wikiqa, mode, max_sent_len=50):
 		_, q, doc_id, _, _, sent, label = tuple(line.split(sep='\t'))
 		
 		if doc_id != d_id:
-			# if len(context) > 0:
 			samples.append((q_, context, label_list))
 			context = []
 			label_list = []
@@ -539,7 +540,7 @@ def process_wikiqa_for_abcnn(wikiqa, mode, max_sent_len=50):
 def get_wikiqa_raw(mode):
 	wikiqa_raw = []
 
-	wikiqa_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
+	wikiqa_path = pu.get_wikiqa_raw_path(mode)
 	with open(wikiqa_path, 'r') as f:
 		print('  > Getting WikiQA {} raw from \'{}\''.format(mode, wikiqa_path))
 		for line in f:
@@ -551,7 +552,7 @@ def get_wikiqa_raw(mode):
 def get_wikiqa_for_abcnn(mode='train'):
 	wikiqa = []
 
-	cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'data/cache/WikiQA_{}.pkl'.format(mode))
+	cache_file = os.path.join(pu.get_cache_path(), 'WikiQA_{}.pkl'.format(mode))
 	if os.path.isfile(cache_file):
 		print(' > Using cached WikiQA {}'.format(mode))
 		with open(cache_file, 'rb') as f:
@@ -561,13 +562,12 @@ def get_wikiqa_for_abcnn(mode='train'):
 		print(' > Preparing WikiQA {} for abcnn'.format(mode))
 		wikiqa_raw = get_wikiqa_raw(mode)
 
-		# print(wikiqa_raw[0])
 		print(' > Processing WikiQA {}'.format(mode))
 		wikiqa = process_wikiqa_for_abcnn(wikiqa_raw, mode, 50)
-		# print(wikiqa[0])
+
 		print(' > Getting QA pairs for WikiQA {}'.format(mode))
 		wikiqa = get_question_answer_pair_wikiqa(wikiqa)
-		# print(wikiqa[0])
+
 		print('> Caching WikiQA {}'.format(mode))
 		with open(cache_file, 'wb') as f:
 			pickle.dump(wikiqa, f)

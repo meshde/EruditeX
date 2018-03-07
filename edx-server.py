@@ -1,14 +1,17 @@
 import subprocess
 import os
-import nltk.data-
+import nltk.data
 
 from flask import Flask
 from flask import Response
 from flask import request
 
-# from Helpers import file_extraction as filer
+from Helpers import file_extraction as filer
+from Helpers import deployment_utils as deploy 
 from IR import infoRX
 from Models import abcnn_model
+from Models import AnsSelect
+from Models import DT_RNN
 
 class EdXServer():
 
@@ -22,7 +25,7 @@ class EdXServer():
 		# print(filename)
 		self.file = os.path.join('.\data-og\corpus\\'+filename)
 
-		# self.context = filer.extract_file_contents(self.file)
+		self.context = filer.extract_file_contents(self.file)
 		if len(self.context) > 0:
 			return True
 
@@ -42,22 +45,34 @@ class EdXServer():
 			para_sents.extend(tokenizer.tokenize(para))
 
 		# Select Ans Sents - ABCNN
-		ans_select = abcnn_model.ans_select(query, para_sents)
+		ans_sents = abcnn.ans_select(query, para_sents)
 
-		# TODO: Phase 2-3: Input Module and Answer Module
+		best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
 
+		# Ignore: Phase 2-3: Input Module and Answer Module
+		# answers = []
+		# for ans, a_score in ans_sents.iteritems():
+		# 	words = deploy.extract_answer_from_sentence(ans, self.query)
+		# 	words = sorted(words, key=operator.itemgetter(1))
+		# 	for word, w_score in words.iteritems()[:5]:
+		# 		answers.append((word, w_score * a_score))
+		# answers = sorted(answers, key=operator.itemgetter(1))
 		# proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
+		
+		return answers[:5]
 
-		return answer
 
 app = Flask(__name__)
 server = EdXServer()
+abcnn = abcnn_model()
+ans_select = AnsSelect()
+dt_rnn = DT_RNN()
 
 @app.route('/filed',methods=['POST'])
 def filer():
 	filename = request.get_json(force=True)['filename']
 	if server.get_file(filename):
-		resp = Response('Context Ready')
+		resp = Response('Context Ready.')
 		resp.headers['Access-Control-Allow-Origin'] = '*'
 		return resp
 

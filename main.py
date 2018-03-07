@@ -6,7 +6,7 @@ def preprocessSick():
 def train_dtrnn():
 
     from Model_Trainer.dtrnnTrain import DT_RNN_Train
-    model = DT_RNN_Train(n=8000, epochs=5, hid_dim=50)
+    model = DT_RNN_Train(n=8000, epochs=10, hid_dim=50)
     model.train_dtRNN()
 
 def train_dtrnn_debug():
@@ -58,7 +58,7 @@ def install_packages():
     with open('requirements.txt','r') as f:
         requirements = [line.strip() for line in f.readlines()]
         for requirement in requirements:
-            return_code = call("pip install " + requirement, shell=True)
+            return_code = call("pip install {} > /dev/null".format(requirement), shell=True)
 
             if return_code:
                 if 'tensorflow-gpu' in requirement:
@@ -74,8 +74,8 @@ def install_packages():
                     print("Lasagne 0.2.dev1 could not be found on PyPI")
                     print("Installing from the GitHub repository...")
 
-                    lasagne_req_link = "https://raw.githubusercontent.com/\
-                        Lasagne/Lasagne/master/requirements.txt"
+                    lasagne_req_link = "https://raw.githubusercontent.com/"\
+                        "Lasagne/Lasagne/master/requirements.txt"
                     lasagne_link = \
                         "https://github.com/Lasagne/Lasagne/archive/master.zip"
 
@@ -86,6 +86,8 @@ def install_packages():
                         ),
                         shell=True
                     )
+            else:
+                print("Installed: {}".format(requirement))
 
     call("python -m spacy download en", shell=True)
     

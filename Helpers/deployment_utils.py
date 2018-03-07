@@ -1,7 +1,9 @@
 from Helpers import utils
 from Helpers import path_utils
-from Models import DT_RNN
+from Models import DT_RNN, abcnn_ass
 import os
+import spacy
+import operator
 
 def get_config(filename):
     filepath = path_utils.get_config_file_path(filename)
@@ -9,7 +11,7 @@ def get_config(filename):
     config = {}
     with open(filepath, 'r') as f:
         for line in f:
-            key,value = line.split('=')
+            key, value = line.split('=')
             key = key.strip()
             value = value.strip()
 
@@ -55,12 +57,12 @@ def check_configurations():
         raise ValueError(error_msg)
     return
 
-def extract_answer_from_sentence(sentence, question):
-    check_configurations()
-    config = get_config('dtrnn.cfg')
+def _extract_answer_from_sentence(sentence, question, nlp, config):
+    # check_configurations()
+    # config = get_config('dtrnn.cfg')
     
-    sentence_tree = utils.get_dtree(sentence, dim=config['word_vector_size'])
-    question_tree = utils.get_dtree(question, dim=config['word_vector_size'])
+    sentence_tree = utils.get_dtree(sentence, nlp, dim=config['word_vector_size'])
+    question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
     sentence_text_traversal = sentence_tree.get_tree_taversal('text')
 
     temp = get_tree_hidden_states(sentence_tree, question_tree, config)
@@ -71,9 +73,29 @@ def extract_answer_from_sentence(sentence, question):
     question_tree.update_hidden_states(question_hidden_states)
 
     answers = get_answer_nodes(sentence_tree, question_tree)
-    answers = [(sentence_text_traversal[i], score) for i,score in answers]
+    answers = [(sentence_text_traversal[i], score) for i, score in answers]
 
     return answers
+
+def extract_answer_from_sentences(sentences, question):
+    check_configurations()
+    config = get_config('dtrnn.cfg')
+
+    nlp = spacy.load('en')
+    ans_sent_list = []
+    final_list = []
+    for sent_score_tuple in sentences:
+        sentence, score = sent_score_tuple
+        node_scores = _extract_answer_from_sentence(sentence, question, nlp, config)
+        for ns in node_scores:
+            node, n_score = ns
+            f_score = score * n_score
+            final_list.append((node, f_score))
+
+    ans_node, score = max(final_list, key=operator.itemgetter(1))
+    final_list = sorted(final_list, key=operator.itemgetter(1), reverse=True) # Uncomment this if want list of all nodes with scores
+    return ans_node, score, final_list
+
 
 def get_dtrnn_model(config):
     model = DT_RNN(

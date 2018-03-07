@@ -19,6 +19,11 @@ def get_babi_ans_extract_input_path():
     PATH = os.path.join(BASE, 'data/cache/babi_ans_extraction.pkl')
     return PATH
 
+def get_babi_ans_mod_path():
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/cache/babi_ans_model.pkl')
+    return PATH
+
 def get_logs_path(file_path):
     BASE = get_base_path()
     PATH = os.path.join(BASE, 'logs/'+file_path)
@@ -28,6 +33,7 @@ def get_save_states_path(file_path):
     BASE = get_base_path()
     PATH = os.path.join(BASE, 'states/'+file_path)
     return PATH
+
 
 def get_config_path():
     BASE = get_base_path()
@@ -39,4 +45,18 @@ def get_config_file_path(filename):
     config_file_path = os.path.join(CONFIG_PATH, filename)
     return config_file_path
 
+def get_cache_path():
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/cache/')
+    return PATH
 
+
+def get_wikiqa_raw_path(mode):
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/wikiqa/WikiQA-{}.tsv'.format(mode))
+    return PATH
+
+def get_babi_raw_path(babi_name, mode):
+    BASE = get_base_path()
+    PATH = os.path.join(BASE, 'data/{}{}.txt'.format(babi_name, mode))
+    return PATH
