@@ -68,7 +68,7 @@ class SICK:
     def get_final_input():
         from os import path as path
         import pickle as pkl
-        file_path = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'data/cache/SICK_cache.pkl')
+        file_path = path_utils.get_sick_cache_path() 
         dataset_dtree, dataset_dtne = get_final_input_from_path(
             file_path,
             SICK.get_input_tree
