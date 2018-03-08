@@ -58,5 +58,5 @@ def get_wikiqa_raw_path(mode):
 
 def get_babi_raw_path(babi_name, mode):
     BASE = get_base_path()
-    PATH = os.path.join(BASE, 'data/{}{}.txt'.format(babi_name, mode))
+    PATH = os.path.join(BASE, 'data/en/{}{}.txt'.format(babi_name, mode))
     return PATH
