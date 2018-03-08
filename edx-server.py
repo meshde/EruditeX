@@ -5,7 +5,7 @@ import nltk.data
 from flask import Flask
 from flask import Response
 from flask import request
-
+from flask import jsonify
 from Helpers import file_extraction as filer
 from Helpers import deployment_utils as deploy 
 from IR import infoRX
@@ -80,7 +80,10 @@ def filer():
 @app.route('/query',methods=['POST'])
 def queried():
 	query = request.get_json(force=True)['query']
-	resp = Response(server.get_query(query))
+	# resp = jsonify({'answers': [{'word':'this', 'score':1.0}, {'word':'is', 'score':1.0}, 
+	# {'word':'a', 'score':1.0}, {'word':'sample', 'score':1.0}, {'word':'answer', 'score':1.0}]})
+	# resp = Response(server.get_query(query))
+	resp = jsonify(server.get_query(query))
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
 
