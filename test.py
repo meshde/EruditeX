@@ -115,10 +115,26 @@ def test_dtrnn_train():
             )
     return
 
+
+def test_configurations():
+    from Helpers.deployment_utils import create_config
+    from Helpers.deployment_utils import get_config
+    from Helpers.utils import get_file_name
+
+    filename = 'age:22__name:mehmood__time:10:12:30__username:meshde.pkl'
+    create_config(filename, 'test.cfg')
+
+    config = get_config('test.cfg')
+
+    output_filename = get_file_name(extension='pkl', **config)
+
+    assert(filename == output_filename)
+    return
+
 def test_get_state_file_name():
     from Helpers import utils
 
-    filename = utils.get_state_file_name(
+    filename = utils.get_file_name(
         extension = 'pkl',
         first_name = 'mehmood shakeel deshmukh',
         username = 'meshde',

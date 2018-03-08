@@ -6,8 +6,7 @@ import spacy
 import operator
 
 def get_config(filename):
-    CONFIG_PATH = path_utils.get_config_path()
-    filepath = os.path.join(CONFIG_PATH, filename)
+    filepath = path_utils.get_config_file_path(filename)
 
     config = {}
     with open(filepath, 'r') as f:
@@ -21,6 +20,25 @@ def get_config(filename):
 
             config[key] = value
     return config
+
+def create_config(state_file_name, config_file_name):
+    config = {}
+    state_file_name = state_file_name.strip('.pkl')
+
+    for param in state_file_name.split('__'):
+        try:
+            key,value = param.split(':')
+        except:
+            key,value = param.split(':', maxsplit=1)
+        config[key] = value
+
+    config_file_path = path_utils.get_config_file_path(config_file_name)
+
+    with open(config_file_path, 'w') as f:
+        for key,value in sorted(config.items()):
+            f.write('{}={}'.format(key, value))
+            f.write('\n')
+    return
 
 def check_configurations():
     input_config = get_config('dtrnn.cfg')
