@@ -150,3 +150,28 @@ def test_imports():
     import Models
     import Model_Trainer
     return
+
+def test_abcnn_ass_for_babi():
+    from Models import abcnn_ass
+    from Helpers import utils
+
+    selector = abcnn_ass()
+
+    babi = utils.get_babi_raw_for_abcnn(babi_id='1', mode='train')
+    babi = utils.process_babi_for_abcnn(babi)
+    babi = babi[:5]
+
+    instances = len(babi)
+    correct_op = 0
+    for sample in tqdm(babi, total=len(babi), ncols=75, unit='Sample '):
+        line_numbers, context, question, _, support = sample
+
+        ans_sents = selector.ans_select(question, context)
+        ans_sent, _ = ans_sents[0]
+        if line_numbers[context.index(ans_sent)] == support:
+            correct_op += 1
+
+    accuracy = correct_op / instances
+    print('Accuracy: {0:.2f}'.format(accuracy))
+
+    return
