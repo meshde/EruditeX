@@ -610,6 +610,8 @@ class abcnn_model:
 		tfidf, word_cnt = self.extract_features(question, ans_list)
 		_, _, output_layer_test = self.model()
 
+		saver = tf.train.Saver()
+
 		with tf.Session() as sessn:
 			
 			filename, _, _ = self.model_state_loader()
