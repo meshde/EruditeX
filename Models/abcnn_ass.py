@@ -607,7 +607,7 @@ class abcnn_model:
 
 		ans_sents = []
 
-		tfidf, word_cnt = self.extract_features(q, ans_list)
+		tfidf, word_cnt = self.extract_features(question, ans_list)
 		_, _, output_layer_test = self.model()
 
 		with tf.Session() as sessn:
