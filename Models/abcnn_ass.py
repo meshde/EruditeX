@@ -580,6 +580,7 @@ class abcnn_model:
 							recall = (p_score / p_instances) * 100 
 							itr_res += '  > True_+ve accuracy (recall): {0:.2f}\n'.format(recall)
 
+						precision = 0
 						if pred_pos > 0:
 							precision = (p_score / pred_pos) * 100 
 							itr_res += '  > Pred_+ve accuracy (precision): {0:.2f}\n'.format(precision)
@@ -608,15 +609,16 @@ class abcnn_model:
 		ans_sents = []
 
 		tfidf, word_cnt = self.extract_features(question, ans_list)
+		
 		_, _, output_layer_test = self.model()
-
 		saver = tf.train.Saver()
 
 		with tf.Session() as sessn:
 			
 			filename, _, _ = self.model_state_loader()
 			try:
-				saver.restore(sess, filename)
+				print(filename)
+				saver.restore(sessn, filename)
 				print(' > Model state restored from @ ' + filename)
 			except:
 				print(' > No saved state found. Exiting')
