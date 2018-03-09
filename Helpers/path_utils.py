@@ -34,10 +34,22 @@ def get_save_states_path(file_path):
     PATH = os.path.join(BASE, 'states/'+file_path)
     return PATH
 
+
+def get_config_path():
+    BASE = get_base_path()
+    CONFIG_PATH = os.path.join(BASE, 'Configurations')
+    return CONFIG_PATH
+
+def get_config_file_path(filename):
+    CONFIG_PATH = get_config_path()
+    config_file_path = os.path.join(CONFIG_PATH, filename)
+    return config_file_path
+
 def get_cache_path():
     BASE = get_base_path()
     PATH = os.path.join(BASE, 'data/cache/')
     return PATH
+
 
 def get_wikiqa_raw_path(mode):
     BASE = get_base_path()
@@ -46,5 +58,5 @@ def get_wikiqa_raw_path(mode):
 
 def get_babi_raw_path(babi_name, mode):
     BASE = get_base_path()
-    PATH = os.path.join(BASE, 'data/{}{}.txt'.format(babi_name, mode))
+    PATH = os.path.join(BASE, 'data/en/{}{}.txt'.format(babi_name, mode))
     return PATH

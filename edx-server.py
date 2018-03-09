@@ -5,6 +5,8 @@ import nltk.data
 from flask import Flask
 from flask import Response
 from flask import request
+from flask import jsonify
+from werkzeug import secure_filename
 
 from Helpers import file_extraction as filer
 from Helpers import deployment_utils as deploy 
@@ -23,7 +25,7 @@ class EdXServer():
 	def get_file(self, filename):
 
 		# print(filename)
-		self.file = os.path.join('.\data-og\corpus\\'+filename)
+		self.file = os.path.join(app.config['UPLOAD_FOLDER'] + filename)
 
 		self.context = filer.extract_file_contents(self.file)
 		if len(self.context) > 0:
@@ -68,19 +70,31 @@ abcnn = abcnn_model()
 ans_select = AnsSelect()
 dt_rnn = DT_RNN()
 
+app.config['UPLOAD_FOLDER']	= os.path.join('./data/uploads')
+
 @app.route('/filed',methods=['POST'])
 def filer():
-	filename = request.get_json(force=True)['filename']
-	if server.get_file(filename):
-		resp = Response('Context Ready.')
+
+	# data = request.get_json(force=True)
+	# filename = data['filename']
+	# file = data['file']
+	
+	f = request.files['file']
+	f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+	print(f)
+
+	if server.get_file(f.filename):
+		resp = Response('File uploaded. Context Ready.')
 		resp.headers['Access-Control-Allow-Origin'] = '*'
 		return resp
-
-
+	
 @app.route('/query',methods=['POST'])
 def queried():
 	query = request.get_json(force=True)['query']
-	resp = Response(server.get_query(query))
+	# resp = jsonify({'answers': [{'word':'this', 'score':1.0}, {'word':'is', 'score':1.0}, 
+	# {'word':'a', 'score':1.0}, {'word':'sample', 'score':1.0}, {'word':'answer', 'score':1.0}]})
+	# resp = Response(server.get_query(query))
+	resp = jsonify(server.get_query(query))
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
 

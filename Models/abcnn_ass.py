@@ -492,16 +492,11 @@ class abcnn_model:
 		# print(dataset[0])
 		mark_init = time.time()
 		
-		score = 0
-		p_score = 0
-		pred_pos = 0
-		
-		instances = 0
-		p_instances = 0
-
-		iteration = 0
-		# result_file, accuracy_file = '', ''
-		
+		# Initialize Accuracy variables
+		score, p_score = 0, 0
+		p_instances, pred_pos = 0, 0
+		recall, precision = 0, 0
+		instances, iteration = 0, 0
 		pred_labl = -1
 		
 		train_step, loss, output_layer_test = self.model()
@@ -584,12 +579,13 @@ class abcnn_model:
 							precision = (p_score / pred_pos) * 100 
 							itr_res += '  > Pred_+ve accuracy (precision): {0:.2f}\n'.format(precision)
 
-						f1 = 2 * precision * recall / (precision + recall) 
-						itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
+						if recall > 0 and precision > 0:
+							f1 = 2 * precision * recall / (precision + recall) 
+							itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
 
 						f.write(itr_res)
 
-					score, instances = 0, 0
+					score, instances, recall, precision = 0, 0, 0, 0
 					p_score, p_instances, pred_pos = 0, 0, 0
 
 					if mode == 'train':
@@ -607,14 +603,17 @@ class abcnn_model:
 
 		ans_sents = []
 
-		tfidf, word_cnt = self.extract_features(q, ans_list)
+		tfidf, word_cnt = self.extract_features(question, ans_list)
+		
 		_, _, output_layer_test = self.model()
+		saver = tf.train.Saver()
 
 		with tf.Session() as sessn:
 			
 			filename, _, _ = self.model_state_loader()
 			try:
-				saver.restore(sess, filename)
+				print(filename)
+				saver.restore(sessn, filename)
 				print(' > Model state restored from @ ' + filename)
 			except:
 				print(' > No saved state found. Exiting')
@@ -635,6 +634,56 @@ class abcnn_model:
 		ans_sents = sorted(ans_sents, key=operator.itemgetter(1), reverse=True) # Sorts by scores in desc order
 		
 		return ans_sents
+
+	def test_ans_select(self):
+		babi = utils.get_babi_raw_for_abcnn(babi_id='1', mode='test')
+		babi = utils.process_babi_for_abcnn(babi)
+		babi = babi[:5]
+
+		instances, correct_op = len(babi), 0
+
+		_, _, output_layer_test = self.model()
+
+		with tf.Session() as sess:
+
+			filename, _, _ = self.model_state_loader()
+			try:
+				saver = tf.train.Saver()
+				print(filename)
+				saver.restore(sess, filename)
+				print(' > Model state restored from @ ' + filename)
+			except Exception as e:
+				# print(e)
+				print(' > No saved state found. Exiting')
+				sess.close()
+				sys.exit()
+
+			glove = utils.load_glove(200)
+
+			for sample in tqdm(babi, total=len(babi), ncols=75, unit='Sample '):
+				line_numbers, context, question, _, support = sample
+				print(sample)
+				ans_sents = []
+
+				tfidf, word_cnt = self.extract_features(question, context)
+
+				for i, ans in enumerate(context):
+					q_vector, a_vector = self.qa_vectorize(question, ans, glove)
+
+					input_dict = {self.q: q_vector, self.a: a_vector, self.label: None, self.word_cnt: word_cnt[i], self.tfidf: tfidf[i]}
+					pred = sess.run(output_layer_test, feed_dict=input_dict)
+
+					ans_sents.append((ans, pred))
+
+				ans_sent, _ = max(ans_sents, key=operator.itemgetter(1))
+
+				print(support, line_numbers[context.index(ans_sent)])
+				if line_numbers[context.index(ans_sent)] == support:
+					correct_op += 1
+					print('yay')
+
+			accuracy = correct_op / instances
+			print('Accuracy: {0:.2f}'.format(accuracy))
 
 
 # model verification

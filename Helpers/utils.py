@@ -415,7 +415,9 @@ def process_babi_for_abcnn(babi):
 		
 		if '?' in data:
 			question, ans_token, support = tuple(data.split(sep='\t'))
-			samples.append((line_numbers, context, question, ans_token, support))
+			l_n = list(line_numbers)
+			c = list(context)
+			samples.append((l_n, c, question, ans_token, support))
 		else:
 			context.append(data)
 			line_numbers.append(line_number)
