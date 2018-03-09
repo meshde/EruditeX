@@ -329,8 +329,9 @@ class abcnn_model:
 			timestamp = 'temp'
 		
 		with open(filename + 'r.txt', 'r') as fp:
-			_, i, _ = tuple(fp.read().split(sep='\t'))
-			index += int(i)
+			_, i, _u_dataset = tuple(fp.read().split(sep='\t'))
+			if u_dataset == _u_dataset:
+				index += int(i)
 
 		with open(filename + 'r.txt', 'w') as fp:
 			s = timestamp + '\t' + str(index) + '\t' + u_dataset
@@ -585,13 +586,13 @@ class abcnn_model:
 
 						f.write(itr_res)
 
-					score, instances, recall, precision = 0, 0, 0, 0
-					p_score, p_instances, pred_pos = 0, 0, 0
-
 					if mode == 'train':
-						file_path = self.model_state_saver(iteration, 'temp', u_dataset)
+						file_path = self.model_state_saver(instances, 'temp', u_dataset)
 						saver.save(sess, file_path)
 						print(' > Model state saved @ ' + file_path)
+
+					score, instances, recall, precision = 0, 0, 0, 0
+					p_score, p_instances, pred_pos = 0, 0, 0
 
 			if mode == 'train':
 				file_path = self.model_state_saver(0, mode, u_dataset)
