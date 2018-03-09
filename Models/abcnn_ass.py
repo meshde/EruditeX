@@ -564,7 +564,7 @@ class abcnn_model:
 
 				if instances % 100 == 0:
 
-					with open('result_abcnn') as f:
+					with open('result_abcnn.txt', 'a') as f:
 						for itr in per_itr_res:
 							f.write(itr)
 					per_itr_res = []
