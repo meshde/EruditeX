@@ -498,6 +498,7 @@ class abcnn_model:
 		p_instances, pred_pos = 0, 0
 		recall, precision = 0, 0
 		instances, iteration = 0, 0
+		per_itr_res = []
 		pred_labl = -1
 		
 		train_step, loss, output_layer_test = self.model()
@@ -559,11 +560,14 @@ class abcnn_model:
 					if label == 1:
 						p_score += 1
 
-				with open('result_abcnn.txt', 'a') as f:
-					itr_res = str('> QA' + str(iteration) + ' | Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n')
-					f.write(itr_res)
+				per_itr_res.append(str('> QA' + str(iteration) + ' | Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n'))
 
 				if instances % 100 == 0:
+
+					with open('result_abcnn') as f:
+						for itr in per_itr_res:
+							f.write(itr)
+					per_itr_res = []
 					
 					with open('accuracy_abcnn.txt', 'a') as f:
 						
