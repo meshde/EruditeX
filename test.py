@@ -175,3 +175,19 @@ def test_abcnn_ass_for_babi():
     print('Accuracy: {0:.2f}'.format(accuracy))
 
     return
+
+
+def test_IR():
+
+    from IR import infoRX
+    import os
+
+    file_name = os.path.join("../data/corpus/cricket.txt")
+    query = "what is the role of bat in cricket"
+
+    with open(file_name, 'r') as f:
+        doc = list(filter(('\n').__ne__, f.readlines()))
+
+    print(retrieve_info(doc, query))
+
+    return
