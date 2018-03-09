@@ -492,16 +492,11 @@ class abcnn_model:
 		# print(dataset[0])
 		mark_init = time.time()
 		
-		score = 0
-		p_score = 0
-		pred_pos = 0
-		
-		instances = 0
-		p_instances = 0
-
-		iteration = 0
-		# result_file, accuracy_file = '', ''
-		
+		# Initialize Accuracy variables
+		score, p_score = 0, 0
+		p_instances, pred_pos = 0, 0
+		recall, precision = 0, 0
+		instances, iteration = 0, 0
 		pred_labl = -1
 		
 		train_step, loss, output_layer_test = self.model()
@@ -580,17 +575,17 @@ class abcnn_model:
 							recall = (p_score / p_instances) * 100 
 							itr_res += '  > True_+ve accuracy (recall): {0:.2f}\n'.format(recall)
 
-						precision = 0
 						if pred_pos > 0:
 							precision = (p_score / pred_pos) * 100 
 							itr_res += '  > Pred_+ve accuracy (precision): {0:.2f}\n'.format(precision)
 
-						f1 = 2 * precision * recall / (precision + recall) 
-						itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
+						if recall > 0 and precision > 0:
+							f1 = 2 * precision * recall / (precision + recall) 
+							itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
 
 						f.write(itr_res)
 
-					score, instances = 0, 0
+					score, instances, recall, precision = 0, 0, 0, 0
 					p_score, p_instances, pred_pos = 0, 0, 0
 
 					if mode == 'train':
