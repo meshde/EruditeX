@@ -182,7 +182,7 @@ def test_IR():
     from IR import infoRX
     import os
 
-    file_name = os.path.join("../data/corpus/cricket.txt")
+    file_name = os.path.join("./data/corpus/cricket.txt")
     query = "what is the role of bat in cricket"
 
     with open(file_name, 'r') as f:
@@ -191,3 +191,20 @@ def test_IR():
     print(retrieve_info(doc, query))
 
     return
+
+def test_flask_server():
+    
+    import requests
+    import os
+
+    input_file_path = os.path.join(".\data\corpus\cricket.txt")
+    input_filename = 'cricket.txt'
+    
+    with open(input_file_path) as input:
+        files = {'file': input}
+        values = {'filename': input_filename}
+        resp = requests.post("http://127.0.0.1:5000/filed", files=files, data=values)
+
+    print(resp.status_code, resp.reason, resp.text)
+    assert(resp.text == 'File uploaded. Context Ready.')
+    assert( os.path.isfile('./data/uploads/'+input_filename))
