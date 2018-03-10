@@ -206,5 +206,19 @@ def test_flask_server():
         resp = requests.post("http://127.0.0.1:5000/filed", files=files, data=values)
 
     print(resp.status_code, resp.reason, resp.text)
-    assert(resp.text == 'File uploaded. Context Ready.')
+    assert(resp.status_code == 200 and resp.text == 'File uploaded. Context Ready.')
     assert( os.path.isfile('./data/uploads/'+input_filename))
+
+    query = "what is the role of bat in cricket"
+    values = {'query': query}
+
+    resp = requests.post("http://127.0.0.1:5000/query", json=values)
+
+    print(resp.status_code, resp.reason, resp.text)
+    assert(resp.status_code == 200)
+    
+    print('Flask server tests successful.')
+
+
+if __name__ == '__main__':
+    test_flask_server()
