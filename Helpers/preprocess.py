@@ -1,5 +1,7 @@
 from . import path_utils
 from . import utils
+from . import deployment_utils as deploy
+
 from tqdm import *
 import os
 import json
@@ -212,13 +214,22 @@ class AnswerExtract(object):
         dataset_ = AnswerExtract.get_final_input_babi()[0]
         ans_mod_dataset = []
 
+        config_ = deploy.get_config('dtrnn.cfg')
+        dtrnn_model = deploy.get_dtrnn_model(config_)
+
         for x in dataset_dtree:
+
             amd_entry = {}
             parent_index = x['ans_sent']['parent_indices'][x['ans']]
 
-            hid_states = replace_actual_method(x['qstn'], x['ans_sent'])
+            hid_states = dtrnn_model.get_hidden_states(x['qstn']['word_vectors'], x['qstn']['parent_indices'], 
+                x['qstn']['is_leaf'], x['qstn']['dep_tags'])
 
-            amd_entry['qstn_root'] = hid_states['qstn'][-1] 
+            amd_entry['qstn_root'] = q_hid_states['qstn'][-1] 
+            
+            hid_states = dtrnn_model.get_hidden_states(x['ans_sent']['word_vectors'], x['ans_sent']['parent_indices'], 
+                x['ans_sent']['is_leaf'], x['ans_sent']['dep_tags'])
+
             amd_entry['ans_root'] = hid_states['ans_sent'][-1]
             amd_entry['ans_node'] = hid_states['ans_sent'][x['ans']]
             amd_entry['ans_parent'] = hid_states['ans_sent'][parent_index]
