@@ -6,6 +6,7 @@ def test_dt_rnn():
     from Helpers import utils
 
     model = DT_RNN(dim=3, word_vector_size=3)
+    model.theano_build()
 
     np_W_dep = model.W_dep.get_value()
     np_W_x = model.W_x.get_value()
