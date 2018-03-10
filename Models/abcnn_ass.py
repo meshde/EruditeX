@@ -281,7 +281,7 @@ class abcnn_model:
 		output_layer_test = tf.sigmoid(output_layer)
 
 		# cross entropy loss
-		with tf.name_scope('loss')
+		with tf.name_scope('loss'):
 			loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.label, logits=output_layer)
 			tf.summary.scalar('loss', loss)
 		# loss = -((self.label * tf.log(output_layer)) + ((1 - self.label) *
