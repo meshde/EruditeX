@@ -134,6 +134,16 @@ def test_configurations():
     assert(filename == output_filename)
     return
 
+def test_dtrnn_cfg():
+    from Helpers.deployment_utils import get_config
+
+    config = get_config('dtrnn.cfg')
+
+    assert('dep_len' in config)
+    assert('word_vector_size' in config)
+    assert('dim' in config)
+    return
+
 def test_get_state_file_name():
     from Helpers import utils
 
