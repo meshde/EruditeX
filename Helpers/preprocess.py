@@ -220,24 +220,37 @@ class AnswerExtract(object):
         for x in dataset_dtree:
 
             amd_entry = {}
-            parent_index = x['ans_sent']['parent_indices'][x['ans']]
+            q_node = x['qstn']
+            a_node = x['ans_sent']
 
-            hid_states = dtrnn_model.get_hidden_states(x['qstn']['word_vectors'], x['qstn']['parent_indices'], 
-                x['qstn']['is_leaf'], x['qstn']['dep_tags'])
-
-            amd_entry['qstn_root'] = q_hid_states['qstn'][-1] 
+            a_index = x['ans']
+            parent_index = a_node['parent_indices'][a_index]
             
-            hid_states = dtrnn_model.get_hidden_states(x['ans_sent']['word_vectors'], x['ans_sent']['parent_indices'], 
-                x['ans_sent']['is_leaf'], x['ans_sent']['dep_tags'])
+            hid_states = dtrnn_model.get_hidden_states(
+                q_node['word_vectors'], 
+                q_node['parent_indices'], 
+                q_node['is_leaf'],
+                q_node['dep_tags'])
 
-            amd_entry['ans_root'] = hid_states['ans_sent'][-1]
-            amd_entry['ans_node'] = hid_states['ans_sent'][x['ans']]
-            amd_entry['ans_parent'] = hid_states['ans_sent'][parent_index]
+            amd_entry['qstn_root'] = hid_states['qstn'][-1] 
+            
+            hid_states = dtrnn_model.get_hidden_states(
+                a_node['word_vectors'], 
+                a_node['parent_indices'], 
+                a_node['is_leaf'], 
+                a_node['dep_tags'])
+
+            hid_ans = hid_states['ans_sent']
+
+            amd_entry['ans_root'] = hid_ans[-1]
+            amd_entry['ans_node'] = hid_ans[a_index]
+            amd_entry['ans_parent'] = hid_ans[parent_index]
             
             ans_mod_dataset.append(amd_entry)
             # print(x['ans'], parent_index)
 
         return ans_mod_dataset
+
 
 if __name__ == '__main__':
     # SICK.get_final_input()
