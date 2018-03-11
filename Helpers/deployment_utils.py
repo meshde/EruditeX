@@ -9,16 +9,23 @@ def get_config(filename):
     filepath = path_utils.get_config_file_path(filename)
 
     config = {}
-    with open(filepath, 'r') as f:
-        for line in f:
-            key, value = line.split('=')
-            key = key.strip()
-            value = value.strip()
+    try:
+        with open(filepath, 'r') as f:
+            for line in f:
+                key, value = line.split('=')
+                key = key.strip()
+                value = value.strip()
 
-            if value.isdigit():
-                value = int(value)
+                if value.isdigit():
+                    value = int(value)
 
-            config[key] = value
+                config[key] = value
+    except:
+        raise FileNotFoundError(
+            '{0} has not been created yet!'.format(
+            filename,
+            ),
+        )
     return config
 
 def create_config(state_file_name, config_file_name):
@@ -27,9 +34,9 @@ def create_config(state_file_name, config_file_name):
 
     for param in state_file_name.split('__'):
         try:
-            key,value = param.split(':')
+            key,value = param.split('.')
         except:
-            key,value = param.split(':', maxsplit=1)
+            key,value = param.split('.', maxsplit=1)
         config[key] = value
        
     config['state'] = state_file_name + '.pkl'
