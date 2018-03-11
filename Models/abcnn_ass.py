@@ -632,7 +632,7 @@ class abcnn_model:
 
 		tfidf, word_cnt = self.extract_features(question, ans_list)
 		
-		_, _, output_layer_test = self.model()
+		_, _, output_layer_test, _ = self.model()
 		saver = tf.train.Saver()
 
 		with tf.Session() as sessn:
@@ -665,11 +665,11 @@ class abcnn_model:
 	def test_ans_select(self):
 		babi = utils.get_babi_raw_for_abcnn(babi_id='1', mode='test')
 		babi = utils.process_babi_for_abcnn(babi)
-		babi = babi[:5]
+		babi = babi[:100]
 
 		instances, correct_op = len(babi), 0
 
-		_, _, output_layer_test = self.model()
+		_, _, output_layer_test, _ = self.model()
 
 		with tf.Session() as sess:
 
@@ -680,7 +680,7 @@ class abcnn_model:
 				saver.restore(sess, filename)
 				print(' > Model state restored from @ ' + filename)
 			except Exception as e:
-				# print(e)
+				print(e)
 				print(' > No saved state found. Exiting')
 				sess.close()
 				sys.exit()
@@ -689,7 +689,6 @@ class abcnn_model:
 
 			for sample in tqdm(babi, total=len(babi), ncols=75, unit='Sample '):
 				line_numbers, context, question, _, support = sample
-				print(sample)
 				ans_sents = []
 
 				tfidf, word_cnt = self.extract_features(question, context)
@@ -704,10 +703,8 @@ class abcnn_model:
 
 				ans_sent, _ = max(ans_sents, key=operator.itemgetter(1))
 
-				print(support, line_numbers[context.index(ans_sent)])
 				if line_numbers[context.index(ans_sent)] == support:
 					correct_op += 1
-					print('yay')
 
 			accuracy = correct_op / instances
 			print('Accuracy: {0:.2f}'.format(accuracy))
@@ -725,4 +722,5 @@ if __name__ == '__main__':
 	mode, u_dataset, babi_id = args.mode, args.dataset, args.babi_id
 
 	selector = abcnn_model()
-	selector.run_model_v2(mode=mode, u_dataset=u_dataset, babi_id=babi_id)
+	# selector.run_model_v2(mode=mode, u_dataset=u_dataset, babi_id=babi_id)
+	selector.test_ans_select()
