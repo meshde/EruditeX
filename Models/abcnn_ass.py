@@ -57,15 +57,17 @@ class abcnn_model:
 		with tf.name_scope('Conv'):
 			self.W_q = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim]), name='W_q')
 			self.W_a = tf.Variable(tf.random_normal([self.max_sent_len, self.vector_dim]), name='W_a')
+			
+			tf.summary.histogram('weights', self.W_q)
+			tf.summary.histogram('weights', self.W_a)
+		
 
 		with tf.name_scope('LogRegr'):
 			self.W_lr = tf.Variable(tf.random_normal([3]), name='W_lr')
 			self.B_lr = tf.Variable(tf.random_normal([1]), name='B_lr')
 
-		tf.summary.histogram('weights', self.W_q)
-		tf.summary.histogram('weights', self.W_a)
-		tf.summary.histogram('weights', self.W_lr)
-		tf.summary.histogram('biases', self.B_lr)
+			tf.summary.histogram('weights', self.W_lr)
+			tf.summary.histogram('biases', self.B_lr)
 
 
 	def pairwise_euclidean_dist(self, m0, m1):
@@ -281,9 +283,9 @@ class abcnn_model:
 		output_layer_test = tf.sigmoid(output_layer)
 
 		# cross entropy loss
-		with tf.name_scope('loss'):
+		with tf.name_scope('Loss'):
 			loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.label, logits=output_layer)
-			tf.summary.scalar('loss', loss)
+		tf.summary.scalar('loss', tf.squeeze(loss))
 		# loss = -((self.label * tf.log(output_layer)) + ((1 - self.label) *
                                                  # tf.log(1 - output_layer)))
 
@@ -579,8 +581,11 @@ class abcnn_model:
 
 				per_itr_res.append(str('> QA' + str(iteration) + ' | Output Layer: ' + str(self.predict_label) + ' | Predicted Label: ' + str(pred_labl) + ' | Label: ' + str(label)+ ' | Loss:' + str(l)  + '| Elapsed: {0:.2f}'.format(time.time() - mark_start) + '\n'))
 
-				if instances % 100 == 0:
+				if instances % 10 == 0:
 					writer.add_summary(s, instances)
+
+				if instances % 100 == 0:
+
 					with open('result_abcnn.txt', 'a') as f:
 						for itr in per_itr_res:
 							f.write(itr)
