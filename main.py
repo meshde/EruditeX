@@ -105,6 +105,15 @@ def create_ans_ext_input():
     return
 
 
+def train_ans_extract(inp_dim=50, hid_dim=200, epochs=10):
+    from Model_Trainer import train_extraction_module
+    train_extraction_module(
+        inp_dim=inp_dim,
+        hid_dim=hid_dim,
+        epochs=epochs,
+    )
+    return
+
 if __name__ == '__main__':
     train_dtrnn()
 
