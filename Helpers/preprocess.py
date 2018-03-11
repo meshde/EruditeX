@@ -214,14 +214,15 @@ class AnswerExtract(object):
 
     # Creates the input pickle file needed to train AnsSelect
     def create_ans_mod_babi_dataset():
+        from tqdm import tqdm
 
-        dataset_ = AnswerExtract.get_final_input_babi()[0]
+        dataset_dtree = AnswerExtract.get_final_input_babi()[0]
         ans_mod_dataset = []
 
         config_ = deploy.get_config('dtrnn.cfg')
         dtrnn_model = deploy.get_dtrnn_model(config_)
 
-        for x in dataset_dtree:
+        for x in tqdm(dataset_dtree, total=len(dataset_dtree), unit=' item'):
 
             amd_entry = {}
             q_node = x['qstn']
@@ -231,12 +232,13 @@ class AnswerExtract(object):
             parent_index = a_node['parent_indices'][a_index]
             
             hid_states = dtrnn_model.get_hidden_states(
-                q_node['word_vectors'], 
-                q_node['parent_indices'], 
+                q_node['word_vectors'],
+                q_node['parent_indices'],
                 q_node['is_leaf'],
-                q_node['dep_tags'])
+                q_node['dep_tags']
+            )
 
-            amd_entry['qstn_root'] = hid_states['qstn'][-1] 
+            amd_entry['qstn_root'] = hid_states[-1]
             
             hid_states = dtrnn_model.get_hidden_states(
                 a_node['word_vectors'], 
@@ -244,7 +246,7 @@ class AnswerExtract(object):
                 a_node['is_leaf'], 
                 a_node['dep_tags'])
 
-            hid_ans = hid_states['ans_sent']
+            hid_ans = hid_states
 
             amd_entry['ans_root'] = hid_ans[-1]
             amd_entry['ans_node'] = hid_ans[a_index]
