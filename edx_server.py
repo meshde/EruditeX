@@ -61,7 +61,13 @@ class EdXServer():
 		# answers = sorted(answers, key=operator.itemgetter(1))
 		# proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
 		
-		return answers[:5]
+		ans_list = []
+		for x in answers:
+			ans_list.append({'word':x[0], 'score': x[1]})
+
+		ans_dict = {'answers': ans_list}
+
+		return ans_dict
 
 
 app = Flask(__name__)
@@ -91,8 +97,6 @@ def filer():
 @app.route('/query',methods=['POST'])
 def queried():
 	query = request.get_json(force=True)['query']
-	# resp = jsonify({'answers': [{'word':'this', 'score':1.0}, {'word':'is', 'score':1.0}, 
-	# {'word':'a', 'score':1.0}, {'word':'sample', 'score':1.0}, {'word':'answer', 'score':1.0}]})
 	# resp = Response(server.get_query(query))
 	resp = jsonify(server.get_query(query))
 	resp.headers['Access-Control-Allow-Origin'] = '*'
@@ -100,4 +104,3 @@ def queried():
 
 if __name__ == '__main__':
 	app.run()
-	
