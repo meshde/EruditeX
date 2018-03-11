@@ -125,7 +125,10 @@ def test_configurations():
     create_config(filename, 'test.cfg')
 
     config = get_config('test.cfg')
+    assert('state' in config)
+    assert(config['state'] == filename)
 
+    del config['state']
     output_filename = get_file_name(extension='pkl', **config)
 
     assert(filename == output_filename)

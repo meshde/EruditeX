@@ -32,7 +32,7 @@ def create_config(state_file_name, config_file_name):
             key,value = param.split(':', maxsplit=1)
         config[key] = value
        
-    config['state'] = state_file_name
+    config['state'] = state_file_name + '.pkl'
 
     config_file_path = path_utils.get_config_file_path(config_file_name)
 
