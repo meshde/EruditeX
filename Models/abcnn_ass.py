@@ -665,6 +665,8 @@ class abcnn_model:
 	def test_ans_select(self):
 		babi = utils.get_babi_raw_for_abcnn(babi_id='1', mode='test')
 		babi = utils.process_babi_for_abcnn(babi)
+
+		shuffle(babi)
 		babi = babi[:100]
 
 		instances, correct_op = len(babi), 0
@@ -702,8 +704,15 @@ class abcnn_model:
 					ans_sents.append((ans, pred))
 
 				ans_sent, _ = max(ans_sents, key=operator.itemgetter(1))
+				pred_labl = line_numbers[context.index(ans_sent)]
+				ans_sents = sorted(ans_sents, key=operator.itemgetter(1), reverse=True)
+				all_labels = [operator.itemgetter(0)(item) for item in ans_sents]
+				all_labels = [line_numbers[context.index(item)] for item in all_labels]
+				with open('context_accuracy_abcnn.txt', 'a') as f:
+					res = 'Correct Label: {}\tPredicted Label: {}\tSorted Labels: {}\n'.format(support, pred_labl, all_labels)
+					f.write(res)
 
-				if line_numbers[context.index(ans_sent)] == support:
+				if pred_labl == support:
 					correct_op += 1
 
 			accuracy = correct_op / instances
