@@ -1,6 +1,6 @@
 from Helpers import utils
 from Helpers import path_utils
-from Models import DT_RNN, abcnn_ass
+from Models import abcnn_ass
 import os
 import spacy
 import operator
@@ -100,6 +100,7 @@ def extract_answer_from_sentences(sentences, question):
 
 
 def get_dtrnn_model(config):
+    from Models import DT_RNN
     model = DT_RNN(
         dep_len = config['dep_len'],
         dim = config['dim'],
