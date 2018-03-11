@@ -7,6 +7,7 @@ include/
 pip-selfcheck.json
 *.zip
 data.bak/
+data/
 data-og/
 erudite_theano/
 __pycache__/
