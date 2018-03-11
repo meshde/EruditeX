@@ -206,7 +206,7 @@ class AnswerExtract(object):
         )
         return dataset_dtree, dataset_dtne
 
-    # Returns the input pickle file to train AnsSelect
+    # Returns the input pickle file(non-compressed) to train AnsSelect
     def get_ans_model_input_babi():
         file_path = path_utils.get_babi_ans_mod_path()
         dataset_ = get_ans_model_input_from_path(file_path, lambda: AnswerExtract.create_ans_mod_babi_dataset())
@@ -229,8 +229,7 @@ class AnswerExtract(object):
             a_node = x['ans_sent']
 
             a_index = x['ans']
-            parent_index = a_node['parent_indices'][a_index]
-            
+
             hid_states = dtrnn_model.get_hidden_states(
                 q_node['word_vectors'],
                 q_node['parent_indices'],
@@ -238,25 +237,44 @@ class AnswerExtract(object):
                 q_node['dep_tags']
             )
 
-            amd_entry['qstn_root'] = hid_states[-1]
-            
+            question_root = hid_states[-1]
+
             hid_states = dtrnn_model.get_hidden_states(
-                a_node['word_vectors'], 
-                a_node['parent_indices'], 
-                a_node['is_leaf'], 
+                a_node['word_vectors'],
+                a_node['parent_indices'],
+                a_node['is_leaf'],
                 a_node['dep_tags'])
 
-            hid_ans = hid_states
+            answer_root = hid_states[-1]
 
-            amd_entry['ans_root'] = hid_ans[-1]
-            amd_entry['ans_node'] = hid_ans[a_index]
-            amd_entry['ans_parent'] = hid_ans[parent_index]
-            
-            ans_mod_dataset.append(amd_entry)
+            for i,hid_ans in enumerate(hid_states):
+                amd_entry = {}
+                parent_index = a_node['parent_indices'][i]
+
+                amd_entry['question_root'] = question_root
+                amd_entry['answer_root'] = answer_root
+                amd_entry['answer_node'] = hid_ans
+                amd_entry['parent_node'] = hid_states[parent_index]
+
+                if i == a_index:
+                    amd_entry['label'] = 1
+                else:
+                    amd_entry['label'] = 0
+
+                ans_mod_dataset.append(amd_entry)
             # print(x['ans'], parent_index)
 
         return ans_mod_dataset
 
+
+    def get_babi_dataset(compressed_dataset):
+        if compressed_dataset:
+            raise NotImplementedError(
+                'Compressed Dataset has not been created yet!'
+            )
+
+        dataset = AnswerExtract.get_ans_model_input_babi()
+        return dataset
 
 if __name__ == '__main__':
     # SICK.get_final_input()

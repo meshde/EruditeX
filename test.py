@@ -190,6 +190,24 @@ def test_abcnn_ass_for_babi():
     return
 
 
+def test_get_babi_dataset_normal():
+    from Helpers.preprocess import AnswerExtract
+
+    dataset = AnswerExtract.get_babi_dataset(compressed_dataset=False)
+
+    keys = [
+        'question_root',
+        'answer_root',
+        'answer_node',
+        'parent_node',
+        'label',
+    ]
+
+    for key in keys:
+        assert(key in dataset[0])
+
+    return
+
 def test_IR():
 
     from IR import infoRX
