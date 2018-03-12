@@ -114,6 +114,38 @@ def train_ans_extract(inp_dim=50, hid_dim=200, epochs=10):
     )
     return
 
+
+def get_output():
+    from Models import abcnn_model
+    from Helpers.deployment_utils import extract_answer_from_sentences
+
+    sents = [
+        'john went to the bathroom',
+        'mary went to the kitchen',
+        'john moved to the hallway',
+        'kim journeyed to the garden',
+        'sandra is in the bedroom',
+    ]
+
+    query = 'where is john'
+
+
+    # Select Ans Sents - ABCNN
+    abcnn = abcnn_model()
+    ans_sents = abcnn.ans_select(query, sents)
+
+    print('Sentences scored by Sentence Selection Module:')
+    print(ans_sents)
+
+    best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
+
+    ans_list = []
+    for x in answers:
+        ans_list.append({'word':x[0], 'score': x[1]})
+
+    print('Candidate answers scored by Answer Extraction Module:')
+    print(ans_list)
+
 if __name__ == '__main__':
     train_dtrnn()
 
