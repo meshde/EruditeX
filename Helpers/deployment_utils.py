@@ -72,7 +72,7 @@ def _extract_answer_from_sentence(sentence, question, nlp, config):
     
     sentence_tree = utils.get_dtree(sentence, nlp, dim=config['word_vector_size'])
     question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
-    sentence_text_traversal = sentence_tree.get_tree_taversal('text')
+    sentence_text_traversal = sentence_tree.get_tree_traversal('text')
 
     temp = get_tree_hidden_states(sentence_tree, question_tree, config)
     sentence_hidden_states = temp[0]
@@ -151,6 +151,7 @@ def get_tree_hidden_states(sentence_tree, question_tree, config):
     return sentence_hidden_states, question_hidden_states
 
 def get_answer_extraction_model(config):
+    from Models import AnsSelect
     model = AnsSelect(
         inp_dim = config['inp_dim'],
         hid_dim = config['hid_dim']

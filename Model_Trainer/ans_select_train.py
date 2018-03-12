@@ -139,7 +139,7 @@ def train_extraction_module(inp_dim, hid_dim, epochs,
             inp_dim = inp_dim,
             hid_dim = hid_dim,
             threshold = threshold,
-            extension = '.pkl'
+            extension = 'pkl'
         )
         model.save_params(filename, epochs=epoch)
     return
