@@ -208,6 +208,21 @@ def test_get_babi_dataset_normal():
 
     return
 
+def test_extract_answer():
+    sentence = 'John went to the bathroom'
+    question = 'where is john'
+    sentences = [
+        (sentence, 1),
+    ]
+
+    from Helpers.deployment_utils import extract_answer_from_sentences
+    extract_answer_from_sentences(
+        sentences,
+        question,
+    )
+    return
+
+
 def test_IR():
 
     from IR import infoRX
