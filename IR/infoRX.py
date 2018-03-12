@@ -113,7 +113,7 @@ def retrieve_info(doc, query):
 
 
 if __name__ == '__main__':
-    file_name = os.path.join("../data/corpus/cricket.txt")
+	file_name = os.path.join("../data/corpus/cricket.txt")
 	query = "what is the role of bat in cricket"
 
 	with open(file_name, 'r') as f:

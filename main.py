@@ -48,7 +48,10 @@ def get_babi_tree():
     return
 
 def create_config(state_file_name, config_file_name):
-    from Helpers.delpoyment_utils import create_config
+    from Helpers.deployment_utils import create_config
+    import os
+
+    state_file_name = os.path.basename(state_file_name)
     create_config(state_file_name, config_file_name)
     return
 
@@ -93,6 +96,22 @@ def install_packages():
     
     print("The following packages could not be installed:")
     call("pip freeze | diff requirements.txt - | grep '^<' | sed 's/^<\ //'", shell=True)
+    return
+
+
+def create_ans_ext_input():
+    from Helpers.preprocess import AnswerExtract
+    AnswerExtract.get_ans_model_input_babi()
+    return
+
+
+def train_ans_extract(inp_dim=50, hid_dim=200, epochs=10):
+    from Model_Trainer import train_extraction_module
+    train_extraction_module(
+        inp_dim=inp_dim,
+        hid_dim=hid_dim,
+        epochs=epochs,
+    )
     return
 
 if __name__ == '__main__':

@@ -121,14 +121,27 @@ def test_configurations():
     from Helpers.deployment_utils import get_config
     from Helpers.utils import get_file_name
 
-    filename = 'age:22__name:mehmood__time:10:12:30__username:meshde.pkl'
+    filename = 'age.22__name.mehmood__time.10:12:30__username.meshde.pkl'
     create_config(filename, 'test.cfg')
 
     config = get_config('test.cfg')
+    assert('state' in config)
+    assert(config['state'] == filename)
 
+    del config['state']
     output_filename = get_file_name(extension='pkl', **config)
 
     assert(filename == output_filename)
+    return
+
+def test_dtrnn_cfg():
+    from Helpers.deployment_utils import get_config
+
+    config = get_config('dtrnn.cfg')
+
+    assert('dep_len' in config)
+    assert('word_vector_size' in config)
+    assert('dim' in config)
     return
 
 def test_get_state_file_name():
@@ -177,12 +190,45 @@ def test_abcnn_ass_for_babi():
     return
 
 
+def test_get_babi_dataset_normal():
+    from Helpers.preprocess import AnswerExtract
+
+    dataset = AnswerExtract.get_babi_dataset(compressed_dataset=False)
+
+    keys = [
+        'question_root',
+        'answer_root',
+        'answer_node',
+        'parent_node',
+        'label',
+    ]
+
+    for key in keys:
+        assert(key in dataset[0])
+
+    return
+
+def test_extract_answer():
+    sentence = 'John went to the bathroom'
+    question = 'where is john'
+    sentences = [
+        (sentence, 1),
+    ]
+
+    from Helpers.deployment_utils import extract_answer_from_sentences
+    extract_answer_from_sentences(
+        sentences,
+        question,
+    )
+    return
+
+
 def test_IR():
 
     from IR import infoRX
     import os
 
-    file_name = os.path.join("../data/corpus/cricket.txt")
+    file_name = os.path.join("./data/corpus/cricket.txt")
     query = "what is the role of bat in cricket"
 
     with open(file_name, 'r') as f:
@@ -191,3 +237,34 @@ def test_IR():
     print(retrieve_info(doc, query))
 
     return
+
+def test_flask_server():
+    
+    import requests
+    import os
+
+    input_file_path = os.path.join(".\data\corpus\cricket.txt")
+    input_filename = 'cricket.txt'
+    
+    with open(input_file_path) as input:
+        files = {'file': input}
+        values = {'filename': input_filename}
+        resp = requests.post("http://127.0.0.1:5000/filed", files=files, data=values)
+
+    print(resp.status_code, resp.reason, resp.text)
+    assert(resp.status_code == 200 and resp.text == 'File uploaded. Context Ready.')
+    assert( os.path.isfile('./data/uploads/'+input_filename))
+
+    query = "what is the role of bat in cricket"
+    values = {'query': query}
+
+    resp = requests.post("http://127.0.0.1:5000/query", json=values)
+
+    print(resp.status_code, resp.reason, resp.text)
+    assert(resp.status_code == 200)
+    
+    print('Flask server tests successful.')
+
+
+if __name__ == '__main__':
+    test_flask_server()

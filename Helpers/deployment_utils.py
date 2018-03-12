@@ -1,6 +1,6 @@
 from Helpers import utils
 from Helpers import path_utils
-from Models import DT_RNN, abcnn_ass
+from Models import abcnn_ass
 import os
 import spacy
 import operator
@@ -9,16 +9,23 @@ def get_config(filename):
     filepath = path_utils.get_config_file_path(filename)
 
     config = {}
-    with open(filepath, 'r') as f:
-        for line in f:
-            key, value = line.split('=')
-            key = key.strip()
-            value = value.strip()
+    try:
+        with open(filepath, 'r') as f:
+            for line in f:
+                key, value = line.split('=')
+                key = key.strip()
+                value = value.strip()
 
-            if value.isdigit():
-                value = int(value)
+                if value.isdigit():
+                    value = int(value)
 
-            config[key] = value
+                config[key] = value
+    except:
+        raise FileNotFoundError(
+            '{0} has not been created yet!'.format(
+            filename,
+            ),
+        )
     return config
 
 def create_config(state_file_name, config_file_name):
@@ -27,10 +34,12 @@ def create_config(state_file_name, config_file_name):
 
     for param in state_file_name.split('__'):
         try:
-            key,value = param.split(':')
+            key,value = param.split('.')
         except:
-            key,value = param.split(':', maxsplit=1)
+            key,value = param.split('.', maxsplit=1)
         config[key] = value
+       
+    config['state'] = state_file_name + '.pkl'
 
     config_file_path = path_utils.get_config_file_path(config_file_name)
 
@@ -63,7 +72,7 @@ def _extract_answer_from_sentence(sentence, question, nlp, config):
     
     sentence_tree = utils.get_dtree(sentence, nlp, dim=config['word_vector_size'])
     question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
-    sentence_text_traversal = sentence_tree.get_tree_taversal('text')
+    sentence_text_traversal = sentence_tree.get_tree_traversal('text')
 
     temp = get_tree_hidden_states(sentence_tree, question_tree, config)
     sentence_hidden_states = temp[0]
@@ -98,6 +107,7 @@ def extract_answer_from_sentences(sentences, question):
 
 
 def get_dtrnn_model(config):
+    from Models import DT_RNN
     model = DT_RNN(
         dep_len = config['dep_len'],
         dim = config['dim'],
@@ -141,6 +151,7 @@ def get_tree_hidden_states(sentence_tree, question_tree, config):
     return sentence_hidden_states, question_hidden_states
 
 def get_answer_extraction_model(config):
+    from Models import AnsSelect
     model = AnsSelect(
         inp_dim = config['inp_dim'],
         hid_dim = config['hid_dim']
