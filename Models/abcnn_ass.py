@@ -332,25 +332,28 @@ class abcnn_model:
 
 	def model_state_saver(self, index, mode, u_dataset):
 		filename = path.join(path.dirname(path.dirname(path.realpath(__file__))), 'states/abcnn/state_')
-		timestamp = ''
+		timestamp = 'presentation'
 		
-		if mode == 'train': # Saving model state at training completion
-			timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+		# if mode == 'train': # Saving model state at training completion
+		# 	timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
-		else: # Saving model state at checkpoint
-			timestamp = 'temp'
+		# else: # Saving model state at checkpoint
+		# 	timestamp = 'temp'
 		
-		with open(filename + 'r.txt', 'r') as fp:
-			_, i, _u_dataset = tuple(fp.read().split(sep='\t'))
-			if u_dataset == _u_dataset:
-				index += int(i)
+		try:
+			with open(filename + 'r.txt', 'r') as fp:
+				_, i, _u_dataset = tuple(fp.read().split(sep='\t'))
+				if u_dataset == _u_dataset:
+					index += int(i)
+		except:
+			pass
 
 		with open(filename + 'r.txt', 'w') as fp:
 			s = timestamp + '\t' + str(index) + '\t' + u_dataset
 			fp.write(s)
 
 		file_path = filename + timestamp + '.ckpt'
-		print('\n> Model state will be saved @', file_path)
+		tqdm.write('\n> Model state will be saved @ {}'.format(file_path))
 
 		return file_path # file_path is the path where the most recent training state will be saved.
 
@@ -527,6 +530,7 @@ class abcnn_model:
 						dataset = dataset[index: ]
 						print('> Resuming training from instance {}'.format(index))
 				except:
+					print('> No saved state found. Initializing global variables.')
 					sess.run(tf.global_variables_initializer())
 
 			else:
@@ -537,7 +541,8 @@ class abcnn_model:
 					if _u_dataset == u_dataset:
 						dataset = dataset[index: ]
 						print('> Resuming testing from instance {}'.format(index))
-				except:
+				except Exception as e:
+					print(e)
 					print('> No saved state found. Exiting...')
 					sess.close()
 					import sys
@@ -611,11 +616,12 @@ class abcnn_model:
 							itr_res += '  > F1 Score: {0:.2f}\n'.format(f1)
 
 						f.write(itr_res)
+						tqdm.write(itr_res)
 
 					if mode == 'train':
 						file_path = self.model_state_saver(instances, 'temp', u_dataset)
 						saver.save(sess, file_path)
-						print(' > Model state saved @ ' + file_path)
+						tqdm.write(' > Model state saved @ ' + file_path)
 
 					score, instances, recall, precision = 0, 0, 0, 0
 					p_score, p_instances, pred_pos = 0, 0, 0
@@ -662,6 +668,7 @@ class abcnn_model:
 		
 		return ans_sents
 
+
 	def test_ans_select(self):
 		babi = utils.get_babi_raw_for_abcnn(babi_id='1', mode='test')
 		babi = utils.process_babi_for_abcnn(babi)
@@ -672,12 +679,12 @@ class abcnn_model:
 		instances, correct_op = len(babi), 0
 
 		_, _, output_layer_test, _ = self.model()
+		saver = tf.train.Saver()
 
 		with tf.Session() as sess:
 
 			filename, _, _ = self.model_state_loader()
 			try:
-				saver = tf.train.Saver()
 				print(filename)
 				saver.restore(sess, filename)
 				print(' > Model state restored from @ ' + filename)
@@ -731,5 +738,5 @@ if __name__ == '__main__':
 	mode, u_dataset, babi_id = args.mode, args.dataset, args.babi_id
 
 	selector = abcnn_model()
-	# selector.run_model_v2(mode=mode, u_dataset=u_dataset, babi_id=babi_id)
-	selector.test_ans_select()
+	selector.run_model_v2(mode=mode, u_dataset=u_dataset, babi_id=babi_id)
+	# selector.test_ans_select()

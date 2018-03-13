@@ -1,3 +1,2 @@
-model_checkpoint_path: "/home/ghostrider/EruditeX/states/abcnn/state_2018-03-02 13:47.ckpt"
-all_model_checkpoint_paths: "/home/ghostrider/EruditeX/states/abcnn/state_temp.ckpt"
-all_model_checkpoint_paths: "/home/ghostrider/EruditeX/states/abcnn/state_2018-03-02 13:47.ckpt"
+model_checkpoint_path: "/home/ghostrider/EruditeX/states/abcnn/state_presentation.ckpt"
+all_model_checkpoint_paths: "/home/ghostrider/EruditeX/states/abcnn/state_presentation.ckpt"
