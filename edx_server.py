@@ -41,28 +41,34 @@ class EdXServer():
         print(self.query)
 
         try:
-	        # Filter top 5 paras using Info Retrieval
-	        para_select = infoRX.retrieve_info(self.context, self.query)
-	        para_sents = []
-	        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+            # Filter top 5 paras using Info Retrieval
+            para_select = infoRX.retrieve_info(self.context, self.query)
+            para_sents = []
+            tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-	        for para in para_select:
-	            para_sents.extend(tokenizer.tokenize(para))
+            for para in para_select:
+                para_sents.extend(tokenizer.tokenize(para))
 
-	        print('Sentences selected by IR Module:')
-	        print(para_sents)
+            print('Sentences selected by IR Module:')
+            print(para_sents)
 
-	        # Select Ans Sents - ABCNN
-	        ans_sents = abcnn.ans_select(query, para_sents)
+            # Select Ans Sents - ABCNN
+            ans_sents = abcnn.ans_select(query, para_sents)
 
-	        print('Sentences scored by Sentence Selection Module:')
-	        print(ans_sents)
+            print('\nSystem: Sentences scored by Sentence Selection Module')
+            for sentence,score in ans_sents:
+                print('{0:50}\t{1}'.format(sentence, score[0]))
+            print('')
 
-	        best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
+            best_ans, score, answers = deploy.extract_answer_from_sentences(
+                ans_sents,
+                query,
+                verbose=True,
+            )
 
-	    except:
+        except:
 
-	    	return {'answers': [{'word': 'ERROR', 'score': 'QA Subsystem failure.'}]}
+            return {'answers': [{'word': 'ERROR', 'score': 'QA Subsystem failure.'}]}
 
 
         # Ignore: Phase 2-3: Input Module and Answer Module
@@ -81,8 +87,10 @@ class EdXServer():
 
         ans_dict = {'answers': ans_list}
 
-        print('Candidate answers scored by Answer Extraction Module:')
-        print(ans_list)
+        print('\nSystem: Candidate answers scored by Answer Extraction Module')
+        for answer in ans_list:
+            print('{0:10}\t{1}'.format(answer['word'], answer['score']))
+
 
         return ans_dict
 
@@ -106,10 +114,10 @@ def filer():
 
     if server.get_file(f.filename):
         resp = Response('File uploaded. Context Ready.')
-    else
+    else:
         resp = Response('Error in file upload.')
 
-	resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
 @app.route('/query',methods=['POST'])
