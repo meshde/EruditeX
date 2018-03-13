@@ -146,6 +146,50 @@ def get_output():
     print('Candidate answers scored by Answer Extraction Module:')
     print(ans_list)
 
+
+def get_answer():
+    print('System: Initializing...')
+    import spacy
+    from Helpers import deployment_utils as deploy
+
+    sentence = 'john went to the bathroom'
+    question = 'where is john'
+
+    config = deploy.get_config('dtrnn.cfg')
+    print('System: Loading SpaCy...')
+    nlp = spacy.load('en')
+    print('System: SpaCy Loaded')
+
+    print('System: Sentence- ', sentence)
+    print('System: Question-', question)
+    scores = deploy._extract_answer_from_sentence(
+        sentence,
+        question,
+        nlp,
+        config,
+        verbose=True,
+    )
+
+    print(scores)
+
+    question = 'who is in the bathroom'
+
+    print('System: Sentence-', sentence)
+    print('System: Question-', question)
+    scores = deploy._extract_answer_from_sentence(
+        sentence,
+        question,
+        nlp,
+        config,
+        verbose=True,
+    )
+
+    print(scores)
+
+    return
+
+
+
 if __name__ == '__main__':
     train_dtrnn()
 
