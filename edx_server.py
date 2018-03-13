@@ -28,6 +28,7 @@ class EdXServer():
         self.file = os.path.join(app.config['UPLOAD_FOLDER'] + filename)
 
         self.context = filer.extract_file_contents(self.file)
+        
         if len(self.context) > 0:
             return True
         
