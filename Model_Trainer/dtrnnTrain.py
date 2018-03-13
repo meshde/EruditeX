@@ -99,7 +99,17 @@ class DT_RNN_Train(object):
 
 			print("Accuracy after epoch %d is %s"%(epoch_val+1,acc))
 			
-			file_name = file_name = utils.get_file_name("pkl", sentEmbdType=self.SentEmbd_type, epochNum = epoch_val+1, ntp = self.n, hiddenDims = self.hid_dim, accuracy = acc, timestamp = z)
+			file_name = file_name = utils.get_file_name(
+                "pkl",
+                sentEmbdType=self.SentEmbd_type,
+                epochNum=epoch_val+1,
+                ntp=self.n,
+                dep_len=56,
+                word_vector_size=200,
+                dim=self.hid_dim,
+                accuracy=acc,
+                timestamp=z,
+            )
 			# self.SentEmbd_type+str(epoch_val+1)+"_"+str(self.n)+"_"+str(self.hid_dim)+"_"+acc+"_"+z[0]+"_"+z[1].split('.')[0]+".pkl"
 			save_path = path_utils.get_save_states_path('SentEmbd/'+file_name)       
 				

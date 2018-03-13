@@ -3,7 +3,8 @@ import theano.tensor as T
 from theano.ifelse import ifelse
 import lasagne
 from Helpers import nn_utils
-
+import pickle
+import os
 
 class AnsSelect(object):
     def __init__(self, inp_dim, hid_dim=50, initialization='glorot_normal',
@@ -63,7 +64,8 @@ class AnsSelect(object):
         return out
 
     def save_params(self, file_name, epochs):
-        with open(file_name, 'wb') as save_file:
+        file_path = os.path.join('states/AnsSelect', file_name)
+        with open(file_path, 'wb') as save_file:
             pickle.dump(
                 obj={
                     'params': [x.get_value() for x in self.params],
@@ -75,7 +77,8 @@ class AnsSelect(object):
         return
 
     def load_params(self, file_name):
-        with open(file_name, 'rb') as load_file:
+        file_path = os.path.join('states/AnsSelect', file_name)
+        with open(file_path, 'rb') as load_file:
             dict = pickle.load(load_file)
             loaded_params = dict['params']
             for (x, y) in zip(self.params, loaded_params):

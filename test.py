@@ -121,7 +121,7 @@ def test_configurations():
     from Helpers.deployment_utils import get_config
     from Helpers.utils import get_file_name
 
-    filename = 'age:22__name:mehmood__time:10:12:30__username:meshde.pkl'
+    filename = 'age.22__name.mehmood__time.10:12:30__username.meshde.pkl'
     create_config(filename, 'test.cfg')
 
     config = get_config('test.cfg')
@@ -132,6 +132,16 @@ def test_configurations():
     output_filename = get_file_name(extension='pkl', **config)
 
     assert(filename == output_filename)
+    return
+
+def test_dtrnn_cfg():
+    from Helpers.deployment_utils import get_config
+
+    config = get_config('dtrnn.cfg')
+
+    assert('dep_len' in config)
+    assert('word_vector_size' in config)
+    assert('dim' in config)
     return
 
 def test_get_state_file_name():
@@ -177,6 +187,39 @@ def test_abcnn_ass_for_babi():
     accuracy = correct_op / instances
     print('Accuracy: {0:.2f}'.format(accuracy))
 
+    return
+
+
+def test_get_babi_dataset_normal():
+    from Helpers.preprocess import AnswerExtract
+
+    dataset = AnswerExtract.get_babi_dataset(compressed_dataset=False)
+
+    keys = [
+        'question_root',
+        'answer_root',
+        'answer_node',
+        'parent_node',
+        'label',
+    ]
+
+    for key in keys:
+        assert(key in dataset[0])
+
+    return
+
+def test_extract_answer():
+    sentence = 'John went to the bathroom'
+    question = 'where is john'
+    sentences = [
+        (sentence, 1),
+    ]
+
+    from Helpers.deployment_utils import extract_answer_from_sentences
+    extract_answer_from_sentences(
+        sentences,
+        question,
+    )
     return
 
 

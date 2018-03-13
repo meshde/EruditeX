@@ -4,21 +4,29 @@ from Models import abcnn_ass
 import os
 import spacy
 import operator
+from tqdm import tqdm
 
 def get_config(filename):
     filepath = path_utils.get_config_file_path(filename)
 
     config = {}
-    with open(filepath, 'r') as f:
-        for line in f:
-            key, value = line.split('=')
-            key = key.strip()
-            value = value.strip()
+    try:
+        with open(filepath, 'r') as f:
+            for line in f:
+                key, value = line.split('=')
+                key = key.strip()
+                value = value.strip()
 
-            if value.isdigit():
-                value = int(value)
+                if value.isdigit():
+                    value = int(value)
 
-            config[key] = value
+                config[key] = value
+    except:
+        raise FileNotFoundError(
+            '{0} has not been created yet!'.format(
+            filename,
+            ),
+        )
     return config
 
 def create_config(state_file_name, config_file_name):
@@ -27,9 +35,9 @@ def create_config(state_file_name, config_file_name):
 
     for param in state_file_name.split('__'):
         try:
-            key,value = param.split(':')
+            key,value = param.split('.')
         except:
-            key,value = param.split(':', maxsplit=1)
+            key,value = param.split('.', maxsplit=1)
         config[key] = value
        
     config['state'] = state_file_name + '.pkl'
@@ -59,22 +67,35 @@ def check_configurations():
         raise ValueError(error_msg)
     return
 
-def _extract_answer_from_sentence(sentence, question, nlp, config):
+def _extract_answer_from_sentence(sentence, question, nlp, config,
+                                  verbose=False):
     # check_configurations()
     # config = get_config('dtrnn.cfg')
-    
-    sentence_tree = utils.get_dtree(sentence, nlp, dim=config['word_vector_size'])
-    question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
-    sentence_text_traversal = sentence_tree.get_tree_taversal('text')
 
-    temp = get_tree_hidden_states(sentence_tree, question_tree, config)
+    if verbose:
+        print('SpaCy: Generating Dependency Tree for ["{0}"]'.format(sentence))
+    sentence_tree = utils.get_dtree(sentence, nlp, dim=config['word_vector_size'])
+
+    if verbose:
+        print('SpaCy: Generating Dependency Tree for ["{0}"]'.format(question))
+    question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
+
+    sentence_text_traversal = sentence_tree.get_tree_traversal('text')
+
+    temp = get_tree_hidden_states(
+        sentence_tree,
+        question_tree,
+        config,
+        verbose,
+    )
+
     sentence_hidden_states = temp[0]
     question_hidden_states = temp[1]
 
     sentence_tree.update_hidden_states(sentence_hidden_states)
     question_tree.update_hidden_states(question_hidden_states)
 
-    answers = get_answer_nodes(sentence_tree, question_tree)
+    answers = get_answer_nodes(sentence_tree, question_tree, verbose)
     answers = [(sentence_text_traversal[i], score) for i, score in answers]
 
     return answers
@@ -110,7 +131,8 @@ def get_dtrnn_model(config):
     model.load_params(config['state'])
     return model
 
-def get_tree_hidden_states(sentence_tree, question_tree, config):
+def get_tree_hidden_states(sentence_tree, question_tree, config,
+                           verbose=False):
 
     sentence_inputs = sentence_tree.get_rnn_input()
     question_inputs = question_tree.get_rnn_input()
@@ -125,8 +147,12 @@ def get_tree_hidden_states(sentence_tree, question_tree, config):
     question_is_leaf = question_inputs[2]
     question_dep_tags = question_inputs[3]
 
+    if verbose:
+        print('Input Module: Initializing...')
     model = get_dtrnn_model(config)
 
+    if verbose:
+        print('Input Module: Genrating VDT for sentence...')
     sentence_hidden_states = model.get_hidden_states(
         sentence_word_vectors,
         sentence_parent_indices,
@@ -134,6 +160,8 @@ def get_tree_hidden_states(sentence_tree, question_tree, config):
         sentence_dep_tags
     )
 
+    if verbose:
+        print('Input Module: Genrating VDT for question...')
     question_hidden_states = model.get_hidden_states(
         question_word_vectors,
         question_parent_indices,
@@ -144,6 +172,7 @@ def get_tree_hidden_states(sentence_tree, question_tree, config):
     return sentence_hidden_states, question_hidden_states
 
 def get_answer_extraction_model(config):
+    from Models import AnsSelect
     model = AnsSelect(
         inp_dim = config['inp_dim'],
         hid_dim = config['hid_dim']
@@ -151,19 +180,24 @@ def get_answer_extraction_model(config):
     model.load_params(config['state'])
     return model
 
-def get_answer_nodes(sentence_tree, question_tree):
+def get_answer_nodes(sentence_tree, question_tree, verbose=False):
     sentence_root = sentence_tree.get_root_hidden_state() 
     question_root = question_tree.get_root_hidden_state()
 
     answer_nodes = []
 
+    if verbose:
+        print('Extraction Module: Initializing...')
     config = get_config('ans_select.cfg')
     model = get_answer_extraction_model(config)
 
     parent_indices = sentence_tree.get_tree_traversal('parent_index')
     tree_traversal = sentence_tree.postorder()
 
-    for i,node in enumerate(tree_traversal):
+    if verbose:
+        print('Extraction Module: Scoring Answer Nodes...')
+
+    def loop(i, node):
         parent_index = parent_indices[i]
         parent_node = tree_traversal[parent_index]
         parent_hidden_state = parent_node.get_hidden_state()
@@ -176,5 +210,17 @@ def get_answer_nodes(sentence_tree, question_tree):
         )
 
         answer_nodes.append((i,score))
+        return
+
+    if verbose:
+        for i,node in tqdm(
+            enumerate(tree_traversal),
+            total=len(tree_traversal),
+            unit='node'
+        ):
+            loop(i,node)
+    else:
+        for i,node in enumerate(tree_traversal):
+            loop(i,node)
 
     return answer_nodes
