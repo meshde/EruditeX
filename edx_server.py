@@ -30,32 +30,40 @@ class EdXServer():
         self.context = filer.extract_file_contents(self.file)
         if len(self.context) > 0:
             return True
+        
+        return False
 
-        return True #TODO: remove before deploy
+        # return True #TODO: remove before deploy
 
     def get_query(self, query):
         
         self.query = query
         print(self.query)
 
-        # Filter top 5 paras using Info Retrieval
-        para_select = infoRX.retrieve_info(self.context, self.query)
-        para_sents = []
-        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+        try:
+	        # Filter top 5 paras using Info Retrieval
+	        para_select = infoRX.retrieve_info(self.context, self.query)
+	        para_sents = []
+	        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-        for para in para_select:
-            para_sents.extend(tokenizer.tokenize(para))
+	        for para in para_select:
+	            para_sents.extend(tokenizer.tokenize(para))
 
-        print('Sentences selected by IR Module:')
-        print(para_sents)
+	        print('Sentences selected by IR Module:')
+	        print(para_sents)
 
-        # Select Ans Sents - ABCNN
-        ans_sents = abcnn.ans_select(query, para_sents)
+	        # Select Ans Sents - ABCNN
+	        ans_sents = abcnn.ans_select(query, para_sents)
 
-        print('Sentences scored by Sentence Selection Module:')
-        print(ans_sents)
+	        print('Sentences scored by Sentence Selection Module:')
+	        print(ans_sents)
 
-        best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
+	        best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
+
+	    except:
+
+	    	return {'answers': [{'word': 'ERROR', 'score': 'QA Subsystem failure.'}]}
+
 
         # Ignore: Phase 2-3: Input Module and Answer Module
         # answers = []
@@ -68,7 +76,7 @@ class EdXServer():
         # proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
 
         ans_list = []
-        for x in answers:
+        for x in answers[:5]:
             ans_list.append({'word':x[0], 'score': x[1]})
 
         ans_dict = {'answers': ans_list}
@@ -98,9 +106,12 @@ def filer():
 
     if server.get_file(f.filename):
         resp = Response('File uploaded. Context Ready.')
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
-    
+    else
+        resp = Response('Error in file upload.')
+
+	resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
 @app.route('/query',methods=['POST'])
 def queried():
     query = request.get_json(force=True)['query']
