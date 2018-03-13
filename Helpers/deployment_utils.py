@@ -2,7 +2,6 @@ from Helpers import utils
 from Helpers import path_utils
 from Models import abcnn_ass
 import os
-import spacy
 import operator
 from tqdm import tqdm
 
@@ -100,16 +99,28 @@ def _extract_answer_from_sentence(sentence, question, nlp, config,
 
     return answers
 
-def extract_answer_from_sentences(sentences, question):
+def extract_answer_from_sentences(sentences, question, verbose=False):
     check_configurations()
     config = get_config('dtrnn.cfg')
 
+    if verbose:
+        print('Spacy: Initializing...')
+    import spacy
     nlp = spacy.load('en')
+
     ans_sent_list = []
     final_list = []
     for sent_score_tuple in sentences:
         sentence, score = sent_score_tuple
-        node_scores = _extract_answer_from_sentence(sentence, question, nlp, config)
+        node_scores = _extract_answer_from_sentence(
+            sentence,
+            question,
+            nlp,
+            config,
+            verbose,
+        )
+        print('')
+
         for ns in node_scores:
             node, n_score = ns
             f_score = score * n_score
