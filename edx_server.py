@@ -8,8 +8,8 @@ from flask import request
 from flask import jsonify
 from werkzeug import secure_filename
 
-from Helpers import file_extraction as filer
-from Helpers import deployment_utils as deploy 
+from Helpers import file_extraction
+from Helpers import deployment_utils as deploy
 from IR import infoRX
 from Models import abcnn_model
 from Models import AnsSelect
@@ -25,9 +25,9 @@ class EdXServer():
     def get_file(self, filename):
 
         # print(filename)
-        self.file = os.path.join(app.config['UPLOAD_FOLDER'] + filename)
+        self.file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-        self.context = filer.extract_file_contents(self.file)
+        self.context = file_extraction.extract_file_contents(self.file)
         
         if len(self.context) > 0:
             return True
