@@ -108,7 +108,9 @@ def filer():
     # data = request.get_json(force=True)
     # filename = data['filename']
     # file = data['file']
-    
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    	os.makedirs(app.config['UPLOAD_FOLDER'])
+    	
     f = request.files['file']
     f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
     print(f)
