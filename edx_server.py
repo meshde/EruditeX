@@ -41,18 +41,20 @@ class EdXServer():
         self.query = query
         print(self.query)
 
+        # Filter top 5 paras using Info Retrieval
+        para_select = infoRX.retrieve_info(self.context, self.query)
+        para_sents = []
+        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+
+        print(type(para_select[0]), para_select[0])
+
+        for para in para_select:
+            para_sents.extend(tokenizer.tokenize(para[0]))
+
+        print('Sentences selected by IR Module:')
+        print(para_sents)
+
         try:
-            # Filter top 5 paras using Info Retrieval
-            para_select = infoRX.retrieve_info(self.context, self.query)
-            para_sents = []
-            tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-
-            for para in para_select:
-                para_sents.extend(tokenizer.tokenize(para))
-
-            print('Sentences selected by IR Module:')
-            print(para_sents)
-
             # Select Ans Sents - ABCNN
             ans_sents = abcnn.ans_select(query, para_sents)
 
@@ -67,9 +69,9 @@ class EdXServer():
                 verbose=True,
             )
 
-        except:
+        except Exception as e:
 
-            return {'answers': [{'word': 'ERROR', 'score': 'QA Subsystem failure.'}]}
+            return {'answers': [{'word': 'ERROR', 'score': str(e)}]}
 
 
         # Ignore: Phase 2-3: Input Module and Answer Module
@@ -84,7 +86,7 @@ class EdXServer():
 
         ans_list = []
         for x in answers[:5]:
-            ans_list.append({'word':x[0], 'score': x[1]})
+            ans_list.append({'word':x[0], 'score': float(x[1][0])})
 
         ans_dict = {'answers': ans_list}
 
