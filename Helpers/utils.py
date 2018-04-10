@@ -576,6 +576,102 @@ def get_wikiqa_for_abcnn(mode='train'):
 
 	return wikiqa
 
+def parse_squad_json(mode):
+	import json
+
+	file_path = pu.get_squad_path()
+	with open(file_path, 'r', encoding='UTF-8') as f:
+	    j = json.load(f)
+
+	j = j['data']
+
+	parsed_squad = []
+
+	for story in j:
+
+	    for paragraph in story['paragraphs']:
+	        
+	        context = paragraph['context']
+	        qas_list = []
+	        
+	        for qas in paragraph['qas']:
+	            
+	            answers = qas['answers'][0]
+	            answer_start = int(answers['answer_start'])
+	            answer_text = answers['text']
+	            
+	            question = qas['question']
+	            
+	            q_id = qas['id']
+	            
+	            qas_list.append((answer_start, answer_text, question, q_id))
+
+	        parsed_squad.append((context, qas_list))
+
+	return parsed_squad
+
+def get_squad_answer_sentence(parsed_squad):
+	final_squad = []
+	for p_s in parsed_squad:
+		context, qas_list = p_s
+		_qas_list = []
+		for qas in qas_list:
+			a_start, a_text, q, q_id = qas
+			answer_sentence = ''
+			char_count = 0
+			for sentence in context.split(sep='.'):
+				char_count += len(sentence) + 1 # +1 to account for '.'
+				if a_text in sentence and a_start <= char_count:
+					answer_sentence = sentence
+			_qas_list.append((a_start, a_text, answer_sentence, q, q_id))
+		final_squad.append((context, _qas_list))
+	return final_squad
+
+def get_question_answer_pair_squad(squad):
+
+	from IR import infoRX
+	from nltk.stem.wordnet import WordNetLemmatizer
+	lmtzr = WordNetLemmatizer()
+
+	squad_qa = []
+	for s in squad:
+		context, qas_list = s
+		context = context.split('.')
+		context = context[: -1] # To remove empty item after splitting the last '.'
+		for qas in qas_list:
+			a_start, a_text, a_sentence, q, _ = qas
+			tfidf, imp_tokens = infoRX.tf_idf(context, q)
+			label = 0
+			for i, c in enumerate(context.split(sep='.')):
+				if c == a_sentence:
+					label = 1
+				word_cnt = 0
+				for imp in imp_tokens:
+					if lmtzr.lemmatize(imp) in [lmtzr.lemmatize(w) for w in c.split()]:
+						word_cnt += 1
+				squad_qa.append((q, c, label, tfidf[i], word_cnt))
+	return squad_qa
+
+def get_squad_for_abcnn(mode='train'):
+	squad = []
+
+	cache_file = os.path.join(pu.get_cache_path(), 'squad_{}.pkl'.format(mode))
+	if os.path.isfile(cache_file):
+		print(' > Using cached SQuAD {}'.format(mode))
+		with open(cache_file, 'rb') as f:
+			squad = pickle.load(f)
+	else:
+		print(' > Parsing raw SQuAD JSON')
+		squad_raw = parse_squad_json(mode)
+		print(' > Extracting answer sentence')
+		squad = get_squad_answer_sentence(squad_raw)
+		print(' > Generating QA pairs')
+		squad = get_question_answer_pair_squad(squad)
+		print(' > Caching the SQuAD with QA pairs')
+		with open(cache_file, 'wb') as f:
+			pickle.dump(squad, f)
+	return squad
+
 def get_file_name(extension, **kwargs):
     file_name = ""
     for key,value in sorted(kwargs.items()):

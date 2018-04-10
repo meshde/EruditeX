@@ -63,3 +63,12 @@ def get_summary_path(model, mode):
     BASE = get_base_path()
     PATH = os.path.join(BASE, 'data/visualize/{}/{}/'.format(model, mode))
     return PATH
+
+def get_squad_path(mode):
+    BASE = get_base_path()
+    if mode == 'train':
+        filename = 'train-v1.1.json'
+    else:
+        filename = 'dev-v1.1.json'
+    PATH = os.path.join(BASE, 'data/squad/{}'.format(filename))
+    return PATH
