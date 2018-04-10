@@ -638,6 +638,7 @@ def get_question_answer_pair_squad(squad):
 		context, qas_list = s
 		context = context.split('.')
 		context = context[: -1] # To remove empty item after splitting the last '.'
+		context = [c + '. ' for c in context]
 		for qas in qas_list:
 			a_start, a_text, a_sentence, q, _ = qas
 			tfidf, imp_tokens = infoRX.tf_idf(context, q)
