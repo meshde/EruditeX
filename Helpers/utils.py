@@ -611,6 +611,7 @@ def parse_squad_json(mode):
 	return parsed_squad
 
 def get_squad_answer_sentence(parsed_squad):
+	from nltk import sent_tokenize
 	final_squad = []
 	for p_s in parsed_squad:
 		context, qas_list = p_s
@@ -619,7 +620,7 @@ def get_squad_answer_sentence(parsed_squad):
 			a_start, a_text, q, q_id = qas
 			answer_sentence = ''
 			char_count = 0
-			for sentence in context.split(sep='.'):
+			for sentence in sent_tokenize(context):
 				char_count += len(sentence) + 1 # +1 to account for '.'
 				if a_text in sentence and a_start <= char_count:
 					answer_sentence = sentence
@@ -631,14 +632,15 @@ def get_question_answer_pair_squad(squad):
 
 	from IR import infoRX
 	from nltk.stem.wordnet import WordNetLemmatizer
+	from nltk import sent_tokenize
 	lmtzr = WordNetLemmatizer()
 
 	squad_qa = []
 	for s in squad:
 		context, qas_list = s
-		context = context.split('.')
-		context = context[: -1] # To remove empty item after splitting the last '.'
-		context = [c + '. ' for c in context]
+		context = sent_tokenize(context)
+		# context = context[: -1] # To remove empty item after splitting the last '.'
+		# context = [c + '. ' for c in context]
 		for qas in qas_list:
 			a_start, a_text, a_sentence, q, _ = qas
 			tfidf, imp_tokens = infoRX.tf_idf(context, q)
@@ -669,6 +671,34 @@ def get_squad_for_abcnn(mode='train'):
 		print(' > Generating QA pairs')
 		squad = get_question_answer_pair_squad(squad)
 		print(' > Caching the SQuAD with QA pairs')
+		with open(cache_file, 'wb') as f:
+			pickle.dump(squad, f)
+	return squad
+
+def get_ans_node_squad(squad):
+	squad_node = []
+	for s in squad:
+		_, qas_list = s
+		for qas in qas_list:
+			_, a_text, answer_sentence, q, _ = qas
+			squad_node.append((q, answer_sentence, a_text))
+	return squad_node
+
+def get_squad_for_ans_extract(mode='train'):
+	squad = []
+
+	cache_file = os.path.join(pu.get_cache_path(), 'squad_node_{}.pkl'.format(mode))
+	if os.path.isfile(cache_file):
+		print(' > Using cached SQuAD {} for answer extract'.format(mode))
+		with open(cache_file, 'rb') as f:
+			squad = pickle.load(f)
+	else:
+		print(' > Parsing raw SQuAD JSON')
+		squad_raw = parse_squad_json(mode)
+		print(' > Extracting answer sentence')
+		squad = get_squad_answer_sentence(squad_raw)
+		print(' > Generating QAnode pairs')
+		squad = get_ans_node_squad(squad)
 		with open(cache_file, 'wb') as f:
 			pickle.dump(squad, f)
 	return squad
