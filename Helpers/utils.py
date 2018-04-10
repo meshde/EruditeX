@@ -579,7 +579,7 @@ def get_wikiqa_for_abcnn(mode='train'):
 def parse_squad_json(mode):
 	import json
 
-	file_path = pu.get_squad_path()
+	file_path = pu.get_squad_path(mode)
 	with open(file_path, 'r', encoding='UTF-8') as f:
 	    j = json.load(f)
 
@@ -642,7 +642,7 @@ def get_question_answer_pair_squad(squad):
 			a_start, a_text, a_sentence, q, _ = qas
 			tfidf, imp_tokens = infoRX.tf_idf(context, q)
 			label = 0
-			for i, c in enumerate(context.split(sep='.')):
+			for i, c in enumerate(context):
 				if c == a_sentence:
 					label = 1
 				word_cnt = 0
