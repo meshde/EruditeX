@@ -3,6 +3,7 @@ from Helpers import path_utils
 from Models import abcnn_ass
 import os
 import operator
+import sys
 from tqdm import tqdm
 
 def get_config(filename):
@@ -20,10 +21,17 @@ def get_config(filename):
                     value = int(value)
 
                 config[key] = value
-    except:
+    except FileNotFoundError:
         raise FileNotFoundError(
             '{0} has not been created yet!'.format(
             filename,
+            ),
+        )
+    except ValueError:
+        raise ValueError(
+            'The contents of file {0} are not in proper format\n'
+            'Format: key=value'.format(
+                filename,
             ),
         )
     return config
