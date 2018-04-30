@@ -114,6 +114,97 @@ def train_ans_extract(inp_dim=50, hid_dim=200, epochs=10):
     )
     return
 
+
+def get_output():
+    print('System: Initializing...')
+    from Models import abcnn_model
+    from Helpers.deployment_utils import extract_answer_from_sentences
+
+    sents = [
+        'john went to the bathroom',
+        'mary went to the kitchen',
+        'john moved to the hallway',
+        'kim journeyed to the garden',
+        'sandra is in the bedroom',
+    ]
+    print('\nSystem: The context is:')
+    for sentence in sents:
+        print(sentence)
+
+    query = 'where is john'
+    print('System: The question is:')
+    print(query)
+
+
+
+    # Select Ans Sents - ABCNN
+    print('\nSentence Selection Module: Initializing...')
+    abcnn = abcnn_model()
+    ans_sents = abcnn.ans_select(query, sents)
+
+    print('\nSystem: Sentences scored by Sentence Selection Module')
+    for sentence,score in ans_sents:
+        print('{0:50}\t{1}'.format(sentence, score[0]))
+    print('')
+
+    best_ans, score, answers = extract_answer_from_sentences(
+        ans_sents,
+        query,
+        verbose=True,
+    )
+
+    ans_list = []
+    for x in answers:
+        ans_list.append({'word':x[0], 'score': x[1]})
+
+    print('\nSystem: Candidate answers scored by Answer Extraction Module')
+    for answer in ans_list:
+        print('{0:10}\t{1}'.format(answer['word'], answer['score']))
+
+
+def get_answer():
+    print('System: Initializing...')
+    import spacy
+    from Helpers import deployment_utils as deploy
+
+    sentence = 'john went to the bathroom'
+    question = 'where is john'
+
+    config = deploy.get_config('dtrnn.cfg')
+    print('System: Loading SpaCy...')
+    nlp = spacy.load('en')
+    print('System: SpaCy Loaded')
+
+    print('System: Sentence- ', sentence)
+    print('System: Question-', question)
+    scores = deploy._extract_answer_from_sentence(
+        sentence,
+        question,
+        nlp,
+        config,
+        verbose=True,
+    )
+
+    print(scores)
+
+    question = 'who is in the bathroom'
+
+    print('System: Sentence-', sentence)
+    print('System: Question-', question)
+    scores = deploy._extract_answer_from_sentence(
+        sentence,
+        question,
+        nlp,
+        config,
+        verbose=True,
+    )
+
+    print(scores)
+
+    return
+
+
+
 if __name__ == '__main__':
     train_dtrnn()
 

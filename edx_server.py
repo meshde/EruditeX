@@ -8,8 +8,8 @@ from flask import request
 from flask import jsonify
 from werkzeug import secure_filename
 
-from Helpers import file_extraction as filer
-from Helpers import deployment_utils as deploy 
+from Helpers import file_extraction
+from Helpers import deployment_utils as deploy
 from IR import infoRX
 from Models import abcnn_model
 from Models import AnsSelect
@@ -25,13 +25,16 @@ class EdXServer():
     def get_file(self, filename):
 
         # print(filename)
-        self.file = os.path.join(app.config['UPLOAD_FOLDER'] + filename)
+        self.file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-        self.context = filer.extract_file_contents(self.file)
+        self.context = file_extraction.extract_file_contents(self.file)
+        
         if len(self.context) > 0:
             return True
+        
+        return False
 
-        return True #TODO: remove before deploy
+        # return True #TODO: remove before deploy
 
     def get_query(self, query):
         
@@ -43,19 +46,33 @@ class EdXServer():
         para_sents = []
         tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
+        print(type(para_select[0]), para_select[0])
+
         for para in para_select:
-            para_sents.extend(tokenizer.tokenize(para))
+            para_sents.extend(tokenizer.tokenize(para[0]))
 
         print('Sentences selected by IR Module:')
         print(para_sents)
 
-        # Select Ans Sents - ABCNN
-        ans_sents = abcnn.ans_select(query, para_sents)
+        try:
+            # Select Ans Sents - ABCNN
+            ans_sents = abcnn.ans_select(query, para_sents)
 
-        print('Sentences scored by Sentence Selection Module:')
-        print(ans_sents)
+            print('\nSystem: Sentences scored by Sentence Selection Module')
+            for sentence,score in ans_sents:
+                print('{0:50}\t{1}'.format(sentence, score[0]))
+            print('')
 
-        best_ans, score, answers = deploy.extract_answer_from_sentences(ans_sents, query)
+            best_ans, score, answers = deploy.extract_answer_from_sentences(
+                ans_sents,
+                query,
+                verbose=True,
+            )
+
+        except Exception as e:
+
+            return {'answers': [{'word': 'ERROR', 'score': str(e)}]}
+
 
         # Ignore: Phase 2-3: Input Module and Answer Module
         # answers = []
@@ -68,13 +85,15 @@ class EdXServer():
         # proc = subprocess.Popen(['python','test.py',query],shell=False,stdout=subprocess.PIPE)
 
         ans_list = []
-        for x in answers:
-            ans_list.append({'word':x[0], 'score': x[1]})
+        for x in answers[:5]:
+            ans_list.append({'word':x[0], 'score': float(x[1][0])})
 
         ans_dict = {'answers': ans_list}
 
-        print('Candidate answers scored by Answer Extraction Module:')
-        print(ans_list)
+        print('\nSystem: Candidate answers scored by Answer Extraction Module')
+        for answer in ans_list:
+            print('{0:10}\t{1}'.format(answer['word'], answer['score']))
+
 
         return ans_dict
 
@@ -91,16 +110,21 @@ def filer():
     # data = request.get_json(force=True)
     # filename = data['filename']
     # file = data['file']
-    
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    	os.makedirs(app.config['UPLOAD_FOLDER'])
+    	
     f = request.files['file']
     f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
     print(f)
 
     if server.get_file(f.filename):
         resp = Response('File uploaded. Context Ready.')
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
-    
+    else:
+        resp = Response('Error in file upload.')
+
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
 @app.route('/query',methods=['POST'])
 def queried():
     query = request.get_json(force=True)['query']
