@@ -19,7 +19,7 @@ if __name__ == '__main__':
 	# test([""])
 	# test(["train_dtrnn","50","100","10"])
 	# test(["train_ans_extract","100"])
-	test(["train_ans_extract","100","50"])
+	test(["train_ans_extract","100","200"])
 
 
 
