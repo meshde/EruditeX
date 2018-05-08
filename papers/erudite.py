@@ -3,6 +3,7 @@ sys.path.append('../')
 from tqdm  import tqdm
 from babi import get_babi
 from IR import infoRX
+import nltk
 
 class EruditeX(object):
 
@@ -38,12 +39,12 @@ class EruditeX(object):
     def get_query(self, query):
         
         self.query = query
-        print(self.query)
-
-        # Filter top 5 paras using Info Retrieval
-        para_select = infoRX.retrieve_info(self.context, self.query)
-        para_sents = []
+        print('\n' + self.query)
         tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+        # Filter top 5 paras using Info Retrieval
+        para_select = infoRX.retrieve_info(tokenizer.tokenize(self.context), self.query)
+        para_sents = []
+        
 
         print(type(para_select[0]), para_select[0])
 

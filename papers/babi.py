@@ -67,6 +67,7 @@ def get_babi(babi_id='1'):
 	for sample in babi_data:
 		l_n, c, question, ans_token, support = sample
 		context = ' '.join(c)
+		context = context.strip()
 		d = {}
 		d['context'] = context
 		d['question'] = question
