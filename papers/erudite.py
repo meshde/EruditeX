@@ -1,9 +1,39 @@
-class EuditeX(object):
+import sys
+sys.path.append('../')
+from tqdm  import tqdm
+from babi import get_babi
+from IR import infoRX
+
+class EruditeX(object):
 
     def __init__(self):
         self.file = ''
         self.context = []
         self.query = ''
+
+    def get_babi_task_num(self, babi_task_num=1):
+        babi_data_dict = get_babi(str(int(babi_task_num)))
+        count = 0
+        dataset_size = len(babi_data_dict)
+        for element in tqdm(babi_data_dict, total=dataset_size, unit=' Question', ncols=75):
+            self.context = element['context']
+            actual_answer = element['ans_token']
+            q = element['question']
+            
+            ans_dict = self.get_query(q)
+
+            ans_list = ans_dict['answers']
+            predicted_answer = ans_list[0]['word']
+
+            if(predicted_answer is actual_answer):
+                count += 1
+
+        accuracy = (count/dataset_size)*100
+        print("\n Accuracy after testing on bAbI task %d is %f"%(babi_task_num,accuracy))
+
+
+        
+
 
     def get_query(self, query):
         
@@ -65,3 +95,9 @@ class EuditeX(object):
 
 
         return ans_dict
+
+
+if __name__ == '__main__':
+    test_obj = EruditeX()
+    test_obj.get_babi_task_num()
+
