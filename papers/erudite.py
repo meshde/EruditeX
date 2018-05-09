@@ -3,6 +3,8 @@ sys.path.append('../')
 from tqdm  import tqdm
 from babi import get_babi
 from IR import infoRX
+from Models import abcnn_model
+from Helpers import deployment_utils as deploy
 import nltk
 
 class EruditeX(object):
@@ -11,6 +13,7 @@ class EruditeX(object):
         self.file = ''
         self.context = []
         self.query = ''
+        self.abcnn = abcnn_model()
 
     def get_babi_task_num(self, babi_task_num=1):
         babi_data_dict = get_babi(str(int(babi_task_num)))
@@ -23,8 +26,13 @@ class EruditeX(object):
             
             ans_dict = self.get_query(q)
 
+            print(ans_dict)
+
             ans_list = ans_dict['answers']
             predicted_answer = ans_list[0]['word']
+
+            print('predicted_answer:', predicted_answer)
+            print('actual_answer:', actual_answer)
 
             if(predicted_answer is actual_answer):
                 count += 1
@@ -54,25 +62,37 @@ class EruditeX(object):
         print('Sentences selected by IR Module:')
         print(para_sents)
 
-        try:
-            # Select Ans Sents - ABCNN
-            ans_sents = abcnn.ans_select(query, para_sents)
+        # try:
+        #     # Select Ans Sents - ABCNN
+        #     ans_sents = abcnn.ans_select(query, para_sents)
 
-            print('\nSystem: Sentences scored by Sentence Selection Module')
-            for sentence,score in ans_sents:
-                print('{0:50}\t{1}'.format(sentence, score[0]))
-            print('')
+        #     print('\nSystem: Sentences scored by Sentence Selection Module')
+        #     for sentence,score in ans_sents:
+        #         print('{0:50}\t{1}'.format(sentence, score[0]))
+        #     print('')
 
-            best_ans, score, answers = deploy.extract_answer_from_sentences(
-                ans_sents,
-                query,
-                verbose=True,
-            )
+        #     best_ans, score, answers = deploy.extract_answer_from_sentences(
+        #         ans_sents,
+        #         query,
+        #         verbose=True,
+        #     )
 
-        except Exception as e:
+        # except Exception as e:
 
-            return {'answers': [{'word': 'ERROR', 'score': str(e)}]}
+        #     return {'answers': [{'word': 'ERROR', 'score': str(e)}]}
 
+        ans_sents = self.abcnn.ans_select(query, para_sents)
+
+        print('\nSystem: Sentences scored by Sentence Selection Module')
+        for sentence,score in ans_sents:
+            print('{0:50}\t{1}'.format(sentence, score[0]))
+        print('')
+
+        best_ans, score, answers = deploy.extract_answer_from_sentences(
+            ans_sents,
+            query,
+            verbose=True,
+        )
 
         # Ignore: Phase 2-3: Input Module and Answer Module
         # answers = []
@@ -101,4 +121,3 @@ class EruditeX(object):
 if __name__ == '__main__':
     test_obj = EruditeX()
     test_obj.get_babi_task_num()
-

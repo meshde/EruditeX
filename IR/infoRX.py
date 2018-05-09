@@ -55,6 +55,7 @@ def tf_idf(doc, query):
 	wcount_total = []
 	doc_count_total = len(doc)
 	imp_tokens = [i for i in word_tokenize(query.lower()) if i not in stop]
+	# print(imp_tokens)
 
 	for i in range(0, doc_count_total):
 		tfidf.append(0)
