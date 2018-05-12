@@ -16,7 +16,7 @@ class EruditeX(object):
         self.file = ''
         self.context = []
         self.query = ''
-        self.abcnn = abcnn_model()
+        self.abcnn = abcnn_model(verbosity=False)
 
     def get_babi_task_num(self, babi_task_num=1):
         babi_data_dict = get_babi(str(int(babi_task_num)))
@@ -114,7 +114,7 @@ class EruditeX(object):
         best_ans, score, answers = deploy.extract_answer_from_sentences(
             ans_sents,
             query,
-            verbose=True,
+            verbose=False,
         )
 
         # Ignore: Phase 2-3: Input Module and Answer Module
