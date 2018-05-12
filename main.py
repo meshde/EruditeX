@@ -204,7 +204,8 @@ def get_answer():
     return
 
 def paper(task_num=1):
-    assert int(task_num) in [1, 4, 5, 12]
+    task_num = int(task_num)
+    assert task_num in [1, 4, 5, 12]
 
     from paper import erudite
     erudite.EruditeX().get_babi_task_num(task_num)
