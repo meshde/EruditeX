@@ -30,7 +30,9 @@ from IR import infoRX
 
 class abcnn_model:
 
-    def __init__(self):
+    def __init__(self, verbose=True):
+
+        self.verbose = verbose
 
         # Hyperparameters
 
@@ -134,7 +136,7 @@ class abcnn_model:
     def model(self):
 
         attn_ = self.pairwise_euclidean_dist(self.q, self.a)
-        print(" > Attention matrix:", attn_.get_shape())
+        if self.verbose: print(" > Attention matrix:", attn_.get_shape())
 
         # attn_ = tf.cast(euclidean_distances(q_vector, a_vector), tf.float32)
         # attn_ = tf.cast( tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(q_vector, a_vector)), 1)), tf.float32)
@@ -150,7 +152,7 @@ class abcnn_model:
         q_vector = tf.stack([q_feature_, self.q], 2)
         a_vector = tf.stack([a_feature_, self.a], 2)
 
-        print(" > Stack:", q_vector.get_shape(), a_vector.get_shape())
+        if self.verbose: print(" > Stack:", q_vector.get_shape(), a_vector.get_shape())
 
         # Expanding dimensions for conv input
         q_vector = tf.reshape(q_vector, [1, self.max_sent_len, self.vector_dim, 2])
@@ -178,7 +180,7 @@ class abcnn_model:
             padding="valid",
             activation=tf.nn.relu)
 
-        print(" > Conv1 Output:", a_conv.get_shape(), q_conv.get_shape())
+        if self.verbose: print(" > Conv1 Output:", a_conv.get_shape(), q_conv.get_shape())
 
         # Padding before pooling
         padding = tf.constant([[self.pad_len, self.pad_len], [0, 0], [0, 0]])
@@ -186,10 +188,10 @@ class abcnn_model:
         q_vector = tf.pad(tf.squeeze(q_conv), padding)
         a_vector = tf.pad(tf.squeeze(a_conv), padding)
 
-        print(" > Pad1 Output:", q_vector.get_shape(), a_vector.get_shape())
+        if self.verbose: print(" > Pad1 Output:", q_vector.get_shape(), a_vector.get_shape())
 
         attn_ = self.pairwise_euclidean_dist(q_vector, a_vector)
-        print(" > Attention matrix:", attn_.get_shape())
+        if self.verbose: print(" > Attention matrix:", attn_.get_shape())
 
 
         # Attention-based Pooling
@@ -199,7 +201,7 @@ class abcnn_model:
         # a_vector = self.attention_pooling(a_vector, tf.transpose(attn_))
 
 
-        print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
+        if self.verbose: print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
 
         q_feature_ = tf.matmul(attn_, self.W_q)
         a_feature_ = tf.matmul(attn_, self.W_a, transpose_a=True)
@@ -250,16 +252,16 @@ class abcnn_model:
         # q_vector = tf.pad(tf.reduce_sum(tf.squeeze(q_conv), 2), padding)
         # a_vector = tf.pad(tf.reduce_sum(tf.squeeze(a_conv), 2), padding)
 
-        print(" > Conv2 Output:", q_vector.get_shape(), a_vector.get_shape())
+        if self.verbose: print(" > Conv2 Output:", q_vector.get_shape(), a_vector.get_shape())
 
         attn_ = self.pairwise_euclidean_dist(q_vector, a_vector)
 
-        print(" > Attention:", attn_.get_shape())
+        if self.verbose: print(" > Attention:", attn_.get_shape())
 
         q_vector = self.attention_pooling(q_vector, attn_, 0)
         a_vector = self.attention_pooling(a_vector, attn_, 1)
 
-        print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
+        if self.verbose: print(" > Attn_Pool Output:", q_vector.get_shape(), a_vector.get_shape())
 
         q_vector = tf.reshape(q_vector, [1, self.max_sent_len, self.vector_dim, 50])
         a_vector = tf.reshape(a_vector, [1, self.max_sent_len, self.vector_dim, 50])
@@ -271,7 +273,7 @@ class abcnn_model:
         pool2 = tf.layers.average_pooling2d(inputs=a_vector, pool_size=[self.max_sent_len, self.vector_dim],
                                             strides=1)
 
-        print(" > Model Output:", pool1.get_shape(), pool2.get_shape())
+        if self.verbose: print(" > Model Output:", pool1.get_shape(), pool2.get_shape())
 
         optimizer = tf.train.AdamOptimizer(self.learning_rate)
 
@@ -370,7 +372,7 @@ class abcnn_model:
                 timestamp, index, u_dataset = tuple(fp.read().split(sep='\t'))
                 index = int(index)
                 filename = filename + timestamp + '.ckpt'
-                print('> Model will be restored from @', filename, index, u_dataset)
+                if self.verbose: print('> Model will be restored from @', filename, index, u_dataset)
         except:
             pass
 
@@ -648,7 +650,7 @@ class abcnn_model:
             try:
                 print(filename)
                 self.saver.restore(sessn, filename)
-                print(' > Model state restored from @ ' + filename)
+                if self.verbose: print(' > Model state restored from @ ' + filename)
             except Exception as e:
                 print(e)
                 print(' > No saved state found. Exiting')
