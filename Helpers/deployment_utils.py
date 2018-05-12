@@ -66,7 +66,7 @@ def check_configurations():
         raise ValueError(error_msg)
     return
 
-def _extract_answer_from_sentence(sentence, question, nlp, config,
+def _extract_answer_from_sentence(sentence, question_tree, nlp, config,
                                   verbose=False):
     # check_configurations()
     # config = get_config('dtrnn.cfg')
@@ -75,24 +75,17 @@ def _extract_answer_from_sentence(sentence, question, nlp, config,
         print('SpaCy: Generating Dependency Tree for ["{0}"]'.format(sentence))
     sentence_tree = utils.get_dtree(sentence, nlp, dim=config['word_vector_size'])
 
-    if verbose:
-        print('SpaCy: Generating Dependency Tree for ["{0}"]'.format(question))
-    question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
 
     sentence_text_traversal = sentence_tree.get_tree_traversal('text')
 
-    temp = get_tree_hidden_states(
+    sentence_hidden_states = get_tree_hidden_states(
         sentence_tree,
-        question_tree,
         config,
         verbose,
     )
 
-    sentence_hidden_states = temp[0]
-    question_hidden_states = temp[1]
 
     sentence_tree.update_hidden_states(sentence_hidden_states)
-    question_tree.update_hidden_states(question_hidden_states)
 
     answers = get_answer_nodes(sentence_tree, question_tree, verbose)
     answers = [(sentence_text_traversal[i], score) for i, score in answers]
@@ -108,18 +101,28 @@ def extract_answer_from_sentences(sentences, question, verbose=False):
     import spacy
     nlp = spacy.load('en')
 
+    if verbose:
+        print('SpaCy: Generating Dependency Tree for ["{0}"]'.format(question))
+    question_tree = utils.get_dtree(question, nlp, dim=config['word_vector_size'])
+    question_hidden_states = get_tree_hidden_states(
+        question_tree,
+        config,
+        verbose,
+    )
+    question_tree.update_hidden_states(question_hidden_states)
+
     ans_sent_list = []
     final_list = []
     for sent_score_tuple in sentences:
         sentence, score = sent_score_tuple
         node_scores = _extract_answer_from_sentence(
             sentence,
-            question,
+            question_tree,
             nlp,
             config,
             verbose,
         )
-        print('')
+        if verbose: print('')
 
         for ns in node_scores:
             node, n_score = ns
@@ -142,45 +145,30 @@ def get_dtrnn_model(config):
     model.load_params(config['state'])
     return model
 
-def get_tree_hidden_states(sentence_tree, question_tree, config,
-                           verbose=False):
+def get_tree_hidden_states(tree, config, verbose=False):
 
-    sentence_inputs = sentence_tree.get_rnn_input()
-    question_inputs = question_tree.get_rnn_input()
+    inputs = tree.get_rnn_input()
 
-    sentence_word_vectors = sentence_inputs[0]
-    sentence_parent_indices = sentence_inputs[1]
-    sentence_is_leaf = sentence_inputs[2]
-    sentence_dep_tags = sentence_inputs[3]
-
-    question_word_vectors = question_inputs[0]
-    question_parent_indices = question_inputs[1]
-    question_is_leaf = question_inputs[2]
-    question_dep_tags = question_inputs[3]
+    word_vectors = inputs[0]
+    parent_indices = inputs[1]
+    is_leaf = inputs[2]
+    dep_tags = inputs[3]
 
     if verbose:
         print('Input Module: Initializing...')
     model = get_dtrnn_model(config)
 
     if verbose:
-        print('Input Module: Genrating VDT for sentence...')
-    sentence_hidden_states = model.get_hidden_states(
-        sentence_word_vectors,
-        sentence_parent_indices,
-        sentence_is_leaf,
-        sentence_dep_tags
+        print('Input Module: Genrating VDT ...')
+    hidden_states = model.get_hidden_states(
+        word_vectors,
+        parent_indices,
+        is_leaf,
+        dep_tags
     )
 
-    if verbose:
-        print('Input Module: Genrating VDT for question...')
-    question_hidden_states = model.get_hidden_states(
-        question_word_vectors,
-        question_parent_indices,
-        question_is_leaf,
-        question_dep_tags
-    )
 
-    return sentence_hidden_states, question_hidden_states
+    return hidden_states
 
 def get_answer_extraction_model(config):
     from Models import AnsSelect
