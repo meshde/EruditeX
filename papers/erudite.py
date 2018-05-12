@@ -6,6 +6,7 @@ from IR import infoRX
 from Models import abcnn_model
 from Helpers import deployment_utils as deploy
 import nltk
+import datetime
 
 class EruditeX(object):
 
@@ -18,12 +19,22 @@ class EruditeX(object):
     def get_babi_task_num(self, babi_task_num=1):
         babi_data_dict = get_babi(str(int(babi_task_num)))
         count = 0
+        total = 0
         dataset_size = len(babi_data_dict)
+
+        logs_file = "EruditeX_Model_Final_logs"
+        f = open(logs_file,'a')
+        z=str(datetime.datetime.now())
+        f.write(z+"\n")
+        f.write("bAbI task :"+str(babi_task_num)+"\n")
+
         for element in tqdm(babi_data_dict, total=dataset_size, unit=' Question', ncols=75):
+            total += 1
             self.context = element['context']
             actual_answer = element['ans_token']
             q = element['question']
             
+
             ans_dict = self.get_query(q)
 
             print(ans_dict)
@@ -34,14 +45,23 @@ class EruditeX(object):
             print('predicted_answer:', predicted_answer)
             print('actual_answer:', actual_answer)
 
+
             if(predicted_answer is actual_answer):
                 count += 1
+
+            f.write("Example %d\n:"%(total))
+            f.write("Context:\n"+self.context+"\n")
+            f.write("Question: "+q+"\n")
+            f.write("Actual Answer: "+actual_answer+"\n")
+            f.write("Predicted Answer: "+predicted_answer+"\n")
+            f.write("\nTotal correct predictions as of now:%d\n"%(count))
 
         accuracy = (count/dataset_size)*100
         print("\n Accuracy after testing on bAbI task %d is %f"%(babi_task_num,accuracy))
 
+        f.write("Accuracy after testing on bAbI task %d is %f"%(babi_task_num,accuracy))
 
-        
+        f.close()
 
 
     def get_query(self, query):
