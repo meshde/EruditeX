@@ -16,7 +16,7 @@ class EruditeX(object):
         self.file = ''
         self.context = []
         self.query = ''
-        self.abcnn = abcnn_model(verbosity=False)
+        self.abcnn = abcnn_model(verbose=False)
 
     def get_babi_task_num(self, babi_task_num=1):
         babi_data_dict = get_babi(str(int(babi_task_num)))
