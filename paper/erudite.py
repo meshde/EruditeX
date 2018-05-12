@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../')
 from tqdm  import tqdm
-from babi import get_babi
+from paper.babi import get_babi
 from IR import infoRX
 from Models import abcnn_model
 from Helpers import deployment_utils as deploy
