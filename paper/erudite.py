@@ -18,10 +18,10 @@ class EruditeX(object):
         self.query = ''
         self.abcnn = abcnn_model(verbose=False)
 
-    def get_babi_task_num(self, babi_task_num=1):
+    def get_babi_task_num(self, babi_task_num=1, count=0, total=0):
         babi_data_dict = get_babi(str(int(babi_task_num)))
-        count = 0
-        total = 0
+        total_dataset_size = len(babi_data_dict)
+        babi_data_dict = babi_data_dict[total:]
         dataset_size = len(babi_data_dict)
 
         logs_file = "paper/logs/task_{0}_{1}".format(
@@ -38,7 +38,6 @@ class EruditeX(object):
             self.context = element['context']
             actual_answer = element['ans_token']
             q = element['question']
-            
 
             ans_dict = self.get_query(q)
 
@@ -60,7 +59,7 @@ class EruditeX(object):
             logging.info("Predicted Answer: "+predicted_answer+"\n")
             logging.info("\nTotal correct predictions as of now:%d\n"%(count))
 
-        accuracy = (count/dataset_size)*100
+        accuracy = (count/total_dataset_size)*100
         print("\n Accuracy after testing on bAbI task %d is %f"%(babi_task_num,accuracy))
 
         logging.info("Accuracy after testing on bAbI task %d is %f"%(babi_task_num,accuracy))
