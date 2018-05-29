@@ -117,7 +117,22 @@ class dt_node(object):
         for index,text,score in node_scores:
             assert text == postorder[index].text
             postorder[index].node_score = score
+        return
 
+    def print(self, pca_glove, pca_hidden):
+        assert self.word_vector_size == 200
+        parent_indices = self.get_tree_traversal(mode='parent_indices')
+        print('-'*10)
+        postorder = self.postorder()
+        for i, node in enumerate(postorder):
+            print('Word:', node.text)
+            print('Parent:', postorder[parent_indices[i]].text)
+            print('Dependency Tag:', node.dep_tag)
+            print('Word Embedding:', pca_glove.transform(node.word_vector))
+            print('Hidden State:', pca_hidden.transform(node.hidden_state))
+            print('Node Rank:', self.node_score)
+            print('-'*10)
+        return
 
 
 class dtne_node(dt_node):
