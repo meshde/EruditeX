@@ -104,7 +104,7 @@ def _extract_answer_from_sentence_vis(sentence, question_tree, nlp, config,
     sentence_hidden_states = get_tree_hidden_states(
         sentence_tree,
         config,
-        verbose,
+        verbose=False,
     )
 
     hidden_states.extend(sentence_hidden_states)
@@ -131,7 +131,6 @@ def extract_answer_from_sentences(sentences, question, verbose=False,
     question_hidden_states = get_tree_hidden_states(
         question_tree,
         config,
-        verbose,
     )
     question_tree.update_hidden_states(question_hidden_states)
     tree_list = [
@@ -142,6 +141,7 @@ def extract_answer_from_sentences(sentences, question, verbose=False,
     ]
 
     if vis:
+       hidden_states = []
        hidden_states.extend(question_hidden_states)
 
     ans_sent_list = []
