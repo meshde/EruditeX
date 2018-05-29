@@ -85,7 +85,7 @@ def tf_idf(doc, query):
 
 
 def retrieve_info(doc, query):
-	glove = utils.load_glove()
+	glove = utils.load_glove(dim=200)
 	vector = []
 
 	# query = sys.argv[1]
