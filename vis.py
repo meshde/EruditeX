@@ -53,29 +53,29 @@ question = 'Where is John?'
 
 # print(para_list, q_dict)
 
-print('The Context:')
-print(context)
-print('The Question:',question)
-paras, quest = vis_tokenize(context, question)
-
-print('')
-
-pca_glove = get_pca_glove(paras, quest)
-
-print('Preprocessing:')
-for i,para in enumerate(paras):
-    print('-> Paragraph no.',i)
-    print('The paragraph was tokenised into the following sentences:')
-    for j,sent in enumerate(para):
-        print('---> Sentence no.',j)
-        print('The sentence was tokenised into the following words:')
-        print('| '.join(sent['words']))
-        print('The associated word embbeddings are:')
-        print(pca_glove.transform(sent['vectors']))
-print('Preprcoessing the question:')
-print('| '.join(quest['words']))
-print(pca_glove.transform(quest['vectors']))
-print('-'*100)
+# print('The Context:')
+# print(context)
+# print('The Question:',question)
+# paras, quest = vis_tokenize(context, question)
+# 
+# print('')
+# 
+# pca_glove = get_pca_glove(paras, quest)
+# 
+# print('Preprocessing:')
+# for i,para in enumerate(paras):
+#     print('-> Paragraph no.',i)
+#     print('The paragraph was tokenised into the following sentences:')
+#     for j,sent in enumerate(para):
+#         print('---> Sentence no.',j)
+#         print('The sentence was tokenised into the following words:')
+#         print('| '.join(sent['words']))
+#         print('The associated word embbeddings are:')
+#         print(pca_glove.transform(sent['vectors']))
+# print('Preprcoessing the question:')
+# print('| '.join(quest['words']))
+# print(pca_glove.transform(quest['vectors']))
+# print('-'*100)
 
 print('Passage Retrieval:')
 
@@ -87,7 +87,7 @@ print(para_select)
 
 # print(type(para_select[0]), para_select[0])
 
-for para in para_select:
+for para in para_select['top_paras']:
     para_sents.extend(tokenizer.tokenize(para[0]))
 
 print('Sentences selected by IR Module:')
