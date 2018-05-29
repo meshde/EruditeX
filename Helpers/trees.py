@@ -112,6 +112,13 @@ class dt_node(object):
             node.hidden_state = hidden_states[i]
         return
 
+    def update_node_rank(self, node_scores):
+        postorder = self.postorder
+        for index,text,score in node_scores:
+            assert text == postorder[index].text
+            postorder[index].node_score = score
+
+
 
 class dtne_node(dt_node):
     def __init__(self, node, glove, children=[], dim=50):
