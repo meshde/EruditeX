@@ -1,95 +1,121 @@
-def get_pca_glove(paras, question):
-    vectors = []
-    for para in paras:
-        for sentence in para:
-            vectors.extend(sentence['vectors'])
-    vectors.extend(question['vectors'])
-    vectors = np.array(vectors).reshape(-1,200)
-    pca = PCA(n_components=3)
-    pca.fit(vectors)
-    return pca
+from nltk import sent_tokenize, word_tokenize
+from nltk.tokenize.texttiling import TextTilingTokenizer
+import numpy as np
+from Helpers import utils
 
-def get_pca_hidden(hidden_states):
-    vectors = np.array(hidden_states).reshape(-1, 50)
-    pca = PCA(n_components=3)
-    pca.fit(vectors)
-    return pca
+def vis_tokenize(context, question):
 
-context = """
-John travelled to the hallway. Mary journeyed to the bathroom.
-Daniel went back to the bathroom. John moved to the bedroom.
-John went to the hallway. Sandra journeyed to the kitchen.
-Sandra travelled to the hallway. John went to the garden.
-Sandra went back to the bathroom. Sandra moved to the kitchen.
-"""
+    glove = utils.load_glove(dim=200)
+
+    ttt = TextTilingTokenizer()
+
+    para_list = []
+
+    for para in context.split(sep='\\n'):
+        sent_list = []
+        for sent in sent_tokenize(para):
+            temp = {}
+            temp['words'] = word_tokenize(sent)
+            temp['vectors'] = [np.array(glove[word]).reshape(1, 200) for word in temp['words']]
+            sent_list.append(temp)
+        para_list.append(sent_list)
+
+    q_dict = {}
+    q_dict['words'] = word_tokenize(question)
+    q_dict['vectors'] = [np.array(glove[word]).reshape(1, 200) for word in q_dict['words']]
+    return para_list, q_dict
+
+# def get_pca_glove(paras, question):
+#     vectors = []
+#     for para in paras:
+#         for sentence in para:
+#             vectors.extend(sentence['vectors'])
+#     vectors.extend(question['vectors'])
+#     vectors = np.array(vectors).reshape(-1,200)
+#     pca = PCA(n_components=3)
+#     pca.fit(vectors)
+#     return pca
+
+# def get_pca_hidden(hidden_states):
+#     vectors = np.array(hidden_states).reshape(-1, 50)
+#     pca = PCA(n_components=3)
+#     pca.fit(vectors)
+#     return pca
+
+context = ''
+with open('vis.txt', 'r') as f:
+    context = f.read()
 question = 'Where is John?'
 
-print('The Context:')
-print(context)
-print('The Question:',question)
-paras, question = tokenise(context, question)
+para_list, q_dict = vis_tokenize(context, question)
+print(para_list, q_dict)
 
-print('')
+# print('The Context:')
+# print(context)
+# print('The Question:',question)
+# paras, question = tokenise(context, question)
 
-pca_glove = get_pca_glove(paras, question)
+# print('')
 
-print('Preprocessing:')
-for i,para in enumerate(paras):
-    print('-> Paragraph no.',i)
-    print('The paragraph was tokenised into the following sentences:')
-    for j,sent in enumerate(para):
-        print('---> Sentence no.',j)
-        print('The sentence was tokenised into the following words:')
-        print('| '.join(sen['words']))
-        print('The associated word embbeddings are:')
-        print(pca_glove(sent['vectors']))
-print('-'*100)
+# pca_glove = get_pca_glove(paras, question)
 
-print('Passage Retrieval:')
+# print('Preprocessing:')
+# for i,para in enumerate(paras):
+#     print('-> Paragraph no.',i)
+#     print('The paragraph was tokenised into the following sentences:')
+#     for j,sent in enumerate(para):
+#         print('---> Sentence no.',j)
+#         print('The sentence was tokenised into the following words:')
+#         print('| '.join(sen['words']))
+#         print('The associated word embbeddings are:')
+#         print(pca_glove(sent['vectors']))
+# print('-'*100)
 
-para_select = infoRX._retrieve_info(context, question)
-para_sents = []
-tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+# print('Passage Retrieval:')
 
-print(para_select)
+# para_select = infoRX._retrieve_info(context, question)
+# para_sents = []
+# tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-# print(type(para_select[0]), para_select[0])
+# print(para_select)
 
-for para in para_select:
-    para_sents.extend(tokenizer.tokenize(para[0]))
+# # print(type(para_select[0]), para_select[0])
 
-print('Sentences selected by IR Module:')
-print(para_sents)
-print('-'*100)
+# for para in para_select:
+#     para_sents.extend(tokenizer.tokenize(para[0]))
 
-# Select Ans Sents - ABCNN
-ans_sents = abcnn.ans_select(query, para_sents)
+# print('Sentences selected by IR Module:')
+# print(para_sents)
+# print('-'*100)
 
-print('\nSentence Ranking:')
-for sentence,score in ans_sents:
-    print('{0:50}\t{1}'.format(sentence, score[0]))
-print('-'*100)
+# # Select Ans Sents - ABCNN
+# ans_sents = abcnn.ans_select(query, para_sents)
 
-results  = extract_answer_from_sentences(
-    ans_sents,
-    query,
-    vis=True,
-)
-best_ans, score, answers, tree_dict, hidden_states = results
+# print('\nSentence Ranking:')
+# for sentence,score in ans_sents:
+#     print('{0:50}\t{1}'.format(sentence, score[0]))
+# print('-'*100)
 
-pca_hidden = get_pca_hidden(hidden_states)
+# results  = extract_answer_from_sentences(
+#     ans_sents,
+#     query,
+#     vis=True,
+# )
+# best_ans, score, answers, tree_dict, hidden_states = results
 
-print('VDT Generation:')
-for tree in tree_list:
-    print('Statement:', tree['sentence'])
-    print('Tree:')
-    tree['tree'].print(pca_glove, pca_hidden)
-print('-'*100)
+# pca_hidden = get_pca_hidden(hidden_states)
 
-ans_list = []
-for x in answers[:5]:
-    ans_list.append({'word':x[0], 'score': float(x[1][0])})
+# print('VDT Generation:')
+# for tree in tree_list:
+#     print('Statement:', tree['sentence'])
+#     print('Tree:')
+#     tree['tree'].print(pca_glove, pca_hidden)
+# print('-'*100)
 
-print('\nCandidate answers scored by Answer Extraction Module')
-for answer in ans_list:
-    print('{0:10}\t{1}'.format(answer['word'], answer['score']))
+# ans_list = []
+# for x in answers[:5]:
+#     ans_list.append({'word':x[0], 'score': float(x[1][0])})
+
+# print('\nCandidate answers scored by Answer Extraction Module')
+# for answer in ans_list:
+#     print('{0:10}\t{1}'.format(answer['word'], answer['score']))
