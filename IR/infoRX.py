@@ -57,14 +57,14 @@ def tf_idf(doc, query):
 
 	for i in range(0, doc_count_total):
 		tfidf.append(0)
-		para = " ".join(l for l in doc[i] if l not in string.punctuation)
-		wcount_total.append(len(para.split()))
+		#para = " ".join(l for l in doc[i].split('\n'))
+		wcount_total.append(len(doc[i].split()))
 		# print(wcount_total[i])
 
 	for term in imp_tokens:
 		doc_freq = 0
 		tf = []
-		for i in range(0, int(doc_count_total)):
+		for i in range(0, doc_count_total):
 			term_count = doc[i].lower().count(term)
 			if term_count > 0:
 				doc_freq += 1
@@ -77,7 +77,7 @@ def tf_idf(doc, query):
 		# print(term, term_count)
 		idf = math.log(doc_count_total / doc_freq)
 		
-		for i in range(0, int(doc_count_total)):
+		for i in range(0, doc_count_total):
 			tfidf[i] += tf[i] * idf
 
 		# print(tfidf)
@@ -91,6 +91,7 @@ def retrieve_info(doc, query):
 	# query = sys.argv[1]
 	# file_name = sys.argv[2]
 	# print(tf_idf(doc, query))
+	doc = doc.split('\n')
 
 	tidf_measure = np.array(tf_idf(doc, query)[0])
 	top_indices = tidf_measure.argsort()[-10:][::-1]
