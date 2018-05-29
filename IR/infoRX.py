@@ -7,9 +7,7 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 
 sys.path.append('../')
-
 from Helpers import utils
-
 
 def centroid(wordvecs):
 	vec = np.array(wordvecs).reshape((-1, 50))
@@ -43,7 +41,8 @@ def get_most_relevant(paras, query_measure):
 	top_indices = np.array(cosine_sim).argsort()[-5:][::-1]
 
 	for index in top_indices:
-		top_paras.append(paras[index])
+		params = list(paras[index])
+		top_paras.append(params.append(cosine_sim[index]))
 	
 	return top_paras
 
@@ -55,7 +54,6 @@ def tf_idf(doc, query):
 	wcount_total = []
 	doc_count_total = len(doc)
 	imp_tokens = [i for i in word_tokenize(query.lower()) if i not in stop]
-	# print(imp_tokens)
 
 	for i in range(0, doc_count_total):
 		tfidf.append(0)
@@ -92,13 +90,11 @@ def retrieve_info(doc, query):
 
 	# query = sys.argv[1]
 	# file_name = sys.argv[2]
-
-	
-		# print(tf_idf(doc, query))
+	# print(tf_idf(doc, query))
 
 	tidf_measure = np.array(tf_idf(doc, query)[0])
 	top_indices = tidf_measure.argsort()[-10:][::-1]
-	# print(top_indices)
+# 	print(top_indices)
 
 	for index in top_indices:
 		para = doc[index]
@@ -112,6 +108,33 @@ def retrieve_info(doc, query):
 	# print(get_most_relevant(vector, query_measure))
 	return get_most_relevant(vector, query_measure)
 
+def _retrieve_info(doc, query):
+	glove = utils.load_glove()
+	vector = []
+	ir_dict = {}
+	
+	tidf_measure = np.array(tf_idf(doc, query)[0])
+	top_indices = tidf_measure.argsort()[-10:][::-1]
+
+	for index in top_indices:
+		para = doc[index]
+		para_word_vec = get_word_vecs(para, glove)
+		p_centr = centroid(para_word_vec)
+		p_tfidf = tidf_measure[index]
+		vector.append((para, p_centr, p_tfidf))
+
+	# print(vector)
+	query_measure = centroid(get_word_vecs(query, glove))
+	
+	# Ranked Paras - (Para, centroid, tfidf, cosine_sim)
+	top_para_list = get_most_relevant(vector, query_measure)
+	# print(get_most_relevant(vector, query_measure))
+
+	ir_dict['question'] = query
+	ir_dict['q_centroid'] = query_measure
+	ir_dict['top_paras'] = top_para_list
+	
+	return ir_dict
 
 if __name__ == '__main__':
 	file_name = os.path.join("../data/corpus/cricket.txt")
