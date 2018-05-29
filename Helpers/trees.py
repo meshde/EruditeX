@@ -13,6 +13,7 @@ class dt_node(object):
         self.word_vector_size = dim
         self.count = None
         self.po_list = None
+        self.node_score = None
 
     def get_text(self):
         return self.text
@@ -112,8 +113,8 @@ class dt_node(object):
             node.hidden_state = hidden_states[i]
         return
 
-    def update_node_rank(self, node_scores):
-        postorder = self.postorder
+    def update_node_scores(self, node_scores):
+        postorder = self.postorder()
         for index,text,score in node_scores:
             assert text == postorder[index].text
             postorder[index].node_score = score
@@ -126,11 +127,13 @@ class dt_node(object):
         postorder = self.postorder()
         for i, node in enumerate(postorder):
             print('Word:', node.text)
-            print('Parent:', postorder[parent_indices[i]].text)
+            print('Parent:', node.head)
             print('Dependency Tag:', node.dep_tag)
             print('Word Embedding:', pca_glove.transform(node.word_vector))
-            print('Hidden State:', pca_hidden.transform(node.hidden_state))
-            print('Node Rank:', self.node_score)
+            print('Hidden State:', pca_hidden.transform(
+                node.hidden_state.reshape(1, -1)))
+            if self.node_score:
+                print('Node Rank:', self.node_score)
             print('-'*10)
         return
 

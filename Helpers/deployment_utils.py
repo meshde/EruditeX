@@ -110,11 +110,12 @@ def _extract_answer_from_sentence_vis(sentence, question_tree, nlp, config,
     hidden_states.extend(sentence_hidden_states)
     sentence_tree.update_hidden_states(sentence_hidden_states)
 
-    answers = get_answer_nodes(sentence_tree, question_tree, verbose)
+    answers = get_answer_nodes(sentence_tree, question_tree, verbose=False)
     answers = [(i, sentence_text_traversal[i], score) for i, score in answers]
     sentence_tree.update_node_scores(answers)
     output['tree'] = sentence_tree
     return answers,output
+
 def extract_answer_from_sentences(sentences, question, verbose=False,
                                   vis=False):
     check_configurations()
