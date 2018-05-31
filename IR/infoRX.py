@@ -10,14 +10,14 @@ sys.path.append('../')
 from Helpers import utils
 
 def centroid(wordvecs):
-    vec = np.array(wordvecs).reshape((-1, 50))
+    vec = np.array(wordvecs).reshape((-1, 200))
     return vec.mean(axis=0)
 
 
 def get_word_vecs(line, glove):
     l = []
     for word in line.split():
-        l.append(utils.get_vector(word.lower(), glove))
+        l.append(utils.get_vector(word.lower(), glove, dim=200))
     return l
 
 
@@ -122,7 +122,8 @@ def _retrieve_info(doc, query):
     vector = []
     ir_dict = {}
 
-    doc = doc.split('\n')
+    doc = [x for x in doc.split('\n') if x != '']
+    print(doc)
 
     tidf_measure = np.array(tf_idf(doc, query)[0])
     print(tidf_measure)
@@ -143,10 +144,18 @@ def _retrieve_info(doc, query):
     # Ranked Paras - (Para, centroid, tfidf, cosine_sim)
     top_para_list = get_most_relevant(vector, query_measure)
     # print(get_most_relevant(vector, query_measure))
+    top_para_dict = []
+    for para in top_para_list:
+        entry = {}
+        entry['para'] = para[0]
+        entry['centroid'] = para[1]
+        entry['tf_idf'] = para[2]
+        entry['cosine_sim'] = para[3]
+        top_para_dict.append(entry)
 
     ir_dict['question'] = query
     ir_dict['q_centroid'] = query_measure
-    ir_dict['top_paras'] = top_para_list
+    ir_dict['top_paras'] = top_para_dict
     
     return ir_dict
 

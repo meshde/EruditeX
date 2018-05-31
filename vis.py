@@ -83,12 +83,18 @@ para_select = infoRX._retrieve_info(context, question)
 para_sents = []
 tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-print(para_select)
+for para in para_select['top_paras']:
+    assert para['centroid'].shape[0] == 200
+    para['centroid'] = pca_glove.transform(
+        para['centroid'].reshape(1, -1)
+    )
+
+print(para_select['top_paras'])
 
 # print(type(para_select[0]), para_select[0])
 
 for para in para_select['top_paras']:
-    para_sents.extend(tokenizer.tokenize(para[0]))
+    para_sents.extend(tokenizer.tokenize(para['para']))
 
 print('Sentences selected by IR Module:')
 print(para_sents)

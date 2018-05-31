@@ -133,7 +133,7 @@ class dt_node(object):
             print('Hidden State:', pca_hidden.transform(
                 node.hidden_state.reshape(1, -1)))
             if self.node_score:
-                print('Node Rank:', self.node_score)
+                print('Node Rank:', node.node_score)
             print('-'*10)
         return
 
