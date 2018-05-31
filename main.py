@@ -216,6 +216,10 @@ def paper(task_num=1, history=None):
         erudite.EruditeX().get_babi_task_num(task_num, count, total)
 
 
+def analyse(search='Actual Answer'):
+    from paper import analysis
+    analysis.task1(search.title())
+    return
 
 if __name__ == '__main__':
     train_dtrnn()

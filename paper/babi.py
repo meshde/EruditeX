@@ -77,3 +77,28 @@ def get_babi(babi_id='1'):
 		final_dict.append(d)
 
 	return final_dict
+
+def get_vocab(babi_id='1'):
+    from nltk import word_tokenize
+    babi_dict = get_babi(babi_id)
+    vocab = {}
+
+    for entry in babi_dict:
+        tokens = word_tokenize(entry['context'])
+        for token in tokens:
+            try:
+                vocab[token]
+            except:
+                vocab[token] = 0
+
+    with open('vocab.txt', 'w') as f:
+        for key in vocab:
+            f.write(key)
+            f.write('\n')
+    return vocab
+
+def get_location_words():
+    words = [
+        'bathroom', 'garden', 'office', 'hallway', 'kitchen', 'bedroom'
+    ]
+    return words
