@@ -63,7 +63,7 @@ def init_babi_deploy(fname, query):
 			# task['C'] += " "
 	tasks = []
 	tasks.append(task.copy())
-	print(tasks)
+	# print(tasks)
 	return tasks
 
 
