@@ -124,6 +124,8 @@ class EdXServer():
 
 
 app = Flask(__name__)
+app2 = Flask(__name__)
+server = EdXServer()
 
 app.config['UPLOAD_FOLDER'] = os.path.join('./data/uploads')
 
@@ -155,6 +157,13 @@ def queried():
     resp = jsonify(server.get_query(query))
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
+
+@app2.route('/status', methods=['POST'])
+def status():
+	print(EdXServer.status)
+	resp = jsonify(EdXServer.status)
+	resp.headers['Access-Control-Allow-Origin'] = '*'
+	return resp
 
 def start1(port):
     app.run(port=port)
