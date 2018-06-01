@@ -56,6 +56,7 @@ class EdXServer():
 
         try:
             # Select Ans Sents - ABCNN
+            abcnn = abcnn_model()
             ans_sents = abcnn.ans_select(query, para_sents)
 
             print('\nSystem: Sentences scored by Sentence Selection Module')
@@ -99,8 +100,6 @@ class EdXServer():
 
 
 app = Flask(__name__)
-server = EdXServer()
-abcnn = abcnn_model()
 
 app.config['UPLOAD_FOLDER'] = os.path.join('./data/uploads')
 
@@ -134,4 +133,5 @@ def queried():
     return resp
 
 if __name__ == '__main__':
+    server = EdXServer()
     app.run()
