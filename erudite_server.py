@@ -28,9 +28,9 @@ class EdXServer():
 
     @classmethod
     def update(cls, value):
-		cls.status = value
+        cls.status = value
 
-	def get_file(self, filename):
+    def get_file(self, filename):
 
         # print(filename)
         self.file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -50,14 +50,14 @@ class EdXServer():
         print(self.query)
 
         # Filter top 5 paras using Info Retrieval
-		self.update({'val': 'Ranking Paragraphs using Information Retrieval.'})
-		para_select = infoRX.retrieve_info(self.context, self.query)
+        self.update({'val': 'Ranking Paragraphs using Information Retrieval.'})
+        para_select = infoRX.retrieve_info(self.context, self.query)
         para_sents = []
         tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
         print(type(para_select[0]), para_select[0])
 
-		self.update({'val': 'Tokenizing top ranked paragraphs'})
+        self.update({'val': 'Tokenizing top ranked paragraphs'})
         for para in para_select:
             para_sents.extend(tokenizer.tokenize(para[0]))
 
@@ -65,22 +65,27 @@ class EdXServer():
         print(para_sents)
         
         val_list = []
-		for sent in para_sents:
-			val_list.append({'word': sent, 'score': '\b\b'})
-		self.update({'val': 'Sentences selected by IR Module', 'answers': val_list})
+        for sent in para_sents:
+            val_list.append({'word': sent, 'score': '\b\b'})
+        self.update({'val': 'Sentences selected by IR Module', 'answers': val_list})
 
         try:
             # Select Ans Sents - ABCNN
-   			self.update({'val': 'Ranking Candidate Answer Sentences.'})
-			abcnn = abcnn_model()
+            self.update({'val': 'Ranking Candidate Answer Sentences.'})
+            abcnn = abcnn_model()
             ans_sents = abcnn.ans_select(query, para_sents)
-			
-			val_list = []
-			for sentence,score in ans_sents:
-				val_list.append({'word': sentence, 'score': score[0]})              
-			self.update({'val': 'Sentences scored by Sentence Selection Module', 'answers': val_list)            
+            
+            val_list = []
+            for sentence,score in ans_sents:
+                val_list.append({'word': sentence, 'score': score[0]})              
+            self.update(
+                {
+                    'val': 'Sentences scored by Sentence Selection Module', 
+                    'answers': val_list,
+                },
+            )
 
-			print('\nSystem: Sentences scored by Sentence Selection Module')
+            print('\nSystem: Sentences scored by Sentence Selection Module')
             for sentence,score in ans_sents:
                 print('{0:50}\t{1}'.format(sentence, score[0]))
             print('')
@@ -129,8 +134,8 @@ def filer():
     # filename = data['filename']
     # file = data['file']
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    	os.makedirs(app.config['UPLOAD_FOLDER'])
-    	
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+        
     f = request.files['file']
     f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
     print(f)
@@ -152,10 +157,10 @@ def queried():
     return resp
 
 def start1(port):
-	app.run(port=port)
+    app.run(port=port)
 
 def start2(port):
-	app2.run(port=port)
+    app2.run(port=port)
 
 if __name__ == '__main__':
     t1 = threading.Thread(target=start1, args=(5001,))
