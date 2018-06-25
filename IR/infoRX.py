@@ -99,7 +99,7 @@ def retrieve_info(doc, query):
     # query = sys.argv[1]
     # file_name = sys.argv[2]
     # print(tf_idf(doc, query))
-    doc = doc.split('\n')
+    doc = [x for x in doc.split('\n') if x != '']
 
     tidf_measure = np.array(tf_idf(doc, query)[0])
     top_indices = tidf_measure.argsort()[-10:][::-1]

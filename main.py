@@ -216,9 +216,44 @@ def paper(task_num=1, history=None):
         erudite.EruditeX().get_babi_task_num(task_num, count, total)
 
 
-def analyse(search='Actual Answer'):
+def example(task, example):
+    from edx_server import EdXServer as EruditeX
+    from paper import babi
+
+    babi_list = babi.get_babi(task)
+    example = int(example) - 1
+    babi_dict = babi_list[example]
+
+    system = EruditeX()
+    print('Context:', babi_dict['context'])
+    print('Question:', babi_dict['question'])
+    system.context = babi_dict['context']
+    temp = system.get_query(babi_dict['question'])
+    print(temp)
+    return
+
+def analyse(task, search='Predicted Answer'):
     from paper import analysis
-    analysis.task1(search.title())
+    from paper import babi
+
+    if search == 'Predicted Answer':
+        vocab = babi.get_vocab(task)
+    else:
+        vocab = {}
+
+    if task == 'all':
+        for task in ['1', '4', '5', '12']:
+            analysis.task(task, vocab, search.title())
+    else:
+        assert task in ['1', '4', '5', '12']
+        analysis.task(task, vocab, search.title())
+
+    for key in vocab:
+        print(key)
+
+    for key in vocab:
+        print(vocab[key])
+
     return
 
 if __name__ == '__main__':

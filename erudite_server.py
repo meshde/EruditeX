@@ -7,6 +7,7 @@ from flask import Flask
 from flask import Response
 from flask import request
 from flask import jsonify
+from flask_cors import CORS
 from werkzeug import secure_filename
 
 from Helpers import file_extraction
@@ -15,7 +16,6 @@ from IR import infoRX
 from Models import abcnn_model
 from Models import AnsSelect
 from Models import DT_RNN
-
 
 class EdXServer():
 
@@ -36,8 +36,9 @@ class EdXServer():
         self.file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
         self.context = file_extraction.extract_file_contents(self.file)
-        
+        print(self.context)
         if len(self.context) > 0:
+            self.context = self.context[0]
             return True
         
         return False
@@ -127,11 +128,19 @@ app = Flask(__name__)
 app2 = Flask(__name__)
 server = EdXServer()
 
+CORS(app, origins="http://localhost:5000", allow_headers=[
+    "Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+    supports_credentials=True, intercept_exceptions=False)
+
+CORS(app2, origins="http://localhost:5001", allow_headers=[
+    "Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+    supports_credentials=True, intercept_exceptions=False)
+
 app.config['UPLOAD_FOLDER'] = os.path.join('./data/uploads')
 
 @app.route('/filed',methods=['POST'])
 def filer():
-
+    print('here')
     # data = request.get_json(force=True)
     # filename = data['filename']
     # file = data['file']
@@ -150,7 +159,7 @@ def filer():
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
-@app.route('/query',methods=['POST'])
+@app2.route('/query',methods=['POST'])
 def queried():
     query = request.get_json(force=True)['query']
     # resp = Response(server.get_query(query))
@@ -158,7 +167,7 @@ def queried():
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
-@app2.route('/status', methods=['POST'])
+@app.route('/status', methods=['POST'])
 def status():
 	print(EdXServer.status)
 	resp = jsonify(EdXServer.status)
@@ -172,7 +181,7 @@ def start2(port):
     app2.run(port=port)
 
 if __name__ == '__main__':
-    t1 = threading.Thread(target=start1, args=(5001,))
-    t2 = threading.Thread(target=start2, args=(5000,))
+    t1 = threading.Thread(target=start1, args=(5000,))
+    t2 = threading.Thread(target=start2, args=(5001,))
     t1.start()
     t2.start()
