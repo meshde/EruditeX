@@ -46,7 +46,7 @@ scipy==0.19.1
 six==1.11.0
 spacy==2.0.7
 tensorflow==1.5.0
-tensorflow-gpu==1.5.0
+tensorflow-gpu==1.15.0
 tensorflow-tensorboard==1.5.0
 termcolor==1.1.0
 Theano==0.10.0b2
